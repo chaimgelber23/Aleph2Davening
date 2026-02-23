@@ -1,0 +1,858 @@
+[
+  {
+    "prayerId": "modeh-ani",
+    "sectionId": "modeh-ani-1",
+    "status": "MATCH",
+    "similarity": 100,
+    "expectedPreview": "מודה אני לפניך",
+    "transcribedPreview": "מודה אני לפניך"
+  },
+  {
+    "prayerId": "modeh-ani",
+    "sectionId": "modeh-ani-2",
+    "status": "PARTIAL",
+    "similarity": 67,
+    "expectedPreview": "מלך חי וקים",
+    "transcribedPreview": "מלך חי וקיים"
+  },
+  {
+    "prayerId": "modeh-ani",
+    "sectionId": "modeh-ani-3",
+    "status": "MATCH",
+    "similarity": 100,
+    "expectedPreview": "שהחזרת בי נשמתי",
+    "transcribedPreview": "שהחזרת בי נשמתי"
+  },
+  {
+    "prayerId": "modeh-ani",
+    "sectionId": "modeh-ani-4",
+    "status": "MATCH",
+    "similarity": 100,
+    "expectedPreview": "בחמלה רבה אמונתך",
+    "transcribedPreview": "בחמלה רבה אמונתך"
+  },
+  {
+    "prayerId": "baruch-sheamar",
+    "sectionId": "baruch-sheamar-1",
+    "status": "MATCH",
+    "similarity": 100,
+    "expectedPreview": "ברוך שאמר והיה העולם ברוך הוא",
+    "transcribedPreview": "ברוך שאמר והיה העולם ברוך הוא"
+  },
+  {
+    "prayerId": "baruch-sheamar",
+    "sectionId": "baruch-sheamar-2",
+    "status": "MATCH",
+    "similarity": 89,
+    "expectedPreview": "ברוך עושה בראשית ברוך אומר ועושה ברוך גוזר ומקים",
+    "transcribedPreview": "ברוך עושה בראשית ברוך אומר ועושה ברוך גוזר ומקיים"
+  },
+  {
+    "prayerId": "baruch-sheamar",
+    "sectionId": "baruch-sheamar-3",
+    "status": "PARTIAL",
+    "similarity": 78,
+    "expectedPreview": "ברוך מרחם על הארץ ברוך מרחם על הבריות ברוך משלם שכר טוב לירא",
+    "transcribedPreview": "ברוך מרחם על הארץ ברוך מרחם על הבריות ברוך משלם שכר טוב לירא"
+  },
+  {
+    "prayerId": "baruch-sheamar",
+    "sectionId": "baruch-sheamar-4",
+    "status": "MISMATCH",
+    "similarity": 48,
+    "expectedPreview": "ברוך אתה ה׳ אלקינו מלך העולם האל אב הרחמן המהלל בפה עמו משבח",
+    "transcribedPreview": "ברוך אתה ה אלוקינו מלך העולם האלה והרחם הנה מעולה על בשיעמום"
+  },
+  {
+    "prayerId": "ashrei",
+    "sectionId": "ashrei-intro-1",
+    "status": "MATCH",
+    "similarity": 100,
+    "expectedPreview": "אשרי יושבי ביתך עוד יהללוך סלה",
+    "transcribedPreview": "אשרי יושבי ביתך עוד יהללוך סלה"
+  },
+  {
+    "prayerId": "ashrei",
+    "sectionId": "ashrei-intro-2",
+    "status": "PARTIAL",
+    "similarity": 75,
+    "expectedPreview": "אשרי העם שככה לו אשרי העם שה׳ אלקיו",
+    "transcribedPreview": "אשרי העם שככה לו אשרי העם שתלכו"
+  },
+  {
+    "prayerId": "ashrei",
+    "sectionId": "ashrei-aleph",
+    "status": "PARTIAL",
+    "similarity": 78,
+    "expectedPreview": "תהלה לדוד ארוממך אלוקי המלך ואברכה שמך לעולם ועד",
+    "transcribedPreview": "תהילה לדוד ארוממך אלוהי המלך ואברכה שמך לעולם ועד"
+  },
+  {
+    "prayerId": "ashrei",
+    "sectionId": "ashrei-bet-gimel",
+    "status": "PARTIAL",
+    "similarity": 71,
+    "expectedPreview": "בכל יום אברכך ואהללה שמך לעולם ועד גדול ה׳ ומהלל מאד ולגדלתו",
+    "transcribedPreview": "בכל יום אברכך ואהללה שמך לעולם ועד גדול ומהולל מאוד ולגדולתו"
+  },
+  {
+    "prayerId": "ashrei",
+    "sectionId": "ashrei-dalet-hei",
+    "status": "PARTIAL",
+    "similarity": 85,
+    "expectedPreview": "דור לדור ישבח מעשיך וגבורתיך יגידו הדר כבוד הודך ודברי נפלאו",
+    "transcribedPreview": "דור לדור ישבח מעשיך או גבורותיך יגידו הדר כבוד הודך ודברי נפ"
+  },
+  {
+    "prayerId": "ashrei",
+    "sectionId": "ashrei-poteach",
+    "status": "MATCH",
+    "similarity": 86,
+    "expectedPreview": "פותח את ידך ומשביע לכל חי רצון",
+    "transcribedPreview": "פותח את ידיך ומשביע לכל חי רצון"
+  },
+  {
+    "prayerId": "ashrei",
+    "sectionId": "ashrei-closing",
+    "status": "MATCH",
+    "similarity": 89,
+    "expectedPreview": "תהלת ה׳ ידבר פי ויברך כל בשר שם קדשו לעולם ועד ואנחנו נברך י",
+    "transcribedPreview": "תהילה ידבר פי ויברך כל בשר שם קדשו לעולם ועד ואנחנו נברך יה "
+  },
+  {
+    "prayerId": "yishtabach",
+    "sectionId": "yishtabach-1",
+    "status": "MATCH",
+    "similarity": 100,
+    "expectedPreview": "ישתבח שמך לעד מלכנו האל המלך הגדול והקדוש בשמים ובארץ",
+    "transcribedPreview": "ישתבח שמך לעד מלכנו האל המלך הגדול והקדוש בשמים ובארץ"
+  },
+  {
+    "prayerId": "yishtabach",
+    "sectionId": "yishtabach-2",
+    "status": "MISMATCH",
+    "similarity": 45,
+    "expectedPreview": "כי לך נאה ה׳ אלקינו שיר ושבחה הלל וזמרה עז וממשלה נצח גדלה ו",
+    "transcribedPreview": "כי לך נא היי אלוקינו שיר ושבחה הלל וזמרה עוז הוא ממשלה נצח ג"
+  },
+  {
+    "prayerId": "yishtabach",
+    "sectionId": "yishtabach-3",
+    "status": "MATCH",
+    "similarity": 96,
+    "expectedPreview": "ברכות והודאות מעתה ועד עולם ברוך אתה ה׳ אל מלך גדול בתשבחות ",
+    "transcribedPreview": "ברכות והודאות מעתה ועד עולם ברוך אתה יי אל מלך גדול בתשבחות "
+  },
+  {
+    "prayerId": "yotzer-or",
+    "sectionId": "yotzer-or-1",
+    "status": "PARTIAL",
+    "similarity": 73,
+    "expectedPreview": "ברוך אתה ה׳ אלקינו מלך העולם יוצר אור ובורא חשך עשה שלום ובו",
+    "transcribedPreview": "ברוך אתה ה אלוקינו מלך העולם יוצר אור ובורא חושך עושה שלום ו"
+  },
+  {
+    "prayerId": "yotzer-or",
+    "sectionId": "yotzer-or-2",
+    "status": "PARTIAL",
+    "similarity": 80,
+    "expectedPreview": "ברוך אתה ה׳ יוצר המאורות",
+    "transcribedPreview": "ברוך אתה יוצר המאורות"
+  },
+  {
+    "prayerId": "ahavah-rabbah",
+    "sectionId": "ahavah-rabbah-1",
+    "status": "PARTIAL",
+    "similarity": 80,
+    "expectedPreview": "אהבה רבה אהבתנו ה׳ אלקינו חמלה גדולה ויתרה חמלת עלינו",
+    "transcribedPreview": "אהבה רבה אהבתנו היי אלוקינו חמלה גדולה ויתרה חמלת עלינו"
+  },
+  {
+    "prayerId": "ahavah-rabbah",
+    "sectionId": "ahavah-rabbah-2",
+    "status": "MATCH",
+    "similarity": 92,
+    "expectedPreview": "והאר עינינו בתורתך ודבק לבנו במצותיך ויחד לבבנו לאהבה וליראה",
+    "transcribedPreview": "והאר עינינו בתורתך ודבק לבנו במצוותיך ויחד לבבנו לאהבה ולירא"
+  },
+  {
+    "prayerId": "ahavah-rabbah",
+    "sectionId": "ahavah-rabbah-3",
+    "status": "MATCH",
+    "similarity": 86,
+    "expectedPreview": "ברוך אתה ה׳ הבוחר בעמו ישראל באהבה",
+    "transcribedPreview": "ברוך אתה ה הבוחר בעמו ישראל באהבה"
+  },
+  {
+    "prayerId": "emet-vyatziv",
+    "sectionId": "emet-vyatziv-1",
+    "status": "MATCH",
+    "similarity": 90,
+    "expectedPreview": "אמת ויציב ונכון וקים וישר ונאמן ואהוב וחביב ונחמד ונעים",
+    "transcribedPreview": "אמת ויציב ונכון וקיים וישר ונאמן ואהוב וחביב ונחמד ונעים"
+  },
+  {
+    "prayerId": "emet-vyatziv",
+    "sectionId": "emet-vyatziv-2",
+    "status": "MISMATCH",
+    "similarity": 42,
+    "expectedPreview": "מי כמוכה באלם ה׳ מי כמכה נאדר בקדש נורא תהלת עשה פלא",
+    "transcribedPreview": "מי כמוך באלים היי מי כמוך נאדר בקודש נורא תהילות עושה פלא"
+  },
+  {
+    "prayerId": "emet-vyatziv",
+    "sectionId": "emet-vyatziv-3",
+    "status": "PARTIAL",
+    "similarity": 80,
+    "expectedPreview": "ברוך אתה ה׳ גאל ישראל",
+    "transcribedPreview": "ברוך אתה ה גאל ישראל"
+  },
+  {
+    "prayerId": "shema",
+    "sectionId": "shema-1",
+    "status": "PARTIAL",
+    "similarity": 50,
+    "expectedPreview": "שמע ישראל ה׳ אלקינו ה׳ אחד",
+    "transcribedPreview": "שמע ישראל ה אלוקינו ה אחד"
+  },
+  {
+    "prayerId": "shema",
+    "sectionId": "shema-2",
+    "status": "MATCH",
+    "similarity": 100,
+    "expectedPreview": "ברוך שם כבוד מלכותו לעולם ועד",
+    "transcribedPreview": "ברוך שם כבוד מלכותו לעולם ועד"
+  },
+  {
+    "prayerId": "shema",
+    "sectionId": "shema-3",
+    "status": "PARTIAL",
+    "similarity": 50,
+    "expectedPreview": "ואהבת את ה׳ אלקיך",
+    "transcribedPreview": "ואהבת את ה אלוקיך"
+  },
+  {
+    "prayerId": "shema",
+    "sectionId": "shema-4",
+    "status": "PARTIAL",
+    "similarity": 83,
+    "expectedPreview": "בכל לבבך ובכל נפשך ובכל מאדך",
+    "transcribedPreview": "בכל לבבך ובכל נפשך ובכל מאודך"
+  },
+  {
+    "prayerId": "shema",
+    "sectionId": "shema-5",
+    "status": "PARTIAL",
+    "similarity": 78,
+    "expectedPreview": "והיו הדברים האלה אשר אנכי מצוך היום על לבבך",
+    "transcribedPreview": "והיו הדברים האלה אשר אנוכי מצווך היום על לבבך"
+  },
+  {
+    "prayerId": "shema",
+    "sectionId": "shema-6",
+    "status": "MATCH",
+    "similarity": 100,
+    "expectedPreview": "ושננתם לבניך ודברת בם",
+    "transcribedPreview": "ושננתם לבניך ודברת בם"
+  },
+  {
+    "prayerId": "shema",
+    "sectionId": "shema-7",
+    "status": "MATCH",
+    "similarity": 100,
+    "expectedPreview": "בשבתך בביתך ובלכתך בדרך",
+    "transcribedPreview": "בשבתך בביתך ובלכתך בדרך"
+  },
+  {
+    "prayerId": "shema",
+    "sectionId": "shema-8",
+    "status": "MATCH",
+    "similarity": 100,
+    "expectedPreview": "ובשכבך ובקומך",
+    "transcribedPreview": "ובשכבך ובקומך"
+  },
+  {
+    "prayerId": "shemoneh-esrei",
+    "sectionId": "se-opening",
+    "status": "PARTIAL",
+    "similarity": 67,
+    "expectedPreview": "אדני שפתי תפתח ופי יגיד תהלתך",
+    "transcribedPreview": "אדוני שפתי תפתח ופי יגיד תהילתך"
+  },
+  {
+    "prayerId": "shemoneh-esrei",
+    "sectionId": "se-01-avot",
+    "status": "PARTIAL",
+    "similarity": 81,
+    "expectedPreview": "ברוך אתה ה׳ אלקינו ואלקי אבותינו אלקי אברהם אלקי יצחק ואלקי ",
+    "transcribedPreview": "ברוך אתה ה אלוקינו ואלוקי אבותינו אלוקי אברהם אלוקי יצחק ואל"
+  },
+  {
+    "prayerId": "shemoneh-esrei",
+    "sectionId": "se-02-gevurot",
+    "status": "PARTIAL",
+    "similarity": 82,
+    "expectedPreview": "אתה גבור לעולם אדני מחיה מתים אתה רב להושיע מכלכל חיים בחסד ",
+    "transcribedPreview": "אתה גיבור לעולם אדוני אם חיים את אם אתה רב להושיע מכלכל חיים"
+  },
+  {
+    "prayerId": "shemoneh-esrei",
+    "sectionId": "se-03-kedushah",
+    "status": "MATCH",
+    "similarity": 93,
+    "expectedPreview": "אתה קדוש ושמך קדוש וקדושים בכל יום יהללוך סלה ברוך אתה ה׳ הא",
+    "transcribedPreview": "אתה קדוש ושמך קדוש וקדושים בכל יום יהללוך סלה ברוך אתה ה האל"
+  },
+  {
+    "prayerId": "shemoneh-esrei",
+    "sectionId": "se-04-daat",
+    "status": "MATCH",
+    "similarity": 94,
+    "expectedPreview": "אתה חונן לאדם דעת ומלמד לאנוש בינה חננו מאתך דעה בינה והשכל ",
+    "transcribedPreview": "אתה חונן לאדם דעת ומלמד לאנוש בינה חננו מאתך דעה בינה והשכל "
+  },
+  {
+    "prayerId": "shemoneh-esrei",
+    "sectionId": "se-05-teshuvah",
+    "status": "MATCH",
+    "similarity": 93,
+    "expectedPreview": "השיבנו אבינו לתורתך וקרבנו מלכנו לעבודתך והחזירנו בתשובה שלמ",
+    "transcribedPreview": "השיבנו אבינו לתורתך וקרבנו מלכנו לעבודתך והחזירנו בתשובה שלמ"
+  },
+  {
+    "prayerId": "shemoneh-esrei",
+    "sectionId": "se-06-selichah",
+    "status": "MATCH",
+    "similarity": 95,
+    "expectedPreview": "סלח לנו אבינו כי חטאנו מחל לנו מלכנו כי פשענו כי מוחל וסולח ",
+    "transcribedPreview": "סלח לנו אבינו כי חטאנו מחל לנו מלכנו כי פשענו כי מוחל וסולח "
+  },
+  {
+    "prayerId": "shemoneh-esrei",
+    "sectionId": "se-07-geulah",
+    "status": "MATCH",
+    "similarity": 89,
+    "expectedPreview": "ראה נא בענינו וריבה ריבנו וגאלנו מהרה למען שמך כי גואל חזק א",
+    "transcribedPreview": "ראה נא בענינו וריבה ריבנו בגללנו מהרה למען שמך כי גואל חזק א"
+  },
+  {
+    "prayerId": "shemoneh-esrei",
+    "sectionId": "se-08-refuah",
+    "status": "PARTIAL",
+    "similarity": 76,
+    "expectedPreview": "רפאנו ה׳ ונרפא הושיענו ונושעה כי תהלתנו אתה והעלה רפואה שלמה",
+    "transcribedPreview": "רפאנו ה ונרפא הושיענו ונושעה כי תהילתנו אתה והעלה רפואה שלמה"
+  },
+  {
+    "prayerId": "shemoneh-esrei",
+    "sectionId": "se-09-shanim",
+    "status": "MATCH",
+    "similarity": 86,
+    "expectedPreview": "ברך עלינו ה׳ אלקינו את השנה הזאת ואת כל מיני תבואתה לטובה ות",
+    "transcribedPreview": "ברך עלינו היי אלוקינו את השנה הזאת ואת כל מיני תבואתה לטובה "
+  },
+  {
+    "prayerId": "shemoneh-esrei",
+    "sectionId": "se-10-galuyot",
+    "status": "PARTIAL",
+    "similarity": 80,
+    "expectedPreview": "תקע בשופר גדול לחרותנו ושא נס לקבץ גליותינו וקבצנו יחד מארבע",
+    "transcribedPreview": "מכבי שופר גדול לחרותנו ושא נס לקבץ גלויותינו וקבצנו יחד מארב"
+  },
+  {
+    "prayerId": "shemoneh-esrei",
+    "sectionId": "se-11-mishpat",
+    "status": "PARTIAL",
+    "similarity": 80,
+    "expectedPreview": "השיבה שופטינו כבראשונה ויועצינו כבתחלה והסר ממנו יגון ואנחה ",
+    "transcribedPreview": "השיבה שופטינו כבראשונה ויועצינו כבתחילה והסר ממנו יגון ואנחה"
+  },
+  {
+    "prayerId": "shemoneh-esrei",
+    "sectionId": "se-12-minim",
+    "status": "PARTIAL",
+    "similarity": 66,
+    "expectedPreview": "ולמלשינים אל תהי תקוה וכל הרשעה כרגע תאבד וכל אויביך מהרה יכ",
+    "transcribedPreview": "ולמלשינים אל תהי תקווה וכל הרשעה כרגע טובה וכל אויביך מהר הע"
+  },
+  {
+    "prayerId": "shemoneh-esrei",
+    "sectionId": "se-13-tzaddikim",
+    "status": "MATCH",
+    "similarity": 86,
+    "expectedPreview": "על הצדיקים ועל החסידים ועל זקני עמך בית ישראל ועל פליטת סופר",
+    "transcribedPreview": "על הצדיקים ועל החסידים והזיקנה יומך בית ישראל ועל פליטת סופר"
+  },
+  {
+    "prayerId": "shemoneh-esrei",
+    "sectionId": "se-14-yerushalayim",
+    "status": "PARTIAL",
+    "similarity": 83,
+    "expectedPreview": "ולירושלים עירך ברחמים תשוב ותשכון בתוכה כאשר דברת ובנה אותה ",
+    "transcribedPreview": "ולירושלים עירך ברחמים תשוב ותשכון בתוכה כאשר דיברת ובנה אותה"
+  },
+  {
+    "prayerId": "shemoneh-esrei",
+    "sectionId": "se-15-david",
+    "status": "MATCH",
+    "similarity": 85,
+    "expectedPreview": "את צמח דוד עבדך מהרה תצמיח וקרנו תרום בישועתך כי לישועתך קוי",
+    "transcribedPreview": "צמח דוד עבדך מהרה תצמיח וקרנו תרום בישועתך כי לישועתך קיווינ"
+  },
+  {
+    "prayerId": "shemoneh-esrei",
+    "sectionId": "se-16-shema-koleinu",
+    "status": "PARTIAL",
+    "similarity": 74,
+    "expectedPreview": "שמע קולנו ה׳ אלקינו חוס ורחם עלינו וקבל ברחמים וברצון את תפל",
+    "transcribedPreview": "שמע קולנו ה אלוקינו חוס ורחם עלינו וקבל ברחמים וברצון את תפי"
+  },
+  {
+    "prayerId": "shemoneh-esrei",
+    "sectionId": "se-17-avodah",
+    "status": "PARTIAL",
+    "similarity": 66,
+    "expectedPreview": "רצה ה׳ אלקינו בעמך ישראל ובתפלתם והשב את העבודה לדביר ביתך ו",
+    "transcribedPreview": "יצא היי אלוקינו בעמך ישראל הוא ותפילתם והשב את העבודה לדביר "
+  },
+  {
+    "prayerId": "shemoneh-esrei",
+    "sectionId": "se-18-modim",
+    "status": "PARTIAL",
+    "similarity": 74,
+    "expectedPreview": "מודים אנחנו לך שאתה הוא ה׳ אלקינו ואלקי אבותינו לעולם ועד צו",
+    "transcribedPreview": "מודים אנחנו לך שאתה הוא אלוקינו ואלוקי אבותינו לעולם ועד צור"
+  },
+  {
+    "prayerId": "shemoneh-esrei",
+    "sectionId": "se-18-modim-closing",
+    "status": "PARTIAL",
+    "similarity": 74,
+    "expectedPreview": "ועל כלם יתברך ויתרומם שמך מלכנו תמיד לעולם ועד וכל החיים יוד",
+    "transcribedPreview": "ועל כולם יתברך ויתרומם שמך מעל כי אני תמיד לעולם ועד וכל החי"
+  },
+  {
+    "prayerId": "shemoneh-esrei",
+    "sectionId": "se-19-shalom",
+    "status": "MATCH",
+    "similarity": 89,
+    "expectedPreview": "שים שלום טובה וברכה חן וחסד ורחמים עלינו ועל כל ישראל עמך בר",
+    "transcribedPreview": "שים שלום טובה וברכה חן וחסד ורחמים עלינו ועל כל ישראל המלך ב"
+  },
+  {
+    "prayerId": "shemoneh-esrei",
+    "sectionId": "se-closing",
+    "status": "PARTIAL",
+    "similarity": 76,
+    "expectedPreview": "אלקי נצור לשוני מרע ושפתי מדבר מרמה ולמקללי נפשי תדם ונפשי כ",
+    "transcribedPreview": "אלוקי נצור לשוני מרע ושפתי מדבר מרמה ולמקללי נפשי תדום ונפשי"
+  },
+  {
+    "prayerId": "shemoneh-esrei",
+    "sectionId": "se-yihyu",
+    "status": "MATCH",
+    "similarity": 90,
+    "expectedPreview": "יהיו לרצון אמרי פי והגיון לבי לפניך ה׳ צורי וגואלי",
+    "transcribedPreview": "יהיו לרצון אמרי פי והגיון לבי לפניך יי צורי וגואלי"
+  },
+  {
+    "prayerId": "shemoneh-esrei",
+    "sectionId": "se-oseh-shalom",
+    "status": "MATCH",
+    "similarity": 92,
+    "expectedPreview": "עשה שלום במרומיו הוא יעשה שלום עלינו ועל כל ישראל ואמרו אמן",
+    "transcribedPreview": "עושה שלום במרומיו הוא יעשה שלום עלינו ועל כל ישראל ואמרו אמן"
+  },
+  {
+    "prayerId": "aleinu",
+    "sectionId": "aleinu-1",
+    "status": "MATCH",
+    "similarity": 91,
+    "expectedPreview": "עלינו לשבח לאדון הכל לתת גדלה ליוצר בראשית שלא עשנו כגויי הא",
+    "transcribedPreview": "עלינו לשבח לאדון הכל לתת גדולה ליוצר בראשית שלא עשנו כגויי ה"
+  },
+  {
+    "prayerId": "aleinu",
+    "sectionId": "aleinu-2",
+    "status": "MATCH",
+    "similarity": 100,
+    "expectedPreview": "ואנחנו כורעים ומשתחוים ומודים לפני מלך מלכי המלכים הקדוש ברו",
+    "transcribedPreview": "ואנחנו כורעים ומשתחוים ומודים לפני מלך מלכי המלכים הקדוש ברו"
+  },
+  {
+    "prayerId": "aleinu",
+    "sectionId": "aleinu-3",
+    "status": "PARTIAL",
+    "similarity": 70,
+    "expectedPreview": "שהוא נוטה שמים ויוסד ארץ ומושב יקרו בשמים ממעל ושכינת עזו בג",
+    "transcribedPreview": "שהוא נוטה שמים ויסד ארץ הוא מושב יקרו בשמים ממעל הוא שכינת ע"
+  },
+  {
+    "prayerId": "aleinu",
+    "sectionId": "aleinu-4",
+    "status": "PARTIAL",
+    "similarity": 85,
+    "expectedPreview": "על כן נקוה לך ה׳ אלקינו לראות מהרה בתפארת עזך להעביר גלולים ",
+    "transcribedPreview": "על כן נקווה לאחרי אלוקינו לראות מהרה בתפארת עזך להעביר גלולי"
+  },
+  {
+    "prayerId": "aleinu",
+    "sectionId": "aleinu-5",
+    "status": "PARTIAL",
+    "similarity": 83,
+    "expectedPreview": "כי לך תכרע כל ברך תשבע כל לשון לפניך ה׳ אלקינו יכרעו ויפלו ו",
+    "transcribedPreview": "כי לך תכרע כל ברך תשבע כל לשון לפניך יי אלהינו יכרעו ויפלו ו"
+  },
+  {
+    "prayerId": "netilat-yadayim",
+    "sectionId": "netilat-yadayim-1",
+    "status": "PARTIAL",
+    "similarity": 54,
+    "expectedPreview": "ברוך אתה ה׳ אלקינו מלך העולם אשר קדשנו במצותיו וצונו על נטיל",
+    "transcribedPreview": "ברוך אתה ה אלוקינו מלך העולם אשר קידשנו במצוותיו וציוונו על "
+  },
+  {
+    "prayerId": "asher-yatzar",
+    "sectionId": "asher-yatzar-1",
+    "status": "MATCH",
+    "similarity": 88,
+    "expectedPreview": "ברוך אתה ה׳ אלקינו מלך העולם אשר יצר את האדם בחכמה וברא בו נ",
+    "transcribedPreview": "ברוך אתה ה אלוקינו מלך העולם אשר יצר את האדם בחכמה וברא בו נ"
+  },
+  {
+    "prayerId": "asher-yatzar",
+    "sectionId": "asher-yatzar-2",
+    "status": "MATCH",
+    "similarity": 95,
+    "expectedPreview": "גלוי וידוע לפני כסא כבודך שאם יפתח אחד מהם או יסתם אחד מהם א",
+    "transcribedPreview": "גלוי וידוע לפני כסא כבודך שאם יפתח אחד מהם או יסתם אחד מהם א"
+  },
+  {
+    "prayerId": "asher-yatzar",
+    "sectionId": "asher-yatzar-3",
+    "status": "MATCH",
+    "similarity": 88,
+    "expectedPreview": "ברוך אתה ה׳ רופא כל בשר ומפליא לעשות",
+    "transcribedPreview": "ברוך אתה יי רופא כל בשר ומפליא לעשות"
+  },
+  {
+    "prayerId": "elokai-neshama",
+    "sectionId": "elokai-neshama-1",
+    "status": "MATCH",
+    "similarity": 92,
+    "expectedPreview": "אלקי נשמה שנתת בי טהורה היא אתה בראתה אתה יצרתה אתה נפחתה בי",
+    "transcribedPreview": "אלוקי נשמה שנתת בי טהורה היא אתה בראתה אתה יצרתה אתה נפחתה ב"
+  },
+  {
+    "prayerId": "elokai-neshama",
+    "sectionId": "elokai-neshama-2",
+    "status": "MATCH",
+    "similarity": 100,
+    "expectedPreview": "ואתה משמרה בקרבי ואתה עתיד לטלה ממני ולהחזירה בי לעתיד לבוא",
+    "transcribedPreview": "ואתה משמרה בקרבי ואתה עתיד לטלה ממני ולהחזירה בי לעתיד לבוא"
+  },
+  {
+    "prayerId": "elokai-neshama",
+    "sectionId": "elokai-neshama-3",
+    "status": "MATCH",
+    "similarity": 86,
+    "expectedPreview": "ברוך אתה ה׳ המחזיר נשמות לפגרים מתים",
+    "transcribedPreview": "ברוך אתה יי המחזיר נשמות לפגרים מתים"
+  },
+  {
+    "prayerId": "birchos-hatorah",
+    "sectionId": "birchos-hatorah-1",
+    "status": "PARTIAL",
+    "similarity": 62,
+    "expectedPreview": "ברוך אתה ה׳ אלקינו מלך העולם אשר קדשנו במצותיו וצונו לעסוק ב",
+    "transcribedPreview": "ברוך אתה ה אלוקינו מלך העולם אשר קידשנו במצוותיו וציוונו לעס"
+  },
+  {
+    "prayerId": "birchos-hatorah",
+    "sectionId": "birchos-hatorah-2",
+    "status": "MATCH",
+    "similarity": 85,
+    "expectedPreview": "ברוך אתה ה׳ אלקינו מלך העולם אשר בחר בנו מכל העמים ונתן לנו ",
+    "transcribedPreview": "ברוך אתה ה אלוקינו מלך העולם אשר בחר בנו מכל העמים ונתן לנו "
+  },
+  {
+    "prayerId": "birchos-hashachar",
+    "sectionId": "birchos-hashachar-1",
+    "status": "MATCH",
+    "similarity": 86,
+    "expectedPreview": "ברוך אתה ה׳ אלקינו מלך העולם הנותן לשכוי בינה להבחין בין יום",
+    "transcribedPreview": "ברוך אתה ה אלוקינו מלך העולם הנותן לשכוי בינה להבחין בין יום"
+  },
+  {
+    "prayerId": "birchos-hashachar",
+    "sectionId": "birchos-hashachar-2",
+    "status": "PARTIAL",
+    "similarity": 63,
+    "expectedPreview": "ברוך אתה ה׳ אלקינו מלך העולם פוקח עורים",
+    "transcribedPreview": "ברוך אתה ה אלוקינו מלך העולם פוקח עיוורים"
+  },
+  {
+    "prayerId": "birchos-hashachar",
+    "sectionId": "birchos-hashachar-3",
+    "status": "PARTIAL",
+    "similarity": 63,
+    "expectedPreview": "ברוך אתה ה׳ אלקינו מלך העולם מלביש ערמים",
+    "transcribedPreview": "ברוך אתה ה אלוקינו מלך העולם מלביש ערומים"
+  },
+  {
+    "prayerId": "birchos-hashachar",
+    "sectionId": "birchos-hashachar-4",
+    "status": "PARTIAL",
+    "similarity": 75,
+    "expectedPreview": "ברוך אתה ה׳ אלקינו מלך העולם מתיר אסורים",
+    "transcribedPreview": "ברוך אתה ה אלוקינו מלך העולם מתיר אסורים"
+  },
+  {
+    "prayerId": "birchos-hashachar",
+    "sectionId": "birchos-hashachar-5",
+    "status": "PARTIAL",
+    "similarity": 75,
+    "expectedPreview": "ברוך אתה ה׳ אלקינו מלך העולם זוקף כפופים",
+    "transcribedPreview": "ברוך אתה ה אלוקינו מלך העולם זוקף כפופים"
+  },
+  {
+    "prayerId": "birchos-hashachar",
+    "sectionId": "birchos-hashachar-6",
+    "status": "PARTIAL",
+    "similarity": 78,
+    "expectedPreview": "ברוך אתה ה׳ אלקינו מלך העולם המכין מצעדי גבר",
+    "transcribedPreview": "ברוך אתה ה אלוקינו מלך העולם המכין מצעדי גבר"
+  },
+  {
+    "prayerId": "birchos-hashachar",
+    "sectionId": "birchos-hashachar-7",
+    "status": "PARTIAL",
+    "similarity": 63,
+    "expectedPreview": "ברוך אתה ה׳ אלקינו מלך העולם שעשני ישראל",
+    "transcribedPreview": "ברוך אתה ה אלוקינו מלך העולם שעשה ישראל"
+  },
+  {
+    "prayerId": "tachanun",
+    "sectionId": "tachanun-1",
+    "status": "PARTIAL",
+    "similarity": 69,
+    "expectedPreview": "רחום וחנון חטאתי לפניך ה׳ אלקי מלא רחמים רחם עלי וקבל תחנוני",
+    "transcribedPreview": "רחום וחנון חטאתי לפניך אלוקיי מלא רחמים רחם עלי וקבל את החנו"
+  },
+  {
+    "prayerId": "tachanun",
+    "sectionId": "tachanun-2",
+    "status": "PARTIAL",
+    "similarity": 82,
+    "expectedPreview": "שומר ישראל שמור שארית ישראל ואל יאבד ישראל האומרים שמע ישראל",
+    "transcribedPreview": "שומר ישראל שמור שארית ישראל ועל יובל ישראל האומרים שמע ישראל"
+  },
+  {
+    "prayerId": "uva-ltzion",
+    "sectionId": "uva-ltzion-1",
+    "status": "PARTIAL",
+    "similarity": 75,
+    "expectedPreview": "ובא לציון גואל ולשבי פשע ביעקב נאם ה׳",
+    "transcribedPreview": "ובא לציון גואל ולשבי פשע ביעקב נאום היי"
+  },
+  {
+    "prayerId": "uva-ltzion",
+    "sectionId": "uva-ltzion-2",
+    "status": "MATCH",
+    "similarity": 89,
+    "expectedPreview": "קדוש קדוש קדוש ה׳ צבאות מלא כל הארץ כבודו",
+    "transcribedPreview": "קדוש קדוש קדוש ה צבאות מלא כל הארץ כבודו"
+  },
+  {
+    "prayerId": "ein-kelokeinu",
+    "sectionId": "ein-kelokeinu-1",
+    "status": "PARTIAL",
+    "similarity": 50,
+    "expectedPreview": "אין כאלקינו אין כאדוננו אין כמלכנו אין כמושיענו",
+    "transcribedPreview": "אין כאלוקינו אין כאדוננו אין כי מלכנו אין כמו שהיינו"
+  },
+  {
+    "prayerId": "ein-kelokeinu",
+    "sectionId": "ein-kelokeinu-2",
+    "status": "MISMATCH",
+    "similarity": 10,
+    "expectedPreview": "מי כאלקינו מי כאדוננו מי כמלכנו מי כמושיענו",
+    "transcribedPreview": "ניקינו קינומי כאדוננו מיחם על כן אם היא כמו שהיינו"
+  },
+  {
+    "prayerId": "ein-kelokeinu",
+    "sectionId": "ein-kelokeinu-3",
+    "status": "MISMATCH",
+    "similarity": 25,
+    "expectedPreview": "נודה לאלקינו נודה לאדוננו נודה למלכנו נודה למושיענו",
+    "transcribedPreview": "נודל אלוקינו נודל אדוננו נודה למלכנו נודל moschino"
+  },
+  {
+    "prayerId": "ein-kelokeinu",
+    "sectionId": "ein-kelokeinu-4",
+    "status": "MATCH",
+    "similarity": 88,
+    "expectedPreview": "ברוך אלקינו ברוך אדוננו ברוך מלכנו ברוך מושיענו",
+    "transcribedPreview": "ברוך אלוקינו ברוך אדוננו ברוך מלכנו ברוך מושיענו"
+  },
+  {
+    "prayerId": "hodu",
+    "sectionId": "hodu-1",
+    "status": "MATCH",
+    "similarity": 86,
+    "expectedPreview": "הודו לה׳ קראו בשמו הודיעו בעמים עלילותיו",
+    "transcribedPreview": "הודו לה קראו בשמו הודיעו בעמים עלילותיו"
+  },
+  {
+    "prayerId": "hodu",
+    "sectionId": "hodu-2",
+    "status": "MATCH",
+    "similarity": 100,
+    "expectedPreview": "שירו לו זמרו לו שיחו בכל נפלאותיו",
+    "transcribedPreview": "שירו לו זמרו לו שיחו בכל נפלאותיו"
+  },
+  {
+    "prayerId": "mizmor-ltodah",
+    "sectionId": "mizmor-ltodah-1",
+    "status": "PARTIAL",
+    "similarity": 69,
+    "expectedPreview": "מזמור לתודה הריעו לה׳ כל הארץ עבדו את ה׳ בשמחה באו לפניו ברנ",
+    "transcribedPreview": "מזמור לתודה הריעו לכל הארץ עבדו את ה בשמחה בואו לפניו ברננה"
+  },
+  {
+    "prayerId": "mizmor-ltodah",
+    "sectionId": "mizmor-ltodah-2",
+    "status": "MISMATCH",
+    "similarity": 42,
+    "expectedPreview": "דעו כי ה׳ הוא אלקים הוא עשנו ולו אנחנו עמו וצאן מרעיתו",
+    "transcribedPreview": "אוקיי הוא אלוקים הוא עשה לנו ולא אנחנו אמור וצאן מרעיתו"
+  },
+  {
+    "prayerId": "mizmor-ltodah",
+    "sectionId": "mizmor-ltodah-3",
+    "status": "PARTIAL",
+    "similarity": 72,
+    "expectedPreview": "באו שעריו בתודה חצרותיו בתהלה הודו לו ברכו שמו כי טוב ה׳ לעו",
+    "transcribedPreview": "בואו שעריו בתודה חצרותיו בתהילה הודו לו ברכו שמו כי טוב כי ל"
+  },
+  {
+    "prayerId": "az-yashir",
+    "sectionId": "az-yashir-1",
+    "status": "PARTIAL",
+    "similarity": 82,
+    "expectedPreview": "אז ישיר משה ובני ישראל את השירה הזאת לה׳ ויאמרו לאמר",
+    "transcribedPreview": "אז ישיר משה ובני ישראל את השירה הזאת לה ויאמרו למור"
+  },
+  {
+    "prayerId": "az-yashir",
+    "sectionId": "az-yashir-2",
+    "status": "PARTIAL",
+    "similarity": 69,
+    "expectedPreview": "אשירה לה׳ כי גאה גאה סוס ורכבו רמה בים עזי וזמרת יה ויהי לי ",
+    "transcribedPreview": "אשירה לה כי גאו גאה סוס ורוכבו רמה בים אז היא וזמרת יה ויהי "
+  },
+  {
+    "prayerId": "az-yashir",
+    "sectionId": "az-yashir-3",
+    "status": "PARTIAL",
+    "similarity": 50,
+    "expectedPreview": "ה׳ ימלך לעולם ועד",
+    "transcribedPreview": "היי ימלוך לעולם ועד"
+  },
+  {
+    "prayerId": "hamotzi",
+    "sectionId": "hamotzi-1",
+    "status": "PARTIAL",
+    "similarity": 67,
+    "expectedPreview": "ברוך אתה ה׳ אלקינו מלך העולם",
+    "transcribedPreview": "ברוך אתה ה אלוקינו מלך העולם"
+  },
+  {
+    "prayerId": "hamotzi",
+    "sectionId": "hamotzi-2",
+    "status": "MATCH",
+    "similarity": 100,
+    "expectedPreview": "המוציא לחם מן הארץ",
+    "transcribedPreview": "המוציא לחם מן הארץ"
+  },
+  {
+    "prayerId": "mezonot",
+    "sectionId": "mezonot-1",
+    "status": "PARTIAL",
+    "similarity": 67,
+    "expectedPreview": "ברוך אתה ה׳ אלקינו מלך העולם",
+    "transcribedPreview": "ברוך אתה ה אלוקינו מלך העולם"
+  },
+  {
+    "prayerId": "mezonot",
+    "sectionId": "mezonot-2",
+    "status": "MATCH",
+    "similarity": 100,
+    "expectedPreview": "בורא מיני מזונות",
+    "transcribedPreview": "בורא מיני מזונות"
+  },
+  {
+    "prayerId": "hagafen",
+    "sectionId": "hagafen-1",
+    "status": "PARTIAL",
+    "similarity": 67,
+    "expectedPreview": "ברוך אתה ה׳ אלקינו מלך העולם",
+    "transcribedPreview": "ברוך אתה ה אלוקינו מלך העולם"
+  },
+  {
+    "prayerId": "hagafen",
+    "sectionId": "hagafen-2",
+    "status": "MATCH",
+    "similarity": 100,
+    "expectedPreview": "בורא פרי הגפן",
+    "transcribedPreview": "בורא פרי הגפן"
+  },
+  {
+    "prayerId": "ha-eitz",
+    "sectionId": "ha-eitz-1",
+    "status": "PARTIAL",
+    "similarity": 67,
+    "expectedPreview": "ברוך אתה ה׳ אלקינו מלך העולם",
+    "transcribedPreview": "ברוך אתה ה אלוקינו מלך העולם"
+  },
+  {
+    "prayerId": "ha-eitz",
+    "sectionId": "ha-eitz-2",
+    "status": "MATCH",
+    "similarity": 100,
+    "expectedPreview": "בורא פרי העץ",
+    "transcribedPreview": "בורא פרי העץ"
+  },
+  {
+    "prayerId": "ha-adamah",
+    "sectionId": "ha-adamah-1",
+    "status": "PARTIAL",
+    "similarity": 67,
+    "expectedPreview": "ברוך אתה ה׳ אלקינו מלך העולם",
+    "transcribedPreview": "ברוך אתה ה אלוקינו מלך העולם"
+  },
+  {
+    "prayerId": "ha-adamah",
+    "sectionId": "ha-adamah-2",
+    "status": "MATCH",
+    "similarity": 100,
+    "expectedPreview": "בורא פרי האדמה",
+    "transcribedPreview": "בורא פרי האדמה"
+  },
+  {
+    "prayerId": "shehakol",
+    "sectionId": "shehakol-1",
+    "status": "PARTIAL",
+    "similarity": 67,
+    "expectedPreview": "ברוך אתה ה׳ אלקינו מלך העולם",
+    "transcribedPreview": "ברוך אתה ה אלוקינו מלך העולם"
+  },
+  {
+    "prayerId": "shehakol",
+    "sectionId": "shehakol-2",
+    "status": "MATCH",
+    "similarity": 100,
+    "expectedPreview": "שהכל נהיה בדברו",
+    "transcribedPreview": "שהכל נהיה בדברו"
+  }
+]
