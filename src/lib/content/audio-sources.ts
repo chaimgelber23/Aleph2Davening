@@ -8,7 +8,7 @@
  * Sources are listed per prayer so users can choose their preferred voice/style.
  */
 
-export type AudioSourceId = 'siddur-audio' | 'chabad' | 'hadar-weiss' | 'hadar-richman' | 'hadar-diamond' | 'hadar-rosenbaum' | 'google-tts';
+export type AudioSourceId = 'siddur-audio' | 'chabad' | 'young-israel' | 'hadar-weiss' | 'hadar-richman' | 'hadar-diamond' | 'hadar-rosenbaum' | 'google-tts';
 
 export interface AudioSource {
   id: AudioSourceId;
@@ -29,6 +29,12 @@ export const AUDIO_SOURCES: Record<AudioSourceId, AudioSource> = {
     label: 'Chabad.org',
     shortLabel: 'Chabad',
     description: 'Full text reading — Chabad nusach',
+  },
+  'young-israel': {
+    id: 'young-israel',
+    label: 'Young Israel',
+    shortLabel: 'Young Israel',
+    description: 'Full text reading — Young Israel nusach',
   },
   'hadar-weiss': {
     id: 'hadar-weiss',

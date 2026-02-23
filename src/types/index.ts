@@ -112,6 +112,7 @@ export interface Prayer {
   requiredLevel: number;
   estimatedReadSeconds: number;
   sections: PrayerSection[];
+  whatComesNext?: string;
 }
 
 export interface PrayerSection {

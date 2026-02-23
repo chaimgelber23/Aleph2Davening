@@ -7,7 +7,8 @@ import { QuickAnswerCard } from './QuickAnswerCard';
 import { GuideStepCard } from './GuideStepCard';
 import { GuideQuiz } from './GuideQuiz';
 import { GuideCard } from './GuideCard';
-import type { Guide } from '@/types';
+import { LevelSelector } from './LevelSelector';
+import type { Guide, GuideLevel } from '@/types';
 import { getGuideCategoryInfo, GUIDES } from '@/lib/content/guides';
 
 interface GuideReaderProps {
@@ -19,6 +20,7 @@ interface GuideReaderProps {
 export function GuideReader({ guide, onBack, onNavigate }: GuideReaderProps) {
   const [showQuiz, setShowQuiz] = useState(false);
   const [sourcesExpanded, setSourcesExpanded] = useState(false);
+  const [selectedLevel, setSelectedLevel] = useState<GuideLevel>('beginner');
   const guideProgress = useUserStore((s) => s.guideProgress);
   const markGuideRead = useUserStore((s) => s.markGuideRead);
   const toggleGuideBookmark = useUserStore((s) => s.toggleGuideBookmark);
@@ -32,6 +34,14 @@ export function GuideReader({ guide, onBack, onNavigate }: GuideReaderProps) {
   const relatedGuides = (guide.relatedGuideIds || [])
     .map((id) => GUIDES.find((g) => g.id === id))
     .filter(Boolean) as Guide[];
+
+  // Filter steps based on selected level
+  const filteredSteps = guide.steps.filter((step) => {
+    if (!step.level) return true; // Show steps without level to all
+    if (selectedLevel === 'advanced') return true; // Advanced sees everything
+    if (selectedLevel === 'intermediate') return step.level === 'beginner' || step.level === 'intermediate';
+    return step.level === 'beginner'; // Beginner only sees beginner steps
+  });
 
   if (showQuiz) {
     return (
@@ -81,7 +91,7 @@ export function GuideReader({ guide, onBack, onNavigate }: GuideReaderProps) {
               className="text-[11px] font-semibold px-3 py-1 rounded-full text-white"
               style={{ backgroundColor: category?.color || '#1B4965' }}
             >
-              {category?.icon} {category?.title}
+              {category?.title}
             </span>
             {/* Bookmark */}
             <button
@@ -123,26 +133,62 @@ export function GuideReader({ guide, onBack, onNavigate }: GuideReaderProps) {
           </div>
         </motion.div>
 
-        {/* Quick Answer */}
+        {/* Level Selector */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mt-4">
-          <QuickAnswerCard quickAnswer={guide.quickAnswer} />
+          <LevelSelector selected={selectedLevel} onSelect={setSelectedLevel} />
         </motion.div>
 
-        {/* Why It Matters */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="mt-5">
-          <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">Why It Matters</h3>
-          <p className="text-[14px] text-[#2D3142]/80 leading-relaxed">{guide.whyItMatters}</p>
+        {/* Quick Answer - shows based on level */}
+        {selectedLevel === 'beginner' && guide.beginnerSummary && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="mt-4">
+            <div className="bg-[#C6973F]/5 border-2 border-[#C6973F]/20 rounded-2xl p-4">
+              <div className="flex items-start gap-2">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C6973F" strokeWidth="2" className="shrink-0 mt-0.5">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 16v-4M12 8h.01" />
+                </svg>
+                <p className="text-[14px] text-[#2D3142] leading-relaxed font-medium">{guide.beginnerSummary}</p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+        {selectedLevel !== 'beginner' && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="mt-4">
+            <QuickAnswerCard quickAnswer={guide.quickAnswer} />
+          </motion.div>
+        )}
+
+        {/* Why It Matters - Different content for beginners */}
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mt-5">
+          <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">
+            {selectedLevel === 'beginner' ? 'Why Do We Do This?' : 'Why It Matters'}
+          </h3>
+          <p className="text-[14px] text-[#2D3142]/80 leading-relaxed">
+            {selectedLevel === 'beginner' && guide.beginnerWhy ? guide.beginnerWhy : guide.whyItMatters}
+          </p>
         </motion.div>
 
-        {/* Steps */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mt-6">
-          <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-4">Step by Step</h3>
-          <div className="space-y-4">
-            {guide.steps.map((step, i) => (
-              <GuideStepCard key={step.id} step={step} stepNumber={i + 1} />
-            ))}
-          </div>
-        </motion.div>
+        {/* How to Do It - Beginner version */}
+        {selectedLevel === 'beginner' && guide.beginnerHow && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="mt-5">
+            <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2">How to Do It</h3>
+            <div className="bg-white rounded-2xl border border-gray-100/80 p-4">
+              <p className="text-[14px] text-[#2D3142]/80 leading-relaxed">{guide.beginnerHow}</p>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Steps - Filtered by level */}
+        {(selectedLevel !== 'beginner' || !guide.beginnerHow) && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mt-6">
+            <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-4">Step by Step</h3>
+            <div className="space-y-4">
+              {filteredSteps.map((step, i) => (
+                <GuideStepCard key={step.id} step={step} stepNumber={i + 1} />
+              ))}
+            </div>
+          </motion.div>
+        )}
 
         {/* Practical Tips */}
         {guide.practicalTips.length > 0 && (
@@ -181,8 +227,8 @@ export function GuideReader({ guide, onBack, onNavigate }: GuideReaderProps) {
           </motion.div>
         )}
 
-        {/* Halachic Sources */}
-        {guide.sources.length > 0 && (
+        {/* Halachic Sources - Only for Advanced */}
+        {selectedLevel === 'advanced' && guide.sources.length > 0 && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="mt-6">
             <button
               onClick={() => setSourcesExpanded(!sourcesExpanded)}
@@ -234,7 +280,7 @@ export function GuideReader({ guide, onBack, onNavigate }: GuideReaderProps) {
                   onClick={() => onNavigate(rg.id)}
                   className="shrink-0 w-44 bg-white rounded-xl border border-gray-100/80 p-3 text-left hover:shadow-sm transition-all active:scale-[0.98]"
                 >
-                  <span className="text-lg">{rg.icon}</span>
+                  {rg.icon && <span className="text-lg">{rg.icon}</span>}
                   <p className="text-[13px] font-semibold text-[#2D3142] mt-1.5 line-clamp-1">{rg.title}</p>
                   <p className="text-[11px] text-gray-400 mt-0.5 line-clamp-2">{rg.summary}</p>
                 </button>
@@ -245,8 +291,26 @@ export function GuideReader({ guide, onBack, onNavigate }: GuideReaderProps) {
 
         {/* Action buttons */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }} className="mt-8 space-y-3">
-          {/* Take Quiz */}
-          {guide.quiz.length > 0 && (
+          {/* Encouraging message for beginners */}
+          {selectedLevel === 'beginner' && (
+            <div className="bg-[#4A7C59]/10 border border-[#4A7C59]/20 rounded-2xl p-4">
+              <div className="flex items-start gap-2.5">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4A7C59" strokeWidth="2" className="shrink-0 mt-0.5">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                  <polyline points="22 4 12 14.01 9 11.01" />
+                </svg>
+                <div>
+                  <p className="text-[13px] text-[#2D3142] font-medium">You're doing great!</p>
+                  <p className="text-[12px] text-[#2D3142]/70 mt-1 leading-relaxed">
+                    Start practicing at this level. When you feel comfortable, switch to "Ready to Practice" to learn more details.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Take Quiz - Only for intermediate/advanced */}
+          {selectedLevel !== 'beginner' && guide.quiz.length > 0 && (
             <button
               onClick={() => setShowQuiz(true)}
               className="w-full py-3.5 bg-[#8B5CF6] text-white text-[15px] font-semibold rounded-2xl hover:bg-[#7C3AED] transition-colors shadow-sm"

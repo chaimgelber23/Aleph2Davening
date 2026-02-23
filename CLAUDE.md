@@ -1,9 +1,18 @@
-# AlephStart - CLAUDE.md
+# Aleph2Davening - CLAUDE.md
 
 ## Project Overview
-AlephStart is a Hebrew reading & davening app for kiruv. It teaches absolute beginners to decode Hebrew letters and vowels (nekudot), build reading fluency, and read prayers — all through interactive drills, audio, and guided siddur practice.
+Aleph2Davening is a Hebrew reading & davening app for kiruv. It merges the best of AlephStart (Hebrew learning) and AlephDavening (audio/guides) into one app. It teaches absolute beginners to decode Hebrew letters and vowels (nekudot), build reading fluency, and read prayers — all through interactive drills, audio, and guided siddur practice.
 
-**Full specification:** See `ALEPHSTART_SPEC.md` for complete feature spec, curriculum, data model, and design system.
+### App Structure (4 tabs)
+- **Hebrew** (`/hebrew`) — Letters, vowels, 5-day bootcamp, spaced repetition practice
+- **Daven** (`/daven`) — Weekday/Shabbat services, all prayers, coaching, amud mode, prep sheet
+- **Yahrzeit** (`/yahrzeit`) — Kaddish types, kaddish in services, yahrzeit observance guide
+- **Daily Living** (`/living`) — Brachot + 30+ Jewish living guides
+
+Home page (`/`) is an overview with streak, daily goal, and quick-access cards. Settings accessible via header links (not a bottom tab).
+
+### Audio System
+7 sources: siddur-audio, chabad, hadar-weiss/richman/diamond/rosenbaum, google-tts. Per-prayer source picker via `AudioSourcePicker`. Google Cloud TTS (Hebrew Wavenet) as fallback.
 
 ## Tech Stack
 - **Framework:** Next.js 16 with App Router (TypeScript)

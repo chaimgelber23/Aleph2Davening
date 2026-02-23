@@ -7,7 +7,7 @@ export const GUIDE_CATEGORIES: GuideCategoryInfo[] = [
     id: 'morning_routine',
     title: 'Morning Routine',
     titleHebrew: 'סֵדֶר הַבֹּקֶר',
-    icon: '🌅',
+    icon: '', // Removed emoji // Removed emoji
     color: '#C6973F',
     description: 'Start your day the Jewish way',
   },
@@ -15,7 +15,7 @@ export const GUIDE_CATEGORIES: GuideCategoryInfo[] = [
     id: 'brachot_food',
     title: 'Brachot on Food',
     titleHebrew: 'בִּרְכוֹת הַנֶּהֱנִין',
-    icon: '🍎',
+    icon: '', // Removed emoji // Removed emoji
     color: '#4A7C59',
     description: 'Which bracha to say before and after eating',
   },
@@ -23,7 +23,7 @@ export const GUIDE_CATEGORIES: GuideCategoryInfo[] = [
     id: 'personal_care',
     title: 'Personal Care',
     titleHebrew: 'הַנְהָגוֹת',
-    icon: '✂️',
+    icon: '', // Removed emoji // Removed emoji
     color: '#5FA8D3',
     description: 'Halachic guidelines for grooming and hygiene',
   },
@@ -31,7 +31,7 @@ export const GUIDE_CATEGORIES: GuideCategoryInfo[] = [
     id: 'shabbat',
     title: 'Shabbat Basics',
     titleHebrew: 'שַׁבָּת',
-    icon: '🕯️',
+    icon: '', // Removed emoji // Removed emoji
     color: '#8B5CF6',
     description: 'Candle lighting, Kiddush, Havdalah, and more',
   },
@@ -39,7 +39,7 @@ export const GUIDE_CATEGORIES: GuideCategoryInfo[] = [
     id: 'daily_items',
     title: 'Daily Jewish Items',
     titleHebrew: 'מִצְווֹת יוֹמִיּוֹת',
-    icon: '🧵',
+    icon: '', // Removed emoji // Removed emoji
     color: '#1B4965',
     description: 'Kippah, tzitzit, and other daily observances',
   },
@@ -47,7 +47,7 @@ export const GUIDE_CATEGORIES: GuideCategoryInfo[] = [
     id: 'home',
     title: 'The Jewish Home',
     titleHebrew: 'הַבַּיִת הַיְּהוּדִי',
-    icon: '🏠',
+    icon: '', // Removed emoji // Removed emoji
     color: '#D4A373',
     description: 'Mezuzah, kashrut awareness, and home practices',
   },
@@ -65,70 +65,108 @@ const MORNING_GUIDES: Guide[] = [
     titleHebrew: 'נְטִילַת יָדַיִם שֶׁל שַׁחֲרִית',
     category: 'morning_routine',
     sortOrder: 1,
-    icon: '💧',
+    icon: '', // Removed emoji // Removed emoji
     summary: 'Washing your hands upon waking',
     whenRelevant: 'Immediately upon waking, before getting out of bed if possible',
+
+    // BEGINNER LEVEL - Simple, encouraging, not overwhelming
+    beginnerSummary:
+      'When you wake up in the morning, Jews wash their hands with water. This is a simple way to start your day fresh and ready for prayer.',
+    beginnerWhy:
+      'Jewish tradition teaches that sleep is like a mini-death - our soul goes up to Heaven and comes back refreshed. Washing hands in the morning is a way of saying "I\'m starting a new day, and I want to be spiritually clean and ready." It\'s based on a verse in Psalms: "I wash my hands in purity."',
+    beginnerHow:
+      'When you wake up, fill a cup with water and pour it over each hand - right, left, right, left. Dry your hands. Done! As you get more comfortable, you can learn the traditional way with 3 times on each hand.',
+
+    // STANDARD LEVEL - More detail for those ready
     whyItMatters:
       'Jewish tradition teaches that when we sleep, a spiritual impurity rests on our hands. By washing them in a specific way, we start our day fresh and pure — ready to serve Hashem with clean hands and a clear heart. It is one of the first acts of a Jew each morning.',
     quickAnswer:
       'Keep a cup and bowl by your bed. When you wake up, pour water alternating right-left three times each hand (R-L-R-L-R-L). Then dry your hands.',
     steps: [
+      // BEGINNER STEPS - Simplified, practical, not overwhelming
+      {
+        id: 'nv-beginner-1',
+        sortOrder: 1,
+        level: 'beginner',
+        instruction: 'Fill a cup with water. Pour it over your right hand, then your left hand. Do this twice total (right, left, right, left).',
+        tip: 'Any cup works - a plastic cup, a mug, whatever you have. You don\'t need any special setup.',
+      },
+      {
+        id: 'nv-beginner-2',
+        sortOrder: 2,
+        level: 'beginner',
+        instruction: 'Dry your hands. Done!',
+        tip: 'That\'s it! You\'ve done the mitzvah. As you get more comfortable, you can learn the traditional details.',
+      },
+
+      // INTERMEDIATE STEPS - More detail, traditional method
       {
         id: 'nv-1',
-        sortOrder: 1,
+        sortOrder: 4,
+        level: 'intermediate',
         instruction:
-          'Prepare a cup (negel vasser cup or any large cup) filled with water and a bowl before going to sleep. Place them near your bed.',
-        tip: 'Many people keep a dedicated two-handled washing cup by their bed. Any cup works to start.',
+          'Prepare a cup filled with water near your bed the night before. Many people use a bowl to catch the water.',
+        tip: 'Any large cup works to start. Later, you can get a special two-handled washing cup if you want.',
       },
       {
         id: 'nv-2',
-        sortOrder: 2,
-        instruction: 'Upon waking, pick up the cup with your right hand and pass it to your left hand.',
-        tip: 'Try to avoid walking more than 4 amot (about 6 feet) before washing.',
+        sortOrder: 5,
+        level: 'intermediate',
+        instruction: 'Upon waking, pick up the cup and pour water over your entire right hand, up to the wrist.',
       },
       {
         id: 'nv-3',
-        sortOrder: 3,
-        instruction: 'Pour water over your entire right hand, up to the wrist.',
+        sortOrder: 6,
+        level: 'intermediate',
+        instruction: 'Switch the cup to your right hand and pour water over your entire left hand.',
       },
       {
         id: 'nv-4',
-        sortOrder: 4,
-        instruction: 'Transfer the cup to your right hand and pour water over your entire left hand.',
+        sortOrder: 7,
+        level: 'intermediate',
+        instruction:
+          'Repeat two more times, alternating: right, left, right, left — for a total of three pours on each hand.',
+        tip: 'The traditional order is: R-L-R-L-R-L (right first each round).',
       },
       {
         id: 'nv-5',
-        sortOrder: 5,
-        instruction:
-          'Repeat two more times: right, left, right, left — for a total of three pours on each hand.',
-        tip: 'The order is: R-L-R-L-R-L (right first each time).',
-      },
-      {
-        id: 'nv-6',
-        sortOrder: 6,
+        sortOrder: 8,
+        level: 'intermediate',
         instruction: 'Dry your hands with a towel.',
+      },
+
+      // ADVANCED STEPS - Full halachic detail
+      {
+        id: 'nv-adv-1',
+        sortOrder: 9,
+        level: 'advanced',
+        instruction: 'Try to avoid walking more than 4 amot (about 6 feet) before washing.',
+        tip: 'This is an ideal to strive for, but don\'t worry if you need to walk to the sink when starting out.',
       },
       {
         id: 'nv-7',
-        sortOrder: 7,
+        sortOrder: 10,
+        level: 'advanced',
         instruction:
-          'Later, when you are ready to say brachot, wash again with a bracha: "Al Netilat Yadayim."',
+          'Later in your morning routine, after getting dressed, wash your hands again with the bracha "Al Netilat Yadayim."',
         hebrewText: 'בָּרוּךְ אַתָּה ה\' אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם אֲשֶׁר קִדְּשָׁנוּ בְּמִצְוֹתָיו וְצִוָּנוּ עַל נְטִילַת יָדָיִם',
         transliteration:
           "Baruch Atah Adonai Eloheinu Melech ha'olam asher kid'shanu b'mitzvotav v'tzivanu al netilat yadayim",
         translation: 'Blessed are You, Lord our God, King of the universe, who has sanctified us with His commandments and commanded us regarding the washing of hands.',
         audioUrl: '/audio/prayers/netilat-yadayim/netilat-yadayim-1.mp3',
-        tip: 'The bracha is said after drying your hands, not before.',
+        tip: 'The bracha is said after drying your hands, not before. This second washing is for being able to say brachot and prayers.',
       },
     ],
     practicalTips: [
-      "Any cup works — you don't need a special one to start",
-      'If you forgot to prepare water, walk to the sink and wash there',
+      "Just starting? Use your bathroom sink - that's totally fine!",
+      "Any cup works — you don't need anything special",
+      'The most important thing is to wash when you wake up. The details can come later.',
+      'If you want to do it the traditional way, keep a cup and bowl by your bed',
       'The water should cover your whole hand up to the wrist',
-      'Pour the used water into a bowl or the sink, not on the floor',
     ],
     commonMistakes: [
-      "Don't worry if you can't do it perfectly every time — the main thing is to start the practice",
+      "Don't let perfect be the enemy of good - washing at the sink is better than not washing at all",
+      "You don't need to set everything up perfectly on day one - build the habit first, refine later",
       "If you forgot and walked more than 4 amot — still wash! Better late than never",
     ],
     sources: [
@@ -174,24 +212,53 @@ const MORNING_GUIDES: Guide[] = [
     titleHebrew: 'מוֹדֶה אֲנִי',
     category: 'morning_routine',
     sortOrder: 2,
-    icon: '🌤️',
+    icon: '', // Removed emoji // Removed emoji
     summary: 'The first words you say each morning',
     whenRelevant: 'The very first moment you wake up, even before washing hands',
+
+    // BEGINNER LEVEL
+    beginnerSummary:
+      'Modeh Ani is a short prayer you say the moment you wake up, before you even get out of bed. It\'s just one sentence thanking God for returning your soul after sleep.',
+    beginnerWhy:
+      'In Jewish thought, when we sleep our soul goes up to Heaven and God returns it to us when we wake up. Saying Modeh Ani is like saying "Thank you for giving me another day." It\'s one of the most beautiful ways to start your morning - with gratitude.',
+    beginnerHow:
+      'As soon as you open your eyes in the morning, while still lying in bed, say: "Modeh ani l\'fanecha" (I thank You). That\'s it! You can say it in English at first if you don\'t know the Hebrew yet. Later, you can learn the full Hebrew version.',
+
+    // STANDARD LEVEL
     whyItMatters:
       'Before you even get out of bed, you thank God for returning your soul. It is a powerful daily reminder that each new day is a gift. Modeh Ani is so fundamental that it can be said even before washing hands, because it does not contain God\'s actual name.',
     quickAnswer:
       'As soon as you wake up, while still lying in bed, say "Modeh ani l\'fanecha..." thanking God for returning your soul.',
     steps: [
+      // BEGINNER STEPS
+      {
+        id: 'ma-beginner-1',
+        sortOrder: 1,
+        level: 'beginner',
+        instruction: 'The moment you wake up - while still in bed - say "Thank you, God, for returning my soul."',
+        tip: 'You can say it in English when you\'re first learning! The gratitude is what matters.',
+      },
+      {
+        id: 'ma-beginner-2',
+        sortOrder: 2,
+        level: 'beginner',
+        instruction: 'If you want to try the Hebrew, start with just the first two words: "Modeh ani" (I thank You).',
+        tip: 'Don\'t worry about pronouncing it perfectly. God hears your heart.',
+      },
+
+      // INTERMEDIATE STEPS
       {
         id: 'ma-1',
-        sortOrder: 1,
-        instruction: 'As soon as you become conscious upon waking, say Modeh Ani.',
-        tip: 'You can say it while still lying in bed. No need to wash hands first.',
+        sortOrder: 3,
+        level: 'intermediate',
+        instruction: 'As soon as you become conscious upon waking, say Modeh Ani while still lying in bed.',
+        tip: 'No need to wash hands first - this prayer is special because it doesn\'t contain God\'s full name.',
       },
       {
         id: 'ma-2',
-        sortOrder: 2,
-        instruction: 'Recite the following:',
+        sortOrder: 4,
+        level: 'intermediate',
+        instruction: 'Recite the full prayer:',
         hebrewText:
           'מוֹדֶה אֲנִי לְפָנֶיךָ מֶלֶךְ חַי וְקַיָּם שֶׁהֶחֱזַרְתָּ בִּי נִשְׁמָתִי בְחֶמְלָה רַבָּה אֱמוּנָתֶךָ',
         transliteration:
@@ -200,23 +267,28 @@ const MORNING_GUIDES: Guide[] = [
           'I gratefully thank You, living and enduring King, for You have returned my soul within me with compassion — great is Your faithfulness.',
         audioUrl: '/audio/prayers/modeh-ani/modeh-ani-1.mp3',
       },
+
+      // ADVANCED STEPS
       {
         id: 'ma-3',
-        sortOrder: 3,
+        sortOrder: 5,
+        level: 'advanced',
         instruction:
           'Women say "Modah ani" (מוֹדָה אֲנִי) instead of "Modeh ani" — the feminine form.',
-        tip: 'The meaning is identical; only the grammar changes.',
+        tip: 'The meaning is identical; only the grammar changes for the feminine.',
       },
     ],
     practicalTips: [
-      'Keep the text by your bed until you memorize it',
-      'It takes about 5 seconds to say — make it the very first thing',
-      "You don't need to wash hands or be dressed to say it",
+      'Start by saying it in English until you feel ready to learn the Hebrew',
+      'Keep a card with the prayer by your bed, or use your phone',
+      'It takes about 5 seconds - perfect way to start your day with gratitude',
+      "You don't need to wash hands, get dressed, or even sit up to say it",
       'Some people say it with their eyes still closed',
     ],
     commonMistakes: [
-      "Don't wait until you're fully awake — say it the moment you gain consciousness",
-      "There is no bracha before or after — it's just the one sentence",
+      "Don't worry about perfect pronunciation when you're learning - sincerity matters more",
+      "There is no bracha (blessing formula) before or after — it's just the simple statement of thanks",
+      "It's okay to read it from your phone or a card - memorization will come naturally over time",
     ],
     sources: [
       'Shulchan Aruch, Orach Chaim 1:1 (Rema)',
@@ -275,9 +347,19 @@ const MORNING_GUIDES: Guide[] = [
     titleHebrew: 'בִּרְכוֹת הַשַּׁחַר',
     category: 'morning_routine',
     sortOrder: 3,
-    icon: '📜',
+    icon: '', // Removed emoji // Removed emoji
     summary: 'The series of blessings that start your morning',
     whenRelevant: 'After washing hands and getting dressed, before or during Shacharit',
+
+    // BEGINNER LEVEL
+    beginnerSummary:
+      'Morning brachot (blessings) are a series of short thank-yous to God for everyday things like being able to see, get dressed, and walk. They help you start your day with gratitude.',
+    beginnerWhy:
+      'Imagine waking up and thanking God for your eyes working, for having clothes to wear, for being able to stand up. These blessings train us to notice and appreciate the "ordinary" miracles we experience every single morning. They turn getting ready into a spiritual practice.',
+    beginnerHow:
+      'Start with just one or two. For example, when you put on your clothes in the morning, say (in English): "Thank you God for giving me clothing." When you stand up, say: "Thank you God for helping me stand tall." You can add more as you learn them.',
+
+    // STANDARD LEVEL
     whyItMatters:
       'The morning blessings thank God for the basic gifts we take for granted: sight, clothing, the ability to stand, freedom. Saying them each morning cultivates gratitude and mindfulness about the blessings in your life.',
     quickAnswer:
@@ -365,9 +447,19 @@ const BRACHOT_FOOD_GUIDES: Guide[] = [
     titleHebrew: 'סֵדֶר הַבְּרָכוֹת',
     category: 'brachot_food',
     sortOrder: 1,
-    icon: '🗂️',
+    icon: '', // Removed emoji
     summary: 'Which bracha for which food — a complete guide',
     whenRelevant: 'Before eating or drinking anything',
+
+    // BEGINNER LEVEL
+    beginnerSummary:
+      'Before eating, Jews say a quick thank-you prayer (bracha) to God. Different foods have different brachot - but don\'t worry, there\'s a simple "catch-all" prayer that works for almost everything when you\'re learning.',
+    beginnerWhy:
+      'Saying a bracha before you eat helps you pause and be grateful. Instead of mindlessly grabbing a snack, you take a moment to recognize that God created this food. It turns eating into something meaningful.',
+    beginnerHow:
+      'Start with one simple bracha: Shehakol. Before eating anything (except bread), say "Baruch Atah Adonai, shehakol nihyeh bidvaro" (Blessed are You, God, everything came to be by Your word). You can say it in English too: "Thank you God for this food." As you learn, you can add the specific brachot for different foods.',
+
+    // STANDARD LEVEL
     whyItMatters:
       'In Judaism, we don\'t just eat — we acknowledge that everything comes from God. Each type of food has its own specific bracha, creating a moment of mindfulness before every bite. The Talmud says that eating without a bracha is like stealing from God.',
     quickAnswer:
@@ -491,9 +583,19 @@ const BRACHOT_FOOD_GUIDES: Guide[] = [
     titleHebrew: 'נְטִילַת יָדַיִם לְסְעוּדָה',
     category: 'brachot_food',
     sortOrder: 2,
-    icon: '🍞',
+    icon: '', // Removed emoji
     summary: 'The ritual hand-washing before eating bread',
     whenRelevant: 'Before eating any bread (challah, pita, sandwich, etc.)',
+
+    // BEGINNER LEVEL
+    beginnerSummary:
+      'Before eating bread, Jews wash their hands in a special way and say a blessing. This makes the meal more than just eating - it becomes a meaningful moment.',
+    beginnerWhy:
+      'In the Temple, the priests would ritually wash before eating holy bread. When we wash before eating bread, we\'re bringing that holiness into our own homes. Your kitchen table becomes like an altar, your meal becomes like a Temple offering.',
+    beginnerHow:
+      'Before eating bread, wash your hands at the sink with a cup. Pour water over each hand twice (right, left, right, left). Then say the blessing - you can start in English: "Thank you God for the mitzvah of washing hands." Dry your hands, say the blessing over bread (Hamotzi), and eat. Try not to talk between washing and eating.',
+
+    // STANDARD LEVEL
     whyItMatters:
       'Washing before bread elevates a meal from mere eating to a sacred act. The Kohanim (priests) would wash before eating consecrated food in the Temple. We continue this practice to bring holiness to our tables, making every meal a small echo of the Temple service.',
     quickAnswer:
@@ -589,9 +691,17 @@ const BRACHOT_FOOD_GUIDES: Guide[] = [
     titleHebrew: 'בְּרָכָה אַחֲרוֹנָה',
     category: 'brachot_food',
     sortOrder: 3,
-    icon: '✅',
+    icon: '', // Removed emoji
     summary: 'Which bracha to say after eating',
     whenRelevant: 'After eating or drinking a significant amount',
+
+    beginnerSummary:
+      'Just like we say thank you before eating, we also say thank you after eating. It\'s a way to not take food for granted.',
+    beginnerWhy:
+      'It\'s easy to eat and forget where the food came from. Saying a bracha after eating helps us remember to be grateful - not just before we enjoy something, but after too. It completes the circle of thanks.',
+    beginnerHow:
+      'After you finish eating, say a quick thank you to God. You can start in English: "Thank you God for the food I just ate." When you\'re ready, learn the Hebrew blessings - there\'s a short one (Borei Nefashot) for most foods, and a longer one (Birkat Hamazon) after bread meals.',
+
     whyItMatters:
       'Just as we thank God before eating, we also thank Him after. The Torah explicitly commands Birkat Hamazon (grace after meals with bread). After-brachot close the circle of gratitude — we don\'t just take and move on.',
     quickAnswer:
@@ -664,9 +774,17 @@ const BRACHOT_FOOD_GUIDES: Guide[] = [
     titleHebrew: 'אֲשֶׁר יָצַר',
     category: 'brachot_food',
     sortOrder: 4,
-    icon: '🙏',
+    icon: '', // Removed emoji
     summary: 'The bracha after using the bathroom',
     whenRelevant: 'After using the restroom (each time)',
+
+    beginnerSummary:
+      'After using the bathroom, Jews say a short prayer thanking God that our body works properly. It\'s a reminder that health is a gift.',
+    beginnerWhy:
+      'Think about it - if your body didn\'t work right, you couldn\'t live. This prayer thanks God for the amazing design of the human body. Every time you use the bathroom, you\'re reminded that nothing is taken for granted.',
+    beginnerHow:
+      'After using the bathroom and washing your hands, say: "Thank you God for creating my body to work properly." When ready, learn the Hebrew prayer Asher Yatzar, which beautifully explains how our body is a miracle.',
+
     whyItMatters:
       'This seemingly simple bracha is actually one of the most profound in Judaism. It thanks God for the miraculous design of the human body — that all the openings and cavities function properly. When you consider that a single blockage could be life-threatening, it becomes a powerful statement of gratitude for health.',
     quickAnswer:
@@ -736,8 +854,14 @@ const PERSONAL_CARE_GUIDES: Guide[] = [
     titleHebrew: 'שֵׂעָר וְצִפָּרְנַיִם',
     category: 'personal_care',
     sortOrder: 1,
-    icon: '✂️',
+    icon: '', // Removed emoji
     summary: 'Halachic guidelines for grooming',
+    beginnerSummary:
+      "Even simple things like cutting nails have Jewish customs. It's about bringing mindfulness to everyday actions.",
+    beginnerWhy:
+      "Judaism teaches that everything we do can have meaning - even grooming. These customs remind us that we're not just bodies, but souls. Taking care of ourselves can be a spiritual act.",
+    beginnerHow:
+      'Start simple: many Jews cut their nails on Friday in honor of Shabbat. That\'s it! As you grow, you can learn more details like the traditional order. Don\'t stress about getting everything perfect at first.',
     whenRelevant: 'When cutting hair or trimming nails',
     whyItMatters:
       'Even simple acts like cutting nails have spiritual significance in Judaism. These customs connect us to a chain of tradition and remind us that every aspect of our lives — even grooming — can be done with intention and holiness.',
@@ -836,8 +960,14 @@ const SHABBAT_GUIDES: Guide[] = [
     titleHebrew: 'הַדְלָקַת נֵרוֹת',
     category: 'shabbat',
     sortOrder: 1,
-    icon: '🕯️',
+    icon: '', // Removed emoji
     summary: 'Welcoming Shabbat with candle lighting',
+    beginnerSummary:
+      'On Friday evening, Jews light candles to welcome Shabbat. It brings light, peace, and holiness into your home.',
+    beginnerWhy:
+      'Lighting candles marks the transition from regular time to Shabbat - holy time. The moment you light them, Shabbat begins for you. It\'s one of the most beautiful Jewish rituals, traditionally done by women.',
+    beginnerHow:
+      'About 18 minutes before sunset on Friday, light at least 2 candles. After lighting, cover your eyes, say the blessing (you can start in English: "Thank you God for the mitzvah of Shabbat candles"), then uncover your eyes. Welcome Shabbat!',
     whenRelevant: '18 minutes before sunset on Friday evening',
     whyItMatters:
       'Lighting Shabbat candles brings light, peace, and holiness into your home. It is one of the most beautiful and meaningful mitzvot, traditionally performed by women. The moment the candles are lit, Shabbat enters your home — transforming ordinary time into sacred time.',
@@ -915,8 +1045,14 @@ const SHABBAT_GUIDES: Guide[] = [
     titleHebrew: 'קִדּוּשׁ',
     category: 'shabbat',
     sortOrder: 2,
-    icon: '🍷',
+    icon: '', // Removed emoji
     summary: 'Sanctifying Shabbat over wine',
+    beginnerSummary:
+      'Kiddush is a blessing said over wine or grape juice on Friday night and Shabbat day. It sanctifies Shabbat - declares it holy and special.',
+    beginnerWhy:
+      'The Torah says to "remember the Sabbath day to keep it holy." Kiddush is how we do that - we literally say out loud that Shabbat is different, sacred, set apart from the regular week.',
+    beginnerHow:
+      'Fill a cup with wine or grape juice. Say the blessing (Kiddush text is in any siddur). You can read it in English at first. Drink some, share with family. That\'s it! The blessing transforms regular time into holy time.',
     whenRelevant: 'Friday night and Shabbat day, before the meal',
     whyItMatters:
       'Kiddush ("sanctification") fulfills the Torah commandment to "remember the Sabbath day to keep it holy" (Exodus 20:8). By reciting Kiddush over wine, we verbally declare that Shabbat is set apart — holy and different from the rest of the week.',
@@ -993,8 +1129,14 @@ const SHABBAT_GUIDES: Guide[] = [
     titleHebrew: 'הַבְדָּלָה',
     category: 'shabbat',
     sortOrder: 3,
-    icon: '🌙',
+    icon: '', // Removed emoji
     summary: 'Saying goodbye to Shabbat',
+    beginnerSummary:
+      'Havdalah is a beautiful ceremony at the end of Shabbat (Saturday night). It uses wine, spices, and a special candle to say goodbye to Shabbat.',
+    beginnerWhy:
+      'Shabbat is so special that we don\'t just let it end - we give it a proper sendoff. Havdalah means \'separation\' - it marks the line between holy Shabbat and regular weekday time.',
+    beginnerHow:
+      'After Shabbat ends (when you can see 3 stars), gather wine, spices, and a candle. Say blessings over each (you can read in English), smell the spices, look at the candlelight. It\'s a multi-sensory goodbye to Shabbat.',
     whenRelevant: 'Saturday night after three stars appear (about 45-72 minutes after sunset)',
     whyItMatters:
       'Havdalah ("separation") marks the transition from the holy Shabbat back to the weekday. It involves all the senses: seeing the flame, smelling the spices, tasting the wine, and hearing the brachot. It is a beautiful, multi-sensory way to hold onto the sweetness of Shabbat for one last moment.',
@@ -1094,8 +1236,14 @@ const DAILY_ITEMS_GUIDES: Guide[] = [
     titleHebrew: 'כִּפָּה',
     category: 'daily_items',
     sortOrder: 1,
-    icon: '🧢',
+    icon: '', // Removed emoji
     summary: 'Covering your head as a sign of reverence',
+    beginnerSummary:
+      'A kippah (also called yarmulke) is a head covering that reminds us God is above us. Jewish men wear it during prayer, eating, and many wear it all day.',
+    beginnerWhy:
+      'Covering your head cultivates humility and awareness of God. It\'s a physical reminder that there\'s something greater than us. It\'s also a visible sign of Jewish identity.',
+    beginnerHow:
+      'Get a kippah (any style works - knitted, velvet, whatever feels right). Wear it when you pray or eat. Many people start with just those times and gradually wear it more. There\'s no wrong way to begin.',
     whenRelevant: 'Jewish men: all day (or at minimum during prayer and eating). In a synagogue: everyone.',
     whyItMatters:
       'Wearing a kippah (also called a yarmulke) is a constant reminder that God is above us. It cultivates humility and Jewish identity. While not a biblical commandment, it has become one of the most recognized signs of Jewish observance.',
@@ -1153,8 +1301,14 @@ const DAILY_ITEMS_GUIDES: Guide[] = [
     titleHebrew: 'צִיצִית',
     category: 'daily_items',
     sortOrder: 2,
-    icon: '🧵',
+    icon: '', // Removed emoji
     summary: 'The fringed garment worn daily',
+    beginnerSummary:
+      'Tzitzit are fringes on a special garment worn under your shirt. The Torah commands it as a reminder of God\'s commandments.',
+    beginnerWhy:
+      'The Torah says to look at the tzitzit and remember all of God\'s commandments. It\'s a wearable reminder to live with purpose and intention. Every time you see or feel them, you remember your connection to Judaism.',
+    beginnerHow:
+      'Get a tallit katan (the undershirt with fringes). Say a blessing when putting it on in the morning (you can say in English: "Thank you God for the mitzvah of tzitzit"). Wear it during the day. Start there.',
     whenRelevant: 'During the daytime (after sunrise), every day except Shabbat night',
     whyItMatters:
       'The Torah commands us to wear tzitzit (fringes) on four-cornered garments as a reminder of all God\'s commandments. Wearing a tallit katan (small tzitzit garment) under your shirt keeps you connected to this mitzvah all day — a wearable reminder to live with intention.',
@@ -1231,8 +1385,14 @@ const HOME_GUIDES: Guide[] = [
     titleHebrew: 'מְזוּזָה',
     category: 'home',
     sortOrder: 1,
-    icon: '🚪',
+    icon: '', // Removed emoji
     summary: 'The scroll on your doorpost',
+    beginnerSummary:
+      'A mezuzah is a small scroll with verses from the Torah, placed on doorposts of your home. It makes your home a Jewish space.',
+    beginnerWhy:
+      'The Torah commands us to write God\'s words on our doorposts. A mezuzah transforms your home - every time you pass through a doorway, you remember God\'s presence. Your house becomes a sanctuary.',
+    beginnerHow:
+      'Buy a kosher mezuzah scroll (from a Jewish bookstore or online). Put it on the right side of your main entrance doorway. Say the blessing (you can say in English: "Thank you God for the mitzvah of mezuzah"). Touch it when you pass by.',
     whenRelevant: 'When moving into a new home or room',
     whyItMatters:
       'The mezuzah contains a hand-written parchment with the Shema — the declaration of God\'s unity. Placing it on your doorposts transforms your home into a sacred space. Every time you pass through a doorway and touch the mezuzah, you reconnect with God\'s presence in your daily life.',
@@ -1309,8 +1469,14 @@ const HOME_GUIDES: Guide[] = [
     titleHebrew: 'כַּשְׁרוּת',
     category: 'home',
     sortOrder: 2,
-    icon: '🍽️',
+    icon: '', // Removed emoji
     summary: 'The basics of keeping kosher',
+    beginnerSummary:
+      'Keeping kosher means following Jewish dietary laws - what we eat and how we eat it. It sanctifies the act of eating.',
+    beginnerWhy:
+      'Food is necessary for life, but kashrut makes eating a spiritual act. By being mindful of what we eat, we connect every meal to our Jewish identity and values.',
+    beginnerHow:
+      'Start simple: Don\'t mix meat and dairy in the same meal. Look for kosher symbols (like OU) on packaged foods. Every step toward kosher is meaningful - you don\'t have to do everything at once.',
     whenRelevant: 'When shopping, cooking, and eating',
     whyItMatters:
       'Kashrut (keeping kosher) is one of the most distinctive Jewish practices. It transforms every meal into an act of spiritual discipline and identity. By being mindful of what we eat, we sanctify the physical act of eating and connect to thousands of years of Jewish tradition.',

@@ -25,13 +25,15 @@ export function GuideCard({ guide, progress, onClick, index = 0 }: GuideCardProp
       onClick={onClick}
       className="w-full text-left bg-white rounded-2xl shadow-sm border border-gray-100/80 p-4 hover:shadow-md transition-all active:scale-[0.99] flex items-center gap-3.5"
     >
-      {/* Icon */}
-      <div
-        className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 text-lg"
-        style={{ backgroundColor: `${category?.color || '#1B4965'}12` }}
-      >
-        {guide.icon}
-      </div>
+      {/* Icon - Only show if icon exists */}
+      {guide.icon && (
+        <div
+          className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 text-lg"
+          style={{ backgroundColor: `${category?.color || '#1B4965'}12` }}
+        >
+          {guide.icon}
+        </div>
+      )}
 
       {/* Content */}
       <div className="flex-1 min-w-0">

@@ -257,13 +257,13 @@ export default function ServiceRehearsalScript({ prayers }: ServiceRehearsalScri
           hebrewText: 'קָדוֹשׁ קָדוֹשׁ קָדוֹשׁ ה\' צְבָאוֹת',
           transliteration: 'Kadosh, Kadosh, Kadosh, Adonai Tzeva\'ot',
         },
-        variations.hasYaalehVeyavo
-          ? {
-              type: 'note',
+        ...(variations.hasYaalehVeyavo
+          ? [{
+              type: 'note' as const,
               content: '⚠️ REMEMBER: Add Ya\'aleh V\'yavo in Modim (second time today)!',
               critical: true,
-            }
-          : null,
+            }]
+          : []),
         {
           type: 'note',
           content: 'During Modim, the congregation says their own quiet Modim. Keep going.',

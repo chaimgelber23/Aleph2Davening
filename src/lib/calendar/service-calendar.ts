@@ -49,7 +49,7 @@ export function getTodaysServiceVariations(date: Date = new Date()): ServiceVari
   }
 
   // Check for holidays that skip Tachnun
-  const holidays = HebrewCalendar.getHolidaysOnDate(hdate, flags.IL_ONLY) || [];
+  const holidays = HebrewCalendar.getHolidaysOnDate(hdate, false) || [];
 
   for (const holiday of holidays) {
     const holidayName = holiday.getDesc();
