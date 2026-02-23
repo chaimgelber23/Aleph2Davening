@@ -134,10 +134,10 @@ export default function TodaysServicePath() {
 
   // Role icons
   const roleIcons: Record<typeof servicePath[0]['yourRole'], string> = {
-    lead: '🎙️',
-    silent: '🤫',
-    together: '👥',
-    respond: '🙋',
+    lead: '',
+    silent: '',
+    together: '',
+    respond: '',
   };
 
   const roleLabels: Record<typeof servicePath[0]['yourRole'], string> = {
