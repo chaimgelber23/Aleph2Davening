@@ -490,6 +490,8 @@ export type GuideCategory =
   | 'daily_items'
   | 'home';
 
+export type GuideLevel = 'beginner' | 'intermediate' | 'advanced';
+
 export interface GuideStep {
   id: string;
   sortOrder: number;
@@ -499,6 +501,7 @@ export interface GuideStep {
   translation?: string;
   audioUrl?: string;
   tip?: string;
+  level?: GuideLevel; // Which experience level this step is for
 }
 
 export interface GuideQuizQuestion {
@@ -521,6 +524,13 @@ export interface Guide {
   summary: string;
   whenRelevant: string;
   whyItMatters: string;
+
+  // Beginner-friendly content (for absolute beginners) - optional until all guides updated
+  beginnerSummary?: string; // Simple, encouraging explanation
+  beginnerWhy?: string; // Why do we do this? (meaning)
+  beginnerHow?: string; // How to do it - simplified to essentials only
+
+  // Standard content
   quickAnswer: string;
   steps: GuideStep[];
   practicalTips: string[];
