@@ -121,7 +121,7 @@ export default function AmudPreparation({ defaultLevel = 'quick' }: AmudPreparat
         <div className="max-w-6xl mx-auto px-6 pb-6">
           <div className="bg-[#4A7C59] rounded-2xl p-6 text-white text-center">
             <h3 className="text-2xl font-bold mb-3">
-              You Are Fully Prepared! 🎉
+              You Are Fully Prepared! 
             </h3>
             <p className="text-lg mb-4">
               You&apos;ve reviewed the roles, the path, the scope, and the complete script.

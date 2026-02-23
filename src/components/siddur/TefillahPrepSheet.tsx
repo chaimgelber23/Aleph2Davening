@@ -3,10 +3,10 @@
 import type { DaveningService, ServiceSegment, ServiceItem, AmudRole, PhysicalAction } from '@/types';
 
 const ROLE_ICONS: Record<AmudRole, string> = {
-  shaliach_tzibbur: '🎤',
-  congregation: '👥',
-  both: '🤝',
-  silent_individual: '🤫',
+  shaliach_tzibbur: '',
+  congregation: '',
+  both: '',
+  silent_individual: '',
 };
 
 const ROLE_LABELS: Record<AmudRole, { label: string; color: string; bg: string }> = {
@@ -157,7 +157,7 @@ export function TefillahPrepSheet({
         {congregationResponses.length > 0 && (
           <div className="prep-segment">
             <h2 className="text-sm font-bold text-foreground mb-3 flex items-center gap-2">
-              <span className="w-6 h-6 rounded-full bg-success/10 flex items-center justify-center text-xs">👥</span>
+              <span className="w-6 h-6 rounded-full bg-success/10 flex items-center justify-center text-xs"></span>
               Congregation Responses — Quick Reference
             </h2>
             <div className="space-y-2">

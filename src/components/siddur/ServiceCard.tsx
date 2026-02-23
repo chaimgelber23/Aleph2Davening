@@ -5,11 +5,11 @@ import { useUserStore } from '@/stores/userStore';
 import type { DaveningService } from '@/types';
 
 const TIME_ICONS: Record<string, string> = {
-  shacharit: '🌅',
-  mincha: '☀️',
-  maariv: '🌙',
-  musaf: '📜',
-  kabbalat_shabbat: '🕯️',
+  shacharit: '',
+  mincha: '',
+  maariv: '',
+  musaf: '',
+  kabbalat_shabbat: '',
 };
 
 export function ServiceCard({
@@ -45,7 +45,7 @@ export function ServiceCard({
       <div className="flex items-start gap-4">
         {/* Icon */}
         <div className="w-12 h-12 rounded-xl bg-primary/8 flex items-center justify-center text-xl shrink-0">
-          {TIME_ICONS[service.timeOfDay] || '📖'}
+          {TIME_ICONS[service.timeOfDay] || ''}
         </div>
 
         <div className="flex-1 min-w-0">

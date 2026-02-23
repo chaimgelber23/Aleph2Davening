@@ -126,7 +126,7 @@ export function AmudMode({
               ← Exit Amud
             </button>
             <div className="flex items-center gap-2">
-              <span className="text-lg">🎤</span>
+              <span className="text-lg"></span>
               <span className="text-sm font-semibold">Amud Mode</span>
             </div>
             <button
@@ -342,7 +342,7 @@ export function AmudMode({
                             : 'bg-primary/10 text-primary hover:bg-primary/20'
                         }`}
                       >
-                        {isLoading ? 'Loading...' : isPlaying ? '⏹ Stop' : '▶ Listen'}
+                        {isLoading ? 'Loading...' : isPlaying ? ' Stop' : ' Listen'}
                       </button>
                     </div>
                   )}
@@ -365,7 +365,7 @@ export function AmudMode({
                       )}
                       {currentItem.amud.waitForCongregation && (
                         <p className="text-xs text-success mt-2 text-center font-medium">
-                          ⏸ Wait for congregation to finish
+                           Wait for congregation to finish
                         </p>
                       )}
                     </div>

@@ -18,25 +18,25 @@ const roleExplanations: Record<AmudRole, { label: string; color: string; icon: s
   shaliach_tzibbur: {
     label: 'Prayer Leader',
     color: 'bg-[#1B4965] text-white',
-    icon: '🎙️',
+    icon: '',
     explanation: 'The Shaliach Tzibbur (prayer leader) says this aloud for the congregation',
   },
   congregation: {
     label: 'Congregation',
     color: 'bg-[#5FA8D3] text-white',
-    icon: '👥',
+    icon: '',
     explanation: 'Everyone in the congregation says this together',
   },
   both: {
     label: 'Everyone Together',
     color: 'bg-[#8B5CF6] text-white',
-    icon: '🎵',
+    icon: '',
     explanation: 'The prayer leader and congregation say this together',
   },
   silent_individual: {
     label: 'Silent (Individual)',
     color: 'bg-gray-500 text-white',
-    icon: '🤫',
+    icon: '',
     explanation: 'Each person says this quietly to themselves',
   },
 };
@@ -88,7 +88,7 @@ export default function AmudCue({
           <div className="flex flex-wrap gap-2 mb-2">
             {physicalActions.map((action) => (
               <span key={action} className="inline-flex items-center gap-1 px-2 py-1 bg-[#FEF3E2] text-[#8B6914] rounded-md text-xs font-medium">
-                🧘 {actionLabels[action]}
+                {actionLabels[action]}
               </span>
             ))}
           </div>
@@ -112,14 +112,14 @@ export default function AmudCue({
         {/* Wait cue */}
         {waitForCongregation && (
           <p className="text-xs text-[#D4A373] font-medium mt-2">
-            ⏸️ Pause and wait for the congregation to finish responding
+            Pause and wait for the congregation to finish responding
           </p>
         )}
 
         {/* Additional notes */}
         {notes && (
           <p className="text-xs text-gray-600 italic mt-2">
-            💡 {notes}
+            {notes}
           </p>
         )}
       </div>

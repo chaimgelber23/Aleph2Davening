@@ -87,7 +87,7 @@ function HomeOverview() {
     },
     {
       href: '/living',
-      title: 'Daily Living',
+      title: 'Jewish Living',
       subtitle: 'Brachot and Jewish living guides',
       color: 'bg-[#6B4C9A]',
     },

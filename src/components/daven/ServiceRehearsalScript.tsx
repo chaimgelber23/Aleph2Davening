@@ -48,14 +48,14 @@ export default function ServiceRehearsalScript({ prayers }: ServiceRehearsalScri
         variations.hasYaalehVeyavo
           ? {
               type: 'note',
-              content: '⚠️ CRITICAL: Today requires Ya\'aleh V\'yavo in the Amidah. Place a bookmark now!',
+              content: 'CRITICAL: Today requires Ya\'aleh V\'yavo in the Amidah. Place a bookmark now!',
               critical: true,
             }
           : null,
         !variations.hasTachnun
           ? {
               type: 'note',
-              content: '✓ Reminder: NO Tachnun today. After Amidah, go straight to Ashrei.',
+              content: 'Reminder: NO Tachnun today. After Amidah, go straight to Ashrei.',
               critical: true,
             }
           : null,
@@ -113,7 +113,7 @@ export default function ServiceRehearsalScript({ prayers }: ServiceRehearsalScri
       items: [
         {
           type: 'instruction',
-          content: '🔴 STAND UP. This is your first public call to the congregation.',
+          content: ' STAND UP. This is your first public call to the congregation.',
           critical: true,
         },
         {
@@ -131,7 +131,7 @@ export default function ServiceRehearsalScript({ prayers }: ServiceRehearsalScri
         },
         {
           type: 'timing',
-          content: '⏸️ PAUSE. Wait for the congregation to respond.',
+          content: ' PAUSE. Wait for the congregation to respond.',
         },
         {
           type: 'congregation_says',
@@ -161,7 +161,7 @@ export default function ServiceRehearsalScript({ prayers }: ServiceRehearsalScri
         },
         {
           type: 'instruction',
-          content: '🔴 SHEMA: Cover your eyes with your right hand for the first verse.',
+          content: ' SHEMA: Cover your eyes with your right hand for the first verse.',
           critical: true,
         },
         {
@@ -178,7 +178,7 @@ export default function ServiceRehearsalScript({ prayers }: ServiceRehearsalScri
         },
         {
           type: 'note',
-          content: '⚠️ CRITICAL: Do NOT pause between the end of Shema and "Emet V\'Yatziv" - say it immediately.',
+          content: ' CRITICAL: Do NOT pause between the end of Shema and "Emet V\'Yatziv" - say it immediately.',
           critical: true,
         },
         {
@@ -199,7 +199,7 @@ export default function ServiceRehearsalScript({ prayers }: ServiceRehearsalScri
       items: [
         {
           type: 'instruction',
-          content: '🔴 Take 3 small steps FORWARD (to approach God).',
+          content: ' Take 3 small steps FORWARD (to approach God).',
           critical: true,
         },
         {
@@ -214,7 +214,7 @@ export default function ServiceRehearsalScript({ prayers }: ServiceRehearsalScri
         variations.hasYaalehVeyavo
           ? {
               type: 'note',
-              content: '⚠️⚠️⚠️ REMEMBER: Add Ya\'aleh V\'yavo in the Modim section!',
+              content: ' REMEMBER: Add Ya\'aleh V\'yavo in the Modim section!',
               critical: true,
             }
           : null,
@@ -224,7 +224,7 @@ export default function ServiceRehearsalScript({ prayers }: ServiceRehearsalScri
         },
         {
           type: 'timing',
-          content: '⏸️ WAIT for the congregation to finish their silent Amidah. Do NOT rush them.',
+          content: ' WAIT for the congregation to finish their silent Amidah. Do NOT rush them.',
         },
       ].filter(Boolean) as ScriptItem[],
     },
@@ -248,7 +248,7 @@ export default function ServiceRehearsalScript({ prayers }: ServiceRehearsalScri
         },
         {
           type: 'instruction',
-          content: '🔴 KEDUSHAH: When you reach "Nakdishach," the congregation will say Kedushah with you.',
+          content: ' KEDUSHAH: When you reach "Nakdishach," the congregation will say Kedushah with you.',
           critical: true,
         },
         {
@@ -260,7 +260,7 @@ export default function ServiceRehearsalScript({ prayers }: ServiceRehearsalScri
         ...(variations.hasYaalehVeyavo
           ? [{
               type: 'note' as const,
-              content: '⚠️ REMEMBER: Add Ya\'aleh V\'yavo in Modim (second time today)!',
+              content: ' REMEMBER: Add Ya\'aleh V\'yavo in Modim (second time today)!',
               critical: true,
             }]
           : []),
@@ -305,13 +305,13 @@ export default function ServiceRehearsalScript({ prayers }: ServiceRehearsalScri
     });
   } else {
     script.push({
-      title: '✓ SKIP TACHNUN',
+      title: ' SKIP TACHNUN',
       estimatedMinutes: 0,
       conditional: true,
       items: [
         {
           type: 'note',
-          content: `✓ ${variations.notes[0] || 'We do not say Tachnun today.'}`,
+          content: ` ${variations.notes[0] || 'We do not say Tachnun today.'}`,
           critical: true,
         },
         {
@@ -350,11 +350,11 @@ export default function ServiceRehearsalScript({ prayers }: ServiceRehearsalScri
         },
         {
           type: 'timing',
-          content: '⏸️ PAUSE for congregation to answer "Amen".',
+          content: ' PAUSE for congregation to answer "Amen".',
         },
         {
           type: 'note',
-          content: '🔴 CRITICAL MOMENT: When you reach "Y\'hei sh\'mei raba," the congregation says it LOUDLY. WAIT for them.',
+          content: ' CRITICAL MOMENT: When you reach "Y\'hei sh\'mei raba," the congregation says it LOUDLY. WAIT for them.',
           critical: true,
         },
         {
@@ -379,7 +379,7 @@ export default function ServiceRehearsalScript({ prayers }: ServiceRehearsalScri
         },
         {
           type: 'instruction',
-          content: '🔴 Bow during "Va\'anachnu kor\'im u\'mishtachavim."',
+          content: ' Bow during "Va\'anachnu kor\'im u\'mishtachavim."',
           critical: true,
         },
       ],
@@ -396,7 +396,7 @@ export default function ServiceRehearsalScript({ prayers }: ServiceRehearsalScri
         variations.hallelType === 'half'
           ? {
               type: 'note',
-              content: '⚠️ This is HALF Hallel. Skip "Lo lanu" and parts of "Hodu." Follow your siddur carefully.',
+              content: ' This is HALF Hallel. Skip "Lo lanu" and parts of "Hodu." Follow your siddur carefully.',
               critical: true,
             }
           : {
@@ -437,7 +437,7 @@ export default function ServiceRehearsalScript({ prayers }: ServiceRehearsalScri
         variations.hasYaalehVeyavo
           ? {
               type: 'note',
-              content: '⚠️ Include Ya\'aleh V\'yavo in Modim.',
+              content: ' Include Ya\'aleh V\'yavo in Modim.',
               critical: true,
             }
           : null,
@@ -472,7 +472,7 @@ export default function ServiceRehearsalScript({ prayers }: ServiceRehearsalScri
       },
       {
         type: 'instruction',
-        content: '🎉 Congratulations! You have successfully led the service. Well done!',
+        content: ' Congratulations! You have successfully led the service. Well done!',
       },
     ],
   });
@@ -565,7 +565,7 @@ export default function ServiceRehearsalScript({ prayers }: ServiceRehearsalScri
                       }`}
                     >
                       <p className="text-sm font-medium text-gray-800">
-                        📋 {item.content}
+                         {item.content}
                       </p>
                     </div>
                   );
@@ -576,7 +576,7 @@ export default function ServiceRehearsalScript({ prayers }: ServiceRehearsalScri
                     <div key={itemIndex} className="p-4 bg-[#E8F4F8] border-l-4 border-[#1B4965] rounded-r-lg">
                       <div className="flex items-center gap-2 mb-2">
                         <span className="px-2 py-0.5 bg-[#1B4965] text-white rounded text-xs font-bold">
-                          🎙️ YOU SAY
+                           YOU SAY
                         </span>
                         {showTimings && item.timing && (
                           <span className="text-xs text-gray-600">{item.timing}</span>
@@ -600,7 +600,7 @@ export default function ServiceRehearsalScript({ prayers }: ServiceRehearsalScri
                     <div key={itemIndex} className="p-4 bg-[#F0F9FF] border-l-4 border-[#5FA8D3] rounded-r-lg">
                       <div className="flex items-center gap-2 mb-2">
                         <span className="px-2 py-0.5 bg-[#5FA8D3] text-white rounded text-xs font-bold">
-                          👥 CONGREGATION SAYS
+                           CONGREGATION SAYS
                         </span>
                       </div>
                       <p className="text-gray-700 mb-2">{item.content}</p>
@@ -621,7 +621,7 @@ export default function ServiceRehearsalScript({ prayers }: ServiceRehearsalScri
                     <div key={itemIndex} className="p-3 bg-[#F5F3FF] border-l-4 border-[#8B5CF6] rounded-r-lg">
                       <div className="flex items-center gap-2 mb-1">
                         <span className="px-2 py-0.5 bg-[#8B5CF6] text-white rounded text-xs font-bold">
-                          🎵 TOGETHER
+                           TOGETHER
                         </span>
                         {showTimings && item.timing && (
                           <span className="text-xs text-gray-600">{item.timing}</span>
@@ -637,7 +637,7 @@ export default function ServiceRehearsalScript({ prayers }: ServiceRehearsalScri
                     <div key={itemIndex} className="p-3 bg-gray-100 border-l-4 border-gray-400 rounded-r-lg">
                       <div className="flex items-center gap-2 mb-1">
                         <span className="px-2 py-0.5 bg-gray-500 text-white rounded text-xs font-bold">
-                          🤫 SILENT
+                           SILENT
                         </span>
                         {showTimings && item.timing && (
                           <span className="text-xs text-gray-600">{item.timing}</span>
@@ -667,7 +667,7 @@ export default function ServiceRehearsalScript({ prayers }: ServiceRehearsalScri
                       }`}
                     >
                       <p className="text-sm font-medium text-gray-800">
-                        💡 {item.content}
+                         {item.content}
                       </p>
                     </div>
                   );

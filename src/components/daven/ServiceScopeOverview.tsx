@@ -61,7 +61,7 @@ export default function ServiceScopeOverview() {
       estimatedMinutes: 1,
       yourRole: 'lead',
       criticalMoments: [
-        '🔴 YOUR FIRST PUBLIC MOMENT - call out clearly',
+        ' YOUR FIRST PUBLIC MOMENT - call out clearly',
         'Bow when you say "Barechu"',
         'Wait for congregation: "Baruch Hashem ha-m\'vorach l\'olam va-ed"',
         'You repeat their response',
@@ -115,7 +115,7 @@ export default function ServiceScopeOverview() {
   // Add conditional Ya'aleh V'yavo reminder
   if (variations.hasYaalehVeyavo) {
     serviceStructure.push({
-      section: '⚠️ ADD YA\'ALEH V\'YAVO IN AMIDAH',
+      section: ' ADD YA\'ALEH V\'YAVO IN AMIDAH',
       subsections: [
         'Insert Ya\'aleh V\'yavo in the Modim section',
         'Say it in both silent Amidah AND repetition',
@@ -123,7 +123,7 @@ export default function ServiceScopeOverview() {
       estimatedMinutes: 1,
       yourRole: 'lead',
       criticalMoments: [
-        '🔴 EASY TO FORGET - Set a mental reminder',
+        ' EASY TO FORGET - Set a mental reminder',
         'If you forget in silent Amidah, you may need to repeat it',
         'Place a bookmark in your siddur as a visual cue',
       ],
@@ -185,7 +185,7 @@ export default function ServiceScopeOverview() {
     });
   } else {
     serviceStructure.push({
-      section: '7. ✓ SKIP TACHNUN TODAY',
+      section: '7.  SKIP TACHNUN TODAY',
       subsections: ['Go directly to Ashrei'],
       estimatedMinutes: 0,
       yourRole: 'lead',
@@ -244,7 +244,7 @@ export default function ServiceScopeOverview() {
       yourRole: 'lead',
       criticalMoments: [
         variations.hallelType === 'half'
-          ? '🔴 HALF HALLEL - skip certain paragraphs (check your siddur)'
+          ? ' HALF HALLEL - skip certain paragraphs (check your siddur)'
           : 'Full Hallel - say everything',
         'Congregation joins at certain verses (e.g., "Hodu l\'Hashem ki tov")',
       ],
@@ -375,7 +375,7 @@ export default function ServiceScopeOverview() {
                   </h3>
                   {section.conditionalNote && (
                     <div className="inline-block px-3 py-1 bg-[#D4A373] text-white rounded-full text-xs font-bold mb-2">
-                      ⚠️ {section.conditionalNote}
+                       {section.conditionalNote}
                     </div>
                   )}
                 </div>
@@ -385,10 +385,10 @@ export default function ServiceScopeOverview() {
                       roleColors[section.yourRole]
                     }`}
                   >
-                    {section.yourRole === 'lead' && '🎙️ YOU LEAD'}
-                    {section.yourRole === 'silent' && '🤫 SILENT'}
-                    {section.yourRole === 'together' && '👥 TOGETHER'}
-                    {section.yourRole === 'respond' && '🙋 RESPOND'}
+                    {section.yourRole === 'lead' && ' YOU LEAD'}
+                    {section.yourRole === 'silent' && ' SILENT'}
+                    {section.yourRole === 'together' && ' TOGETHER'}
+                    {section.yourRole === 'respond' && ' RESPOND'}
                   </span>
                   <span className="text-sm font-medium text-gray-600">
                     ~{section.estimatedMinutes} min
@@ -404,7 +404,7 @@ export default function ServiceScopeOverview() {
                 <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
                   {section.subsections.map((sub, i) => (
                     <li key={i} className="flex items-start gap-2 text-gray-700">
-                      <span className="text-[#1B4965] mt-1">▸</span>
+                      <span className="text-[#1B4965] mt-1"></span>
                       <span>{sub}</span>
                     </li>
                   ))}
@@ -415,7 +415,7 @@ export default function ServiceScopeOverview() {
               {section.criticalMoments.length > 0 && (
                 <div className="mb-4 p-3 bg-[#E8F4F8] rounded-lg">
                   <h4 className="text-sm font-semibold text-[#1B4965] mb-2">
-                    🎯 Critical Moments:
+                     Critical Moments:
                   </h4>
                   <ul className="space-y-1">
                     {section.criticalMoments.map((moment, i) => (
@@ -432,7 +432,7 @@ export default function ServiceScopeOverview() {
               {section.commonMistakes && section.commonMistakes.length > 0 && (
                 <div className="p-3 bg-[#FFF0F0] border-l-4 border-[#C17767] rounded-r-lg">
                   <h4 className="text-sm font-semibold text-[#C17767] mb-2">
-                    ⚠️ Common Mistakes to Avoid:
+                     Common Mistakes to Avoid:
                   </h4>
                   <ul className="space-y-1">
                     {section.commonMistakes.map((mistake, i) => (

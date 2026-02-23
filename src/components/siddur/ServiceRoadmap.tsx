@@ -7,10 +7,10 @@ import { AmudBadge } from './AmudBadge';
 import type { DaveningService, ServiceSegment, ServiceItem } from '@/types';
 
 const ROLE_ICONS: Record<string, string> = {
-  shaliach_tzibbur: '🎤',
-  congregation: '👥',
-  both: '🤝',
-  silent_individual: '🤫',
+  shaliach_tzibbur: '',
+  congregation: '',
+  both: '',
+  silent_individual: '',
 };
 
 const TYPE_LABELS: Record<string, string> = {
@@ -194,7 +194,7 @@ function SegmentCard({
                       isExpanded ? 'rotate-180' : ''
                     }`}
                   >
-                    ▾
+                    
                   </span>
                 </div>
               </div>

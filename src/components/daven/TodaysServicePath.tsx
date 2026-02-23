@@ -47,7 +47,7 @@ export default function TodaysServicePath() {
   // Add Ya'aleh V'yavo note if applicable
   if (variations.hasYaalehVeyavo) {
     servicePath.push({
-      section: '⚠️ IMPORTANT',
+      section: ' IMPORTANT',
       yourRole: 'silent',
       action: 'Add Ya\'aleh V\'yavo during the Amidah (in the Modim section)',
       tip: 'This is easy to forget! Make sure to include it in both your silent Amidah and the repetition.',
@@ -74,7 +74,7 @@ export default function TodaysServicePath() {
     });
   } else {
     servicePath.push({
-      section: '✓ Skip Tachnun',
+      section: ' Skip Tachnun',
       yourRole: 'lead',
       action: 'NO Tachnun today - go straight to Ashrei',
       tip: variations.notes[0] || 'We don\'t say Tachnun on special days',
@@ -190,7 +190,7 @@ export default function TodaysServicePath() {
                 </p>
               );
             }
-            if (note.startsWith('✓')) {
+            if (note.startsWith('')) {
               return (
                 <p key={i} className="ml-4">
                   {note}
@@ -256,7 +256,7 @@ export default function TodaysServicePath() {
               {/* Tip */}
               {step.tip && (
                 <p className="text-sm text-gray-600 italic">
-                  💡 {step.tip}
+                   {step.tip}
                 </p>
               )}
             </div>

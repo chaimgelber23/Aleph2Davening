@@ -140,8 +140,8 @@ const MORNING_GUIDES: Guide[] = [
         id: 'nv-adv-1',
         sortOrder: 9,
         level: 'advanced',
-        instruction: 'Try to avoid walking more than 4 amot (about 6 feet) before washing.',
-        tip: 'This is an ideal to strive for, but don\'t worry if you need to walk to the sink when starting out.',
+        instruction: 'Ideally, wash as close to your bed as possible — some keep a cup and bowl right at the bedside.',
+        tip: 'If you walk to the sink first, that\'s completely fine — the key is that you wash.',
       },
       {
         id: 'nv-7',
@@ -165,9 +165,9 @@ const MORNING_GUIDES: Guide[] = [
       'The water should cover your whole hand up to the wrist',
     ],
     commonMistakes: [
-      "Don't let perfect be the enemy of good - washing at the sink is better than not washing at all",
-      "You don't need to set everything up perfectly on day one - build the habit first, refine later",
-      "If you forgot and walked more than 4 amot — still wash! Better late than never",
+      'Washing at the sink is great — the important thing is that you washed!',
+      "You don't need to set everything up perfectly on day one — build the habit first, refine later",
+      'If you forgot to wash when you woke up, just wash whenever you remember — it always counts!',
     ],
     sources: [
       'Shulchan Aruch, Orach Chaim 4:1',
@@ -286,9 +286,9 @@ const MORNING_GUIDES: Guide[] = [
       'Some people say it with their eyes still closed',
     ],
     commonMistakes: [
-      "Don't worry about perfect pronunciation when you're learning - sincerity matters more",
-      "There is no bracha (blessing formula) before or after — it's just the simple statement of thanks",
-      "It's okay to read it from your phone or a card - memorization will come naturally over time",
+      'Your sincerity matters more than perfect pronunciation — just say it from the heart',
+      "It's totally fine to read it from your phone or a card — memorization will come naturally over time",
+      "You're starting a beautiful morning habit — be proud of every day you say it!",
     ],
     sources: [
       'Shulchan Aruch, Orach Chaim 1:1 (Rema)',
@@ -530,9 +530,9 @@ const BRACHOT_FOOD_GUIDES: Guide[] = [
       'If a food is a mixture, the bracha follows the majority ingredient',
     ],
     commonMistakes: [
-      "If you said the wrong bracha, don't worry — as long as you said Shehakol, you're covered",
-      "Peanut butter is Ha'adama (peanuts grow in the ground), not Ha'etz",
-      'Orange juice is Shehakol (processed), but a whole orange is Ha\'etz',
+      "Not sure which bracha to say? Say Shehakol — it covers everything. You can't go wrong!",
+      "Said the wrong bracha? No problem — as long as you said Shehakol, you're covered",
+      "The fact that you're pausing to thank God before eating is what really matters",
     ],
     sources: [
       'Shulchan Aruch, Orach Chaim 202-211',
@@ -917,8 +917,8 @@ const PERSONAL_CARE_GUIDES: Guide[] = [
       'During Sefirat HaOmer and the Three Weeks, there are additional restrictions on haircuts',
     ],
     commonMistakes: [
-      "Don't worry if you've been cutting nails in order your whole life — just start alternating from now on",
-      'These are gradual practices — adopt them at your own pace',
+      "These are gradual practices — adopt them at your own pace, one step at a time",
+      "Every small step you take in bringing mindfulness to your day is meaningful",
     ],
     sources: [
       'Shulchan Aruch, Orach Chaim 260:1 (cutting nails for Shabbat)',

@@ -69,7 +69,7 @@ export default function LivingPage() {
               Settings
             </Link>
           </div>
-          <h1 className="text-2xl font-bold mt-2">Daily Living</h1>
+          <h1 className="text-2xl font-bold mt-2">Jewish Living</h1>
           <p className="text-white/60 text-sm mt-1">
             Brachot and practical Jewish living guides
           </p>
