@@ -13,14 +13,15 @@ import { CoachingOverlay } from '@/components/siddur/CoachingOverlay';
 import { DisplayToggleBar } from '@/components/siddur/DisplayToggleBar';
 import { ServiceCard } from '@/components/siddur/ServiceCard';
 import { ServiceRoadmap } from '@/components/siddur/ServiceRoadmap';
-import { AmudMode } from '@/components/siddur/AmudMode';
 import { KaraokePlayer } from '@/components/siddur/KaraokePlayer';
 import { AmudBadge } from '@/components/siddur/AmudBadge';
 import { TefillahPrepSheet } from '@/components/siddur/TefillahPrepSheet';
+import { AudioSourcePicker } from '@/components/siddur/AudioSourcePicker';
 import type { Prayer, DaveningService, ServiceItem } from '@/types';
+import type { AudioSourceId, PrayerAudioEntry } from '@/lib/content/audio-sources';
 
 type Tab = 'services' | 'prayers';
-type View = 'list' | 'prayer_reader' | 'service_roadmap' | 'amud_mode' | 'prep_sheet';
+type View = 'list' | 'prayer_reader' | 'service_roadmap' | 'chazan_guide';
 
 export default function DavenPage() {
   // Navigation state
@@ -30,6 +31,10 @@ export default function DavenPage() {
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [showCoaching, setShowCoaching] = useState(false);
   const [dismissedBanner, setDismissedBanner] = useState(false);
+
+  // Audio source selection
+  const [selectedAudioSource, setSelectedAudioSource] = useState<AudioSourceId>('siddur-audio');
+  const [selectedAudioEntry, setSelectedAudioEntry] = useState<PrayerAudioEntry | null>(null);
 
   // Store
   const audioSpeed = useUserStore((s) => s.profile.audioSpeed);
@@ -121,12 +126,8 @@ export default function DavenPage() {
     [selectedService, updateServicePosition, prayerMap, handleSelectPrayer]
   );
 
-  const handleEnterAmudMode = useCallback(() => {
-    setView('amud_mode');
-  }, []);
-
-  const handleOpenPrepSheet = useCallback(() => {
-    setView('prep_sheet');
+  const handleOpenChazanGuide = useCallback(() => {
+    setView('chazan_guide');
   }, []);
 
   const handleBack = useCallback(() => {
@@ -142,7 +143,7 @@ export default function DavenPage() {
     } else if (view === 'service_roadmap') {
       setView('list');
       setSelectedService(null);
-    } else if (view === 'amud_mode' || view === 'prep_sheet') {
+    } else if (view === 'chazan_guide') {
       setView('service_roadmap');
     } else {
       setView('list');
@@ -181,29 +182,17 @@ export default function DavenPage() {
       <ServiceRoadmap
         service={selectedService}
         onSelectItem={handleServiceItemSelect}
-        onEnterAmudMode={handleEnterAmudMode}
-        onOpenPrepSheet={handleOpenPrepSheet}
+        onOpenChazanGuide={handleOpenChazanGuide}
         onBack={handleBack}
       />
     );
   }
 
-  // Prep Sheet
-  if (view === 'prep_sheet' && selectedService) {
+  // Chazan Guide (formerly Prep Sheet)
+  if (view === 'chazan_guide' && selectedService) {
     return (
       <TefillahPrepSheet
         service={selectedService}
-        onBack={handleBack}
-      />
-    );
-  }
-
-  // Amud Mode
-  if (view === 'amud_mode' && selectedService) {
-    return (
-      <AmudMode
-        service={selectedService}
-        prayers={prayerMap}
         onBack={handleBack}
       />
     );
@@ -283,6 +272,18 @@ export default function DavenPage() {
               ))}
             </div>
           )}
+
+          {/* Audio Source Picker */}
+          <div className="flex justify-center">
+            <AudioSourcePicker
+              prayerId={selectedPrayer.id}
+              selectedSource={selectedAudioSource}
+              onSelectSource={(sourceId, entry) => {
+                setSelectedAudioSource(sourceId);
+                setSelectedAudioEntry(entry);
+              }}
+            />
+          </div>
 
           {/* Karaoke Player */}
           {currentSection && (

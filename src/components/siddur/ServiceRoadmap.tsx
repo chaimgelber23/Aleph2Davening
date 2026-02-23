@@ -23,14 +23,12 @@ const TYPE_LABELS: Record<string, string> = {
 export function ServiceRoadmap({
   service,
   onSelectItem,
-  onEnterAmudMode,
-  onOpenPrepSheet,
+  onOpenChazanGuide,
   onBack,
 }: {
   service: DaveningService;
   onSelectItem: (item: ServiceItem, segmentIndex: number, itemIndex: number) => void;
-  onEnterAmudMode: () => void;
-  onOpenPrepSheet: () => void;
+  onOpenChazanGuide: () => void;
   onBack: () => void;
 }) {
   const [expandedSegment, setExpandedSegment] = useState<string | null>(
@@ -108,18 +106,12 @@ export function ServiceRoadmap({
           </div>
 
           {/* Action Buttons */}
-          <div className="mt-4 flex gap-2">
+          <div className="mt-4">
             <button
-              onClick={onEnterAmudMode}
-              className="flex-1 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition-colors flex items-center justify-center gap-2"
+              onClick={onOpenChazanGuide}
+              className="w-full py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition-colors flex items-center justify-center gap-2"
             >
-              🎤 Amud Mode
-            </button>
-            <button
-              onClick={onOpenPrepSheet}
-              className="flex-1 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition-colors flex items-center justify-center gap-2"
-            >
-              📋 Prep Sheet
+              Chazan Guide
             </button>
           </div>
         </div>
