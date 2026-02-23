@@ -111,12 +111,12 @@ export default function BootcampGraduationPage() {
 
           {/* Navigation */}
           <div className="space-y-3 pt-2">
-            <Link href="/siddur">
+            <Link href="/daven">
               <button className="w-full bg-primary text-white py-4 rounded-xl text-lg font-medium hover:bg-[#163d55] active:scale-[0.98] transition-all">
                 Open the Siddur
               </button>
             </Link>
-            <Link href="/learn">
+            <Link href="/hebrew/letters">
               <button className="w-full border-2 border-primary text-primary py-3 rounded-xl font-medium hover:bg-primary/5 transition-colors">
                 Continue Main Lessons
               </button>

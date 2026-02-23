@@ -185,7 +185,7 @@ export default function PracticePage() {
               Complete a lesson or bootcamp day, then come back here to practice
               with spaced repetition.
             </p>
-            <Link href="/learn">
+            <Link href="/hebrew/letters">
               <button className="bg-primary text-white px-8 py-3 rounded-xl font-medium hover:bg-[#163d55] transition-colors mt-4">
                 Start Learning →
               </button>

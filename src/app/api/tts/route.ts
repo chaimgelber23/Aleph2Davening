@@ -1,18 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { synthesizeHebrew } from '@/lib/google-tts';
 
-const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
-
-// ElevenLabs voices — used for English transliteration only
-const VOICE_IDS = {
-  male: {
-    english: process.env.ELEVENLABS_ENGLISH_MALE_VOICE_ID || 'W1EJxHy9vl73xgPIKgpn',  // Rabbi Shafier — actual rabbi, strong & inviting
-  },
-  female: {
-    english: process.env.ELEVENLABS_ENGLISH_FEMALE_VOICE_ID || 'hpp4J3VqNfWAUOO0d1Us', // Bella — professional, bright, warm educator
-  },
-} as const;
-
 type VoiceGender = 'male' | 'female';
 
 // In-memory cache to avoid re-generating same audio
@@ -29,9 +17,8 @@ function cleanCache() {
 }
 
 export async function POST(req: NextRequest) {
-  const { text, mode, speed, voiceGender } = await req.json() as {
+  const { text, speed, voiceGender } = await req.json() as {
     text: string;
-    mode: 'hebrew' | 'transliteration';
     speed?: number;
     voiceGender?: VoiceGender;
   };
@@ -43,7 +30,7 @@ export async function POST(req: NextRequest) {
   const gender: VoiceGender = voiceGender || 'male';
 
   // Build cache key
-  const cacheKey = `${gender}:${mode}:${speed || 1}:${text}`;
+  const cacheKey = `${gender}:${speed || 1}:${text}`;
   cleanCache();
 
   const cached = audioCache.get(cacheKey);
@@ -57,59 +44,12 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    let audioBuffer: ArrayBuffer;
-
-    if (mode === 'hebrew') {
-      // Google Cloud TTS for Hebrew — proper pronunciation with nekudot
-      const buffer = await synthesizeHebrew(text, {
-        speed: speed || 1.0,
-        gender,
-      });
-      // Convert Node Buffer to ArrayBuffer
-      audioBuffer = new Uint8Array(buffer).buffer as ArrayBuffer;
-    } else {
-      // ElevenLabs for English transliteration
-      if (!ELEVENLABS_API_KEY) {
-        return NextResponse.json(
-          { error: 'ElevenLabs API key not configured. Add ELEVENLABS_API_KEY to .env.local' },
-          { status: 500 }
-        );
-      }
-
-      const voiceId = VOICE_IDS[gender].english;
-      const response = await fetch(
-        `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'xi-api-key': ELEVENLABS_API_KEY,
-          },
-          body: JSON.stringify({
-            text,
-            model_id: 'eleven_v3',
-            voice_settings: {
-              stability: 0.5,
-              similarity_boost: 0.82,
-              speed: speed || 1.0,
-            },
-            apply_text_normalization: 'on',
-            language_code: 'en',
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('[TTS] ElevenLabs error:', response.status, errorText);
-        return NextResponse.json(
-          { error: 'TTS generation failed' },
-          { status: response.status }
-        );
-      }
-
-      audioBuffer = await response.arrayBuffer();
-    }
+    // Google Cloud TTS for Hebrew — proper pronunciation with nekudot
+    const buffer = await synthesizeHebrew(text, {
+      speed: speed || 1.0,
+      gender,
+    });
+    const audioBuffer = new Uint8Array(buffer).buffer as ArrayBuffer;
 
     // Cache it
     audioCache.set(cacheKey, { data: audioBuffer, timestamp: Date.now() });

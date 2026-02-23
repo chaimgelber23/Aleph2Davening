@@ -189,7 +189,7 @@ export const useBootcampStore = create<BootcampState>()(
       },
     }),
     {
-      name: 'alephstart-bootcamp',
+      name: 'aleph2davening-bootcamp',
     }
   )
 );

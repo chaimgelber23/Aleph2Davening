@@ -103,20 +103,20 @@ export default function BootcampDayCompletePage() {
           <div className="space-y-3 pt-4">
             {isLastDay ? (
               <button
-                onClick={() => router.push('/bootcamp/complete')}
+                onClick={() => router.push('/hebrew/bootcamp/complete')}
                 className="w-full bg-gold text-white py-4 rounded-xl text-lg font-medium hover:bg-[#b8892f] active:scale-[0.98] transition-all"
               >
                 See Your Graduation
               </button>
             ) : (
               <button
-                onClick={() => router.push(`/bootcamp/day/${dayNumber + 1}`)}
+                onClick={() => router.push(`/hebrew/bootcamp/day/${dayNumber + 1}`)}
                 className="w-full bg-primary text-white py-4 rounded-xl text-lg font-medium hover:bg-[#163d55] active:scale-[0.98] transition-all"
               >
                 Continue to Day {dayNumber + 1}
               </button>
             )}
-            <Link href="/bootcamp">
+            <Link href="/hebrew/bootcamp">
               <button className="w-full border-2 border-gray-200 text-gray-600 py-3 rounded-xl font-medium hover:border-primary hover:text-primary transition-colors">
                 Back to Bootcamp
               </button>

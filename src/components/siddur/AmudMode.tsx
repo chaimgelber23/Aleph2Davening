@@ -31,13 +31,12 @@ export function AmudMode({
   const displaySettings = useUserStore((s) => s.displaySettings);
   const updateServicePosition = useUserStore((s) => s.updateServicePosition);
   const audioSpeed = useUserStore((s) => s.profile.audioSpeed);
-  const audioSource = useUserStore((s) => s.profile.audioSource ?? 'tts-modern');
 
   const audioOptions = useMemo(
-    () => ({ speed: audioSpeed, audioSource }),
-    [audioSpeed, audioSource]
+    () => ({ speed: audioSpeed }),
+    [audioSpeed]
   );
-  const { play, stop, isPlaying, isLoading, isUnavailable } = useAudio(audioOptions);
+  const { play, stop, isPlaying, isLoading } = useAudio(audioOptions);
 
   const currentSegment = service.segments[segmentIndex];
   const currentItem = currentSegment?.items[itemIndex];

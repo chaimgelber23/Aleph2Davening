@@ -18,7 +18,7 @@ export function BootcampCard() {
   // Completed state — compact
   if (complete) {
     return (
-      <Link href="/bootcamp">
+      <Link href="/hebrew/bootcamp">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -39,7 +39,7 @@ export function BootcampCard() {
   // Not enrolled state
   if (!progress.enrolled) {
     return (
-      <Link href="/bootcamp">
+      <Link href="/hebrew/bootcamp">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -67,7 +67,7 @@ export function BootcampCard() {
 
   // In progress state
   return (
-    <Link href="/bootcamp">
+    <Link href="/hebrew/bootcamp">
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}

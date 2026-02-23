@@ -18,6 +18,7 @@ import type {
   CoachingPhase,
   DisplaySettings,
   ServicePosition,
+  GuideProgress,
 } from '@/types';
 
 interface UserState {
@@ -84,6 +85,12 @@ interface UserState {
   // Service position ("You are here")
   servicePosition: Record<string, ServicePosition>;
   updateServicePosition: (serviceId: string, position: Partial<ServicePosition>) => void;
+
+  // Guide progress
+  guideProgress: Record<string, GuideProgress>;
+  markGuideRead: (guideId: string) => void;
+  toggleGuideBookmark: (guideId: string) => void;
+  completeGuideQuiz: (guideId: string, score: number, total: number) => void;
 }
 
 const DEFAULT_PROFILE: UserProfile = {
@@ -101,7 +108,6 @@ const DEFAULT_PROFILE: UserProfile = {
   hebrewLevel: 'none',
   onboardingComplete: false,
   voiceGender: 'male',
-  audioSource: 'tts-modern',
   streakFreezes: 1,
 };
 
@@ -493,19 +499,57 @@ export const useUserStore = create<UserState>()(
             },
           };
         }),
+
+      // Guide progress
+      guideProgress: {},
+
+      markGuideRead: (guideId) =>
+        set((state) => ({
+          guideProgress: {
+            ...state.guideProgress,
+            [guideId]: {
+              ...(state.guideProgress[guideId] || { guideId, read: false, bookmarked: false }),
+              guideId,
+              read: true,
+              readAt: new Date().toISOString(),
+            },
+          },
+        })),
+
+      toggleGuideBookmark: (guideId) =>
+        set((state) => {
+          const existing = state.guideProgress[guideId] || { guideId, read: false, bookmarked: false };
+          return {
+            guideProgress: {
+              ...state.guideProgress,
+              [guideId]: { ...existing, guideId, bookmarked: !existing.bookmarked },
+            },
+          };
+        }),
+
+      completeGuideQuiz: (guideId, score, total) =>
+        set((state) => ({
+          guideProgress: {
+            ...state.guideProgress,
+            [guideId]: {
+              ...(state.guideProgress[guideId] || { guideId, read: false, bookmarked: false }),
+              guideId,
+              quizScore: score,
+              quizTotal: total,
+              quizCompletedAt: new Date().toISOString(),
+            },
+          },
+        })),
     }),
     {
-      name: 'alephstart-user',
+      name: 'aleph2davening-user',
       version: 2,
       migrate: (persistedState: unknown, version: number) => {
         const state = persistedState as Record<string, unknown>;
         if (version < 2) {
+          // Migration: audioSource moved from profile to per-prayer selection
           const profile = (state.profile ?? {}) as Record<string, unknown>;
-          if (!profile.audioSource) {
-            profile.audioSource = profile.pronunciation === 'american'
-              ? 'tts-american'
-              : 'tts-modern';
-          }
+          delete profile.audioSource;
         }
         return state;
       },

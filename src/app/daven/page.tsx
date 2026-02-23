@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { BottomNav } from '@/components/ui/BottomNav';
-import { getTefillahPrayers, getBrachotPrayers, getAllPrayers } from '@/lib/content/prayers';
+import { getTefillahPrayers, getAllPrayers } from '@/lib/content/prayers';
 import { getAllServices } from '@/lib/content/services';
 import { useAudio } from '@/hooks/useAudio';
 import { useKaraokeSync } from '@/hooks/useKaraokeSync';
@@ -19,10 +19,10 @@ import { AmudBadge } from '@/components/siddur/AmudBadge';
 import { TefillahPrepSheet } from '@/components/siddur/TefillahPrepSheet';
 import type { Prayer, DaveningService, ServiceItem } from '@/types';
 
-type Tab = 'services' | 'prayers' | 'brachot';
+type Tab = 'services' | 'prayers';
 type View = 'list' | 'prayer_reader' | 'service_roadmap' | 'amud_mode' | 'prep_sheet';
 
-export default function SiddurPage() {
+export default function DavenPage() {
   // Navigation state
   const [view, setView] = useState<View>('list');
   const [selectedPrayer, setSelectedPrayer] = useState<Prayer | null>(null);
@@ -32,7 +32,6 @@ export default function SiddurPage() {
   const [dismissedBanner, setDismissedBanner] = useState(false);
 
   // Store
-  const audioSource = useUserStore((s) => s.profile.audioSource ?? 'tts-modern');
   const audioSpeed = useUserStore((s) => s.profile.audioSpeed);
   const updateProfile = useUserStore((s) => s.updateProfile);
   const hasUsedCoaching = useUserStore((s) => s.hasUsedCoaching);
@@ -43,12 +42,9 @@ export default function SiddurPage() {
   // Auto-advance state
   const [autoPlayNext, setAutoPlayNext] = useState(false);
 
-  // Track full-prayer state for auto-advance logic
-  const fullPrayerRef = useRef(false);
-
-  // Audio — auto-advance to next section when audio ends (skip for full-prayer recordings)
+  // Audio — auto-advance to next section when audio ends
   const handleAudioEnded = useCallback(() => {
-    if (!selectedPrayer || fullPrayerRef.current) return;
+    if (!selectedPrayer) return;
     const total = selectedPrayer.sections.length;
     setCurrentSectionIndex((prev) => {
       if (prev < total - 1) {
@@ -60,13 +56,10 @@ export default function SiddurPage() {
   }, [selectedPrayer]);
 
   const audioOptions = useMemo(
-    () => ({ speed: audioSpeed, audioSource, onEnded: handleAudioEnded }),
-    [audioSpeed, audioSource, handleAudioEnded]
+    () => ({ speed: audioSpeed, onEnded: handleAudioEnded }),
+    [audioSpeed, handleAudioEnded]
   );
-  const { play, stop, isPlaying, isLoading, isUnavailable, isFullPrayerAudio, setSpeed } = useAudio(audioOptions);
-
-  // Keep ref in sync for the onEnded callback
-  fullPrayerRef.current = isFullPrayerAudio;
+  const { play, stop, isPlaying, isLoading } = useAudio(audioOptions);
 
   // Current section data
   const currentSection = selectedPrayer?.sections[currentSectionIndex];
@@ -173,14 +166,13 @@ export default function SiddurPage() {
 
   const handleSpeedChange = useCallback((newSpeed: number) => {
     updateProfile({ audioSpeed: newSpeed });
-    setSpeed(newSpeed);
-  }, [updateProfile, setSpeed]);
+  }, [updateProfile]);
 
   // === VIEWS ===
 
-  // List view (main siddur page)
+  // List view
   if (view === 'list') {
-    return <SiddurList onSelectPrayer={handleSelectPrayer} onSelectService={handleSelectService} />;
+    return <DavenList onSelectPrayer={handleSelectPrayer} onSelectService={handleSelectService} />;
   }
 
   // Service Roadmap
@@ -241,7 +233,6 @@ export default function SiddurPage() {
                 {currentSectionIndex + 1}/{totalSections}
               </span>
             </div>
-            {/* Display Toggle Bar */}
             <DisplayToggleBar />
           </div>
         </div>
@@ -254,7 +245,6 @@ export default function SiddurPage() {
               animate={{ opacity: 1, y: 0 }}
               className="bg-gold/10 border border-gold/20 rounded-2xl p-4 flex items-center gap-3"
             >
-              <span className="text-xl">&#x1F393;</span>
               <div className="flex-1">
                 <p className="text-sm font-medium text-foreground">First time?</p>
                 <p className="text-xs text-gray-500">
@@ -272,14 +262,14 @@ export default function SiddurPage() {
             </motion.div>
           )}
 
-          {/* Prayer Context — compact one-liner */}
+          {/* Prayer Context */}
           {currentSectionIndex === 0 && displaySettings.showInstructions && (
             <p className="text-xs text-gray-400 text-center">
               {selectedPrayer.whenSaid}
             </p>
           )}
 
-          {/* Amud Badge for current section */}
+          {/* Amud Badge */}
           {displaySettings.showAmudCues && currentSection?.amud && (
             <div className="flex items-center justify-center gap-2">
               <AmudBadge role={currentSection.amud.role} />
@@ -294,21 +284,19 @@ export default function SiddurPage() {
             </div>
           )}
 
-          {/* Karaoke Player (replaces old text + audio) */}
+          {/* Karaoke Player */}
           {currentSection && (
             <KaraokePlayer
               section={currentSection}
               prayerId={selectedPrayer.id}
-              currentWordIndex={isFullPrayerAudio ? -1 : currentWordIndex}
-              progress={isFullPrayerAudio ? 0 : progress}
+              currentWordIndex={currentWordIndex}
+              progress={progress}
               onTogglePlay={handleTogglePlay}
               onReplay={handleReplay}
               onSpeedChange={handleSpeedChange}
               onWordTap={handleReplay}
               isPlaying={isPlaying}
               isLoading={isLoading}
-              isUnavailable={isUnavailable}
-              isFullPrayerAudio={isFullPrayerAudio}
             />
           )}
 
@@ -332,7 +320,6 @@ export default function SiddurPage() {
               ← Previous
             </button>
 
-            {/* Progress indicator */}
             {showCompactProgress ? (
               <div className="flex items-center gap-2">
                 <div className="w-24 h-1.5 bg-gray-200 rounded-full overflow-hidden">
@@ -387,7 +374,6 @@ export default function SiddurPage() {
           onClick={() => { stop(); setShowCoaching(true); }}
           className="fixed bottom-24 right-6 bg-gold text-white px-5 py-3 rounded-full shadow-lg hover:bg-[#b8892f] active:scale-95 transition-all flex items-center gap-2 z-20"
         >
-          <span className="text-base">&#x1F393;</span>
           <span className="text-sm font-medium">Coach</span>
         </motion.button>
 
@@ -406,7 +392,7 @@ export default function SiddurPage() {
   }
 
   // Fallback
-  return <SiddurList onSelectPrayer={handleSelectPrayer} onSelectService={handleSelectService} />;
+  return <DavenList onSelectPrayer={handleSelectPrayer} onSelectService={handleSelectService} />;
 }
 
 // ==========================
@@ -466,10 +452,10 @@ function PrayerCard({ prayer, onSelect }: { prayer: Prayer; onSelect: (p: Prayer
 }
 
 // ==========================
-// Main Siddur List (3-tab)
+// Daven List (2-tab: Services + All Prayers)
 // ==========================
 
-function SiddurList({
+function DavenList({
   onSelectPrayer,
   onSelectService,
 }: {
@@ -481,7 +467,6 @@ function SiddurList({
 
   const services = getAllServices();
   const tefillahPrayers = getTefillahPrayers();
-  const brachotPrayers = getBrachotPrayers();
 
   // Filter prayers by search
   const filteredPrayers = useMemo(() => {
@@ -500,23 +485,27 @@ function SiddurList({
       {/* Header */}
       <div className="bg-primary text-white px-6 py-8 rounded-b-3xl">
         <div className="max-w-md mx-auto">
-          <Link href="/" className="text-primary-light text-sm hover:text-white">
-            ← Home
-          </Link>
-          <h1 className="text-2xl font-bold mt-2">Your Siddur</h1>
+          <div className="flex items-center justify-between">
+            <Link href="/" className="text-primary-light text-sm hover:text-white">
+              Home
+            </Link>
+            <Link href="/settings" className="text-primary-light text-sm hover:text-white">
+              Settings
+            </Link>
+          </div>
+          <h1 className="text-2xl font-bold mt-2">Daven</h1>
           <p className="text-primary-light text-sm mt-1">
-            Learn to daven, lead from the amud, and follow along in shul
+            Services, prayers, coaching, and amud mode
           </p>
         </div>
       </div>
 
       <div className="max-w-md mx-auto px-6 py-4 pb-28">
-        {/* 3-Tab Bar */}
+        {/* 2-Tab Bar */}
         <div className="flex gap-1 bg-gray-100 rounded-xl p-1 mb-6">
           {[
             { id: 'services' as Tab, label: 'Services' },
             { id: 'prayers' as Tab, label: 'All Prayers' },
-            { id: 'brachot' as Tab, label: 'Brachos' },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -574,7 +563,6 @@ function SiddurList({
                 </div>
               </div>
             )}
-
           </div>
         )}
 
@@ -602,7 +590,7 @@ function SiddurList({
               />
             </div>
 
-            {/* All prayers flat list (no level gating!) */}
+            {/* All prayers flat list */}
             <div className="space-y-2">
               {filteredPrayers.map((prayer, i) => (
                 <motion.div
@@ -620,25 +608,6 @@ function SiddurList({
                 </p>
               )}
             </div>
-          </div>
-        )}
-
-        {/* === BRACHOS TAB === */}
-        {activeTab === 'brachot' && (
-          <div className="space-y-3">
-            <p className="text-xs text-gray-400 mb-4 px-1">
-              Blessings over food and drink — know which bracha to say and when
-            </p>
-            {brachotPrayers.map((prayer, i) => (
-              <motion.div
-                key={prayer.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.04 }}
-              >
-                <PrayerCard prayer={prayer} onSelect={onSelectPrayer} />
-              </motion.div>
-            ))}
           </div>
         )}
       </div>

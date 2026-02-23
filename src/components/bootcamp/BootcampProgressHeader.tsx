@@ -22,7 +22,7 @@ export function BootcampProgressHeader({
     <div className="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-100 px-4 py-3">
       <div className="flex items-center justify-between mb-2">
         <Link
-          href="/bootcamp"
+          href="/hebrew/bootcamp"
           className="text-sm text-primary hover:underline flex items-center gap-1"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

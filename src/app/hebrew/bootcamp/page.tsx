@@ -21,7 +21,7 @@ export default function BootcampPage() {
     if (!progress.enrolled) {
       enrollInBootcamp();
     }
-    router.push(`/bootcamp/day/${day}`);
+    router.push(`/hebrew/bootcamp/day/${day}`);
   };
 
   const handleEnroll = () => {
@@ -109,12 +109,12 @@ export default function BootcampPage() {
               You can now read Hebrew. Continue to the main curriculum or the Siddur to keep practicing.
             </p>
             <div className="flex gap-3 mt-4">
-              <Link href="/learn" className="flex-1">
+              <Link href="/hebrew/letters" className="flex-1">
                 <button className="w-full py-3 rounded-xl border-2 border-primary text-primary font-medium hover:bg-primary/5 transition-colors">
                   Main Lessons
                 </button>
               </Link>
-              <Link href="/siddur" className="flex-1">
+              <Link href="/daven" className="flex-1">
                 <button className="w-full py-3 rounded-xl bg-primary text-white font-medium hover:bg-[#163d55] transition-colors">
                   Siddur
                 </button>

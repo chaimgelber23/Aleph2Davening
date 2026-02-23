@@ -248,7 +248,7 @@ export function Dashboard() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
             >
-              <Link href="/learn">
+              <Link href="/hebrew/letters">
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100/80 p-4 hover:shadow-md transition-all flex items-center gap-4">
                   <div className="bg-primary/8 w-11 h-11 rounded-xl flex items-center justify-center shrink-0">
                     <span className="text-primary font-bold text-lg font-[var(--font-hebrew-serif)]">א</span>
@@ -273,7 +273,7 @@ export function Dashboard() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.05 }}
             >
-              <Link href="/learn">
+              <Link href="/hebrew/letters">
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100/80 p-5 hover:shadow-md transition-all">
                   <div className="flex items-center justify-between">
                     <div>
@@ -318,7 +318,7 @@ export function Dashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.12 }}
         >
-          <Link href="/learn/vowels">
+          <Link href="/hebrew/vowels">
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100/80 p-4 hover:shadow-md transition-all flex items-center gap-4">
               <div className="bg-[#8B5CF6]/8 w-11 h-11 rounded-xl flex items-center justify-center shrink-0">
                 <span className="text-[#8B5CF6] font-bold text-lg font-[var(--font-hebrew-serif)]">ַ</span>
@@ -342,7 +342,7 @@ export function Dashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.14 }}
         >
-          <Link href="/siddur">
+          <Link href="/daven">
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100/80 p-4 hover:shadow-md transition-all flex items-center gap-4">
               <div className="bg-gold/8 w-11 h-11 rounded-xl flex items-center justify-center shrink-0">
                 <span className="text-gold font-bold text-lg font-[var(--font-hebrew-serif)]">ש</span>

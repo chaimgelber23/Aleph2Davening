@@ -15,8 +15,6 @@ export function KaraokePlayer({
   onWordTap,
   isPlaying,
   isLoading,
-  isUnavailable,
-  isFullPrayerAudio,
 }: {
   section: PrayerSection;
   prayerId: string;
@@ -28,8 +26,6 @@ export function KaraokePlayer({
   onWordTap?: () => void;
   isPlaying: boolean;
   isLoading: boolean;
-  isUnavailable?: boolean;
-  isFullPrayerAudio?: boolean;
 }) {
   const displaySettings = useUserStore((s) => s.displaySettings);
   const audioSpeed = useUserStore((s) => s.profile.audioSpeed);
@@ -38,7 +34,7 @@ export function KaraokePlayer({
   const words = section.hebrewText.split(' ');
   const translitWords = section.transliteration.split(' ');
 
-  const audioDisabled = isLoading || isUnavailable;
+  const audioDisabled = isLoading;
 
   return (
     <div className="space-y-4">
@@ -107,23 +103,8 @@ export function KaraokePlayer({
           <span className="text-xs font-medium text-primary w-8 text-right">{audioSpeed}x</span>
         </div>
 
-        {/* Audio coming soon message */}
-        {isUnavailable && (
-          <p className="text-sm text-gray-400 text-center py-1">
-            Audio coming soon
-          </p>
-        )}
-
-        {/* Full prayer recording indicator */}
-        {isFullPrayerAudio && isPlaying && (
-          <p className="text-xs text-primary/60 text-center py-1">
-            Playing full prayer recording
-          </p>
-        )}
-
         {/* Speed slider */}
-        {!isUnavailable && (
-          <div className="flex items-center gap-2 px-1">
+        <div className="flex items-center gap-2 px-1">
             <span className="text-[10px] text-gray-300">Slow</span>
             <input
               type="range"
@@ -143,7 +124,6 @@ export function KaraokePlayer({
             />
             <span className="text-[10px] text-gray-300">Fast</span>
           </div>
-        )}
       </div>
 
       {/* Hebrew Text with Karaoke Highlighting */}

@@ -245,7 +245,7 @@ export default function BootcampDayPage() {
       setMilestone(milestoneKey);
     }
 
-    router.push(`/bootcamp/day/${dayNumber}/complete`);
+    router.push(`/hebrew/bootcamp/day/${dayNumber}/complete`);
   };
 
   // Get current letter for teach phase

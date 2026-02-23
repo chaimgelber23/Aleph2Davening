@@ -221,8 +221,6 @@ export type TransliterationMode = 'full' | 'faded' | 'tap' | 'off';
 export type LearningGoal = 'daven' | 'learn' | 'explore' | 'all';
 export type HebrewLevel = 'none' | 'some_letters' | 'read_slow' | 'read_improve';
 export type VoiceGender = 'male' | 'female';
-export type AudioSource = 'tts-modern' | 'tts-american' | 'rabbi-diamond' | 'rabbi-richman' | 'rabbi-weiss';
-
 export interface UserProfile {
   id?: string;
   displayName?: string;
@@ -242,7 +240,6 @@ export interface UserProfile {
   hebrewLevel: HebrewLevel;
   onboardingComplete: boolean;
   voiceGender: VoiceGender;
-  audioSource: AudioSource;
   // Streak freeze
   streakFreezes: number; // available freezes (max 2)
   lastStreakFreezeWeek?: string; // ISO week string for weekly freeze grant
@@ -479,5 +476,77 @@ export interface BootcampProgress {
   currentDay: BootcampDayNumber;
   dayProgress: Record<number, BootcampDayProgress>;
   completedAt?: string;
+}
+
+// ==========================================
+// GUIDE TYPES
+// ==========================================
+
+export type GuideCategory =
+  | 'morning_routine'
+  | 'brachot_food'
+  | 'personal_care'
+  | 'shabbat'
+  | 'daily_items'
+  | 'home';
+
+export interface GuideStep {
+  id: string;
+  sortOrder: number;
+  instruction: string;
+  hebrewText?: string;
+  transliteration?: string;
+  translation?: string;
+  audioUrl?: string;
+  tip?: string;
+}
+
+export interface GuideQuizQuestion {
+  id: string;
+  question: string;
+  options: string[];
+  correctIndex: number;
+  explanation: string;
+  source?: string;
+}
+
+export interface Guide {
+  id: string;
+  slug: string;
+  title: string;
+  titleHebrew?: string;
+  category: GuideCategory;
+  sortOrder: number;
+  icon: string;
+  summary: string;
+  whenRelevant: string;
+  whyItMatters: string;
+  quickAnswer: string;
+  steps: GuideStep[];
+  practicalTips: string[];
+  commonMistakes?: string[];
+  sources: string[];
+  quiz: GuideQuizQuestion[];
+  relatedGuideIds?: string[];
+  relatedPrayerIds?: string[];
+}
+
+export interface GuideCategoryInfo {
+  id: GuideCategory;
+  title: string;
+  titleHebrew: string;
+  icon: string;
+  color: string;
+  description: string;
+}
+
+export interface GuideProgress {
+  guideId: string;
+  read: boolean;
+  readAt?: string;
+  bookmarked: boolean;
+  quizScore?: number;
+  quizTotal?: number;
+  quizCompletedAt?: string;
 }
 

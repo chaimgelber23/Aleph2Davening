@@ -44,10 +44,6 @@ let _client: TextToSpeechClient | null = null;
 
 function getClient(): TextToSpeechClient {
   if (!_client) {
-    // The client auto-discovers credentials from:
-    // 1. GOOGLE_APPLICATION_CREDENTIALS env var (path to service account JSON)
-    // 2. Application Default Credentials (gcloud auth)
-    // 3. GOOGLE_TTS_API_KEY env var (API key — simpler setup)
     const apiKey = process.env.GOOGLE_TTS_API_KEY;
     if (apiKey) {
       _client = new TextToSpeechClient({ apiKey });
@@ -59,18 +55,11 @@ function getClient(): TextToSpeechClient {
 }
 
 /**
- * Fix Hebrew text for proper TTS pronunciation:
- * 1. ה׳ → אֲדֹנָי  (Hashem → Adonai)
- * 2. אלקינו → אלהינו (kuf → heh in God's names, since texts use kuf as euphemism)
+ * Fix ה׳ → אֲדֹנָי so TTS says "Adonai" instead of "heh".
+ * Also handles the ASCII apostrophe variant ה'.
  */
 export function fixHashemForTTS(text: string): string {
-  // Replace ה׳ with Adonai
-  let fixed = text.replace(/ה[׳']/g, 'אֲדֹנָי');
-  // Replace kuf (ק) with heh (ה) in Elokim/Elokeinu variants
-  // Matches: א + nikud* + ל + nikud* + ק → replace ק with ה
-  // Hebrew combining marks range: U+0591–U+05C7
-  fixed = fixed.replace(/(א[\u0591-\u05C7]*ל[\u0591-\u05C7]*)ק/g, '$1ה');
-  return fixed;
+  return text.replace(/ה[׳']/g, 'אֲדֹנָי');
 }
 
 /**
@@ -106,7 +95,6 @@ export async function synthesizeHebrew(
     throw new Error('Google Cloud TTS returned empty audio');
   }
 
-  // response.audioContent is Uint8Array | string
   if (typeof response.audioContent === 'string') {
     return Buffer.from(response.audioContent, 'base64');
   }
