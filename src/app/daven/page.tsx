@@ -36,6 +36,10 @@ export default function DavenPage() {
   const [selectedAudioSource, setSelectedAudioSource] = useState<AudioSourceId>('siddur-audio');
   const [selectedAudioEntry, setSelectedAudioEntry] = useState<PrayerAudioEntry | null>(null);
 
+  // Prayer view mode
+  const [showProgressSidebar, setShowProgressSidebar] = useState(false);
+  const [viewMode, setViewMode] = useState<'section' | 'full'>('section');
+
   // Store
   const audioSpeed = useUserStore((s) => s.profile.audioSpeed);
   const updateProfile = useUserStore((s) => s.updateProfile);
@@ -45,11 +49,12 @@ export default function DavenPage() {
   const updateServicePosition = useUserStore((s) => s.updateServicePosition);
 
   // Auto-advance state
+  const [autoAdvanceEnabled, setAutoAdvanceEnabled] = useState(false);
   const [autoPlayNext, setAutoPlayNext] = useState(false);
 
-  // Audio — auto-advance to next section when audio ends
+  // Audio — auto-advance to next section when audio ends (if enabled)
   const handleAudioEnded = useCallback(() => {
-    if (!selectedPrayer) return;
+    if (!selectedPrayer || !autoAdvanceEnabled) return;
     const total = selectedPrayer.sections.length;
     setCurrentSectionIndex((prev) => {
       if (prev < total - 1) {
@@ -58,7 +63,7 @@ export default function DavenPage() {
       }
       return prev;
     });
-  }, [selectedPrayer]);
+  }, [selectedPrayer, autoAdvanceEnabled]);
 
   const audioOptions = useMemo(
     () => ({ speed: audioSpeed, onEnded: handleAudioEnded }),
@@ -273,8 +278,8 @@ export default function DavenPage() {
             </div>
           )}
 
-          {/* Audio Source Picker */}
-          <div className="flex justify-center">
+          {/* Controls Row: Audio Source, Auto-Advance, View Mode, Progress */}
+          <div className="flex items-center justify-center gap-2 flex-wrap">
             <AudioSourcePicker
               prayerId={selectedPrayer.id}
               selectedSource={selectedAudioSource}
@@ -283,10 +288,60 @@ export default function DavenPage() {
                 setSelectedAudioEntry(entry);
               }}
             />
+            <button
+              onClick={() => setAutoAdvanceEnabled(!autoAdvanceEnabled)}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
+                autoAdvanceEnabled
+                  ? 'bg-[#4A7C59] text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+              title={autoAdvanceEnabled ? 'Auto-advance ON - plays next section automatically' : 'Manual mode - click Next to advance'}
+            >
+              {autoAdvanceEnabled ? 'Auto' : 'Manual'}
+            </button>
+            <button
+              onClick={() => setViewMode(viewMode === 'section' ? 'full' : 'section')}
+              className="px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
+              title={viewMode === 'section' ? 'Switch to full prayer view' : 'Switch to section-by-section view'}
+            >
+              {viewMode === 'section' ? 'View Full' : 'View Sections'}
+            </button>
+            <button
+              onClick={() => setShowProgressSidebar(!showProgressSidebar)}
+              className="px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
+              title="Toggle prayer outline"
+            >
+              Outline
+            </button>
           </div>
 
-          {/* Karaoke Player */}
-          {currentSection && (
+          {/* Progress Sidebar/Outline */}
+          {showProgressSidebar && (
+            <div className="bg-white rounded-xl border border-gray-200 p-4">
+              <h3 className="text-sm font-semibold text-gray-700 mb-3">Prayer Outline ({currentSectionIndex + 1}/{totalSections})</h3>
+              <div className="space-y-1 max-h-64 overflow-y-auto">
+                {selectedPrayer.sections.map((section, idx) => (
+                  <button
+                    key={section.id}
+                    onClick={() => {
+                      stop();
+                      setCurrentSectionIndex(idx);
+                    }}
+                    className={`w-full text-left px-3 py-2 rounded-lg text-xs transition-colors ${
+                      idx === currentSectionIndex
+                        ? 'bg-primary text-white font-medium'
+                        : 'hover:bg-gray-50 text-gray-600'
+                    }`}
+                  >
+                    <span className="font-medium">{idx + 1}.</span> {section.hebrewText.slice(0, 30)}...
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Section View: Karaoke Player */}
+          {viewMode === 'section' && currentSection && (
             <KaraokePlayer
               section={currentSection}
               prayerId={selectedPrayer.id}
@@ -301,7 +356,44 @@ export default function DavenPage() {
             />
           )}
 
-          {/* Section Navigation */}
+          {/* Full Prayer View: All Sections */}
+          {viewMode === 'full' && (
+            <div className="space-y-6">
+              <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-sm text-blue-800">
+                Viewing full prayer - Switch back to "View Sections" to practice section-by-section
+              </div>
+              {selectedPrayer.sections.map((section, idx) => (
+                <div
+                  key={section.id}
+                  className={`bg-white rounded-xl border p-6 ${
+                    idx === currentSectionIndex ? 'border-primary shadow-md' : 'border-gray-200'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-xs font-semibold text-gray-500">Section {idx + 1}/{totalSections}</span>
+                    {idx === currentSectionIndex && (
+                      <span className="text-xs font-medium text-primary">Current</span>
+                    )}
+                  </div>
+                  <p
+                    className="font-['Noto_Serif_Hebrew'] text-2xl text-[#1A1A2E] leading-[1.8] text-right mb-3"
+                    dir="rtl"
+                  >
+                    {section.hebrewText}
+                  </p>
+                  {displaySettings.showTransliteration && section.transliteration && (
+                    <p className="text-sm text-gray-600 italic mb-2">{section.transliteration}</p>
+                  )}
+                  {displaySettings.showTranslation && section.translation && (
+                    <p className="text-sm text-gray-700">{section.translation}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Section Navigation (only in section view) */}
+          {viewMode === 'section' && (
           <div className="flex items-center justify-between">
             <button
               onClick={() => {
@@ -365,6 +457,7 @@ export default function DavenPage() {
               Next →
             </button>
           </div>
+          )}
         </div>
 
         {/* Coach me floating button */}
