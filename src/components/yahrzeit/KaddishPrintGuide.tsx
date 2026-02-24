@@ -141,36 +141,53 @@ export function KaddishPrintGuide() {
             </tbody>
           </table>
 
-          {/* Full Mourner's Kaddish text — optional */}
+          {/* Footer — page 1 */}
+          <p style={{ fontSize: '7pt', color: '#aaa', marginTop: '8pt', textAlign: 'center' }}>
+            Aleph2Davening — aleph2davening.com
+          </p>
+
+          {/* Page 2: Full Mourner's Kaddish text */}
           {showFullText && mournersPrayer && (
-            <div style={{ borderTop: '1pt solid #ccc', paddingTop: '8pt' }}>
-              <p style={{ fontSize: '10pt', fontWeight: 700, marginBottom: '6pt' }}>
-                Mourner&apos;s Kaddish — Full Text
+            <div style={{ pageBreakBefore: 'always', paddingTop: '0.2in' }}>
+              <h1 style={{ fontSize: '16pt', fontWeight: 700, marginBottom: '2pt', textAlign: 'center' }}>
+                Mourner&apos;s Kaddish
+              </h1>
+              <p dir="rtl" style={{ fontFamily: 'var(--font-hebrew-serif), Noto Serif Hebrew, serif', fontSize: '11pt', color: '#5C4033', textAlign: 'center', marginBottom: '12pt' }}>
+                קַדִּישׁ יָתוֹם
               </p>
-              <div style={{ columnCount: 2, columnGap: '16pt' }}>
-                {mournersPrayer.sections.map((section) => (
-                  <div key={section.id} style={{ breakInside: 'avoid', marginBottom: '6pt' }}>
-                    <p dir="rtl" style={{ fontFamily: 'var(--font-hebrew-serif), Noto Serif Hebrew, serif', fontSize: '10pt', color: '#1A1A2E', lineHeight: 1.7 }}>
+
+              <div style={{ maxWidth: '420pt', margin: '0 auto' }}>
+                {mournersPrayer.sections.map((section, idx) => (
+                  <div key={section.id} style={{ marginBottom: '10pt' }}>
+                    <p dir="rtl" style={{ fontFamily: 'var(--font-hebrew-serif), Noto Serif Hebrew, serif', fontSize: '13pt', color: '#1A1A2E', lineHeight: 2.0, textAlign: 'right' }}>
                       {section.hebrewText}
                     </p>
-                    <p style={{ fontSize: '7pt', color: '#888', fontStyle: 'italic', lineHeight: 1.3 }}>
+                    <p style={{ fontSize: '8.5pt', color: '#777', fontStyle: 'italic', lineHeight: 1.4, marginTop: '1pt' }}>
                       {section.transliteration}
                     </p>
                     {section.amud?.congregationResponse && (
-                      <p style={{ fontSize: '7pt', color: '#5C4033', fontWeight: 600 }}>
-                        Cong: {section.amud.congregationResponseTransliteration || section.amud.congregationResponse}
+                      <p style={{ fontSize: '8pt', color: '#5C4033', fontWeight: 600, marginTop: '2pt' }}>
+                        Congregation responds: {section.amud.congregationResponseTransliteration || section.amud.congregationResponse}
                       </p>
+                    )}
+                    {idx < mournersPrayer.sections.length - 1 && (
+                      <hr style={{ border: 'none', borderTop: '0.5pt solid #e5e5e5', margin: '8pt 0 0' }} />
                     )}
                   </div>
                 ))}
               </div>
+
+              <div style={{ marginTop: '14pt', padding: '8pt 10pt', border: '1pt solid #5C4033', borderRadius: '4pt', background: '#faf6f3', textAlign: 'center' }}>
+                <p style={{ fontSize: '8pt', color: '#5C4033', fontWeight: 600 }}>
+                  At the end: take three steps back. Bow left, right, center. Step forward.
+                </p>
+              </div>
+
+              <p style={{ fontSize: '7pt', color: '#aaa', marginTop: '10pt', textAlign: 'center' }}>
+                Aleph2Davening — aleph2davening.com
+              </p>
             </div>
           )}
-
-          {/* Footer */}
-          <p style={{ fontSize: '7pt', color: '#aaa', marginTop: '8pt', textAlign: 'center' }}>
-            Aleph2Davening — aleph2davening.com
-          </p>
         </div>
       )}
     </div>
