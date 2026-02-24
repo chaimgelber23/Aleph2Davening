@@ -2,12 +2,34 @@
 
 import type { DaveningService, ServiceSegment, ServiceItem, AmudRole, PhysicalAction } from '@/types';
 
-const ROLE_ICONS: Record<AmudRole, string> = {
-  shaliach_tzibbur: '',
-  congregation: '',
-  both: '',
-  silent_individual: '',
-};
+function RoleIcon({ role }: { role: AmudRole }) {
+  const cls = 'w-3 h-3 inline-block';
+  switch (role) {
+    case 'shaliach_tzibbur':
+      return (
+        <svg className={cls} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M12 1a3 3 0 0 0-3 3v4a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8" />
+        </svg>
+      );
+    case 'congregation':
+    case 'both':
+      return (
+        <svg className={cls} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
+      );
+    case 'silent_individual':
+      return (
+        <svg className={cls} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+          <circle cx="12" cy="7" r="4" />
+        </svg>
+      );
+  }
+}
 
 const ROLE_LABELS: Record<AmudRole, { label: string; color: string; bg: string }> = {
   shaliach_tzibbur: { label: 'Say Aloud', color: 'text-white', bg: 'bg-primary' },
@@ -129,7 +151,7 @@ export function TefillahPrepSheet({
               <div className="flex flex-wrap gap-2">
                 {(Object.keys(ROLE_LABELS) as AmudRole[]).map((role) => (
                   <span key={role} className="inline-flex items-center gap-1 text-xs text-gray-600">
-                    <span>{ROLE_ICONS[role]}</span>
+                    <span><RoleIcon role={role} /></span>
                     <span>{ROLE_LABELS[role].label}</span>
                   </span>
                 ))}
@@ -198,7 +220,7 @@ export function TefillahPrepSheet({
             {(Object.keys(roleCounts) as AmudRole[]).map((role) =>
               roleCounts[role] > 0 ? (
                 <span key={role} className="text-xs text-gray-500">
-                  {ROLE_ICONS[role]} {roleCounts[role]} {ROLE_LABELS[role].label.toLowerCase()}
+                  <RoleIcon role={role} /> {roleCounts[role]} {ROLE_LABELS[role].label.toLowerCase()}
                 </span>
               ) : null
             )}
@@ -278,7 +300,7 @@ function ItemRow({
       {/* Main row */}
       <div className="flex items-center gap-2">
         {/* Role icon */}
-        <span className="text-xs shrink-0">{ROLE_ICONS[item.amud.role]}</span>
+        <span className="text-xs shrink-0"><RoleIcon role={item.amud.role} /></span>
 
         {/* Name */}
         <div className="flex-1 min-w-0">

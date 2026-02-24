@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import type { AmudRole, PhysicalAction } from '@/types';
 
 interface AmudCueProps {
@@ -14,29 +13,25 @@ interface AmudCueProps {
   showForBeginners?: boolean; // Show simplified version for beginners
 }
 
-const roleExplanations: Record<AmudRole, { label: string; color: string; icon: string; explanation: string }> = {
+const roleExplanations: Record<AmudRole, { label: string; color: string; explanation: string }> = {
   shaliach_tzibbur: {
     label: 'Prayer Leader',
     color: 'bg-[#1B4965] text-white',
-    icon: '',
     explanation: 'The Shaliach Tzibbur (prayer leader) says this aloud for the congregation',
   },
   congregation: {
     label: 'Congregation',
     color: 'bg-[#5FA8D3] text-white',
-    icon: '',
     explanation: 'Everyone in the congregation says this together',
   },
   both: {
     label: 'Everyone Together',
     color: 'bg-[#8B5CF6] text-white',
-    icon: '',
     explanation: 'The prayer leader and congregation say this together',
   },
   silent_individual: {
     label: 'Silent (Individual)',
     color: 'bg-gray-500 text-white',
-    icon: '',
     explanation: 'Each person says this quietly to themselves',
   },
 };
@@ -71,9 +66,8 @@ export default function AmudCue({
       <div className="my-4 p-4 bg-[#F8F9FA] border-l-4 border-[#1B4965] rounded-r-lg">
         {/* Role badge */}
         <div className="flex items-center gap-2 mb-2">
-          <span className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold ${roleInfo.color}`}>
-            <span>{roleInfo.icon}</span>
-            <span>{roleInfo.label}</span>
+          <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold ${roleInfo.color}`}>
+            {roleInfo.label}
           </span>
         </div>
 
@@ -130,8 +124,8 @@ export default function AmudCue({
   return (
     <div className="my-2 p-2 bg-gray-50 rounded-lg border border-gray-200 text-xs">
       <div className="flex items-center gap-2">
-        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-bold ${roleInfo.color}`}>
-          {roleInfo.icon} {roleInfo.label}
+        <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${roleInfo.color}`}>
+          {roleInfo.label}
         </span>
         {instruction && <span className="text-gray-700">{instruction}</span>}
         {physicalActions && physicalActions.length > 0 && (
@@ -162,7 +156,7 @@ export function AmudRolesGuide() {
         <div>
           <div className="flex items-center gap-2 mb-2">
             <span className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-bold ${roleExplanations.shaliach_tzibbur.color}`}>
-              {roleExplanations.shaliach_tzibbur.icon} {roleExplanations.shaliach_tzibbur.label}
+              {roleExplanations.shaliach_tzibbur.label}
             </span>
           </div>
           <p className="text-gray-700 text-sm leading-relaxed">
@@ -176,7 +170,7 @@ export function AmudRolesGuide() {
         <div>
           <div className="flex items-center gap-2 mb-2">
             <span className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-bold ${roleExplanations.congregation.color}`}>
-              {roleExplanations.congregation.icon} {roleExplanations.congregation.label}
+              {roleExplanations.congregation.label}
             </span>
           </div>
           <p className="text-gray-700 text-sm leading-relaxed">
@@ -189,7 +183,7 @@ export function AmudRolesGuide() {
         <div>
           <div className="flex items-center gap-2 mb-2">
             <span className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-bold ${roleExplanations.both.color}`}>
-              {roleExplanations.both.icon} {roleExplanations.both.label}
+              {roleExplanations.both.label}
             </span>
           </div>
           <p className="text-gray-700 text-sm leading-relaxed">
@@ -202,7 +196,7 @@ export function AmudRolesGuide() {
         <div>
           <div className="flex items-center gap-2 mb-2">
             <span className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-bold ${roleExplanations.silent_individual.color}`}>
-              {roleExplanations.silent_individual.icon} {roleExplanations.silent_individual.label}
+              {roleExplanations.silent_individual.label}
             </span>
           </div>
           <p className="text-gray-700 text-sm leading-relaxed">

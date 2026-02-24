@@ -132,14 +132,6 @@ export default function TodaysServicePath() {
     tip: 'You respond with the congregation. Your job as shaliach tzibbur is complete!',
   });
 
-  // Role icons
-  const roleIcons: Record<typeof servicePath[0]['yourRole'], string> = {
-    lead: '',
-    silent: '',
-    together: '',
-    respond: '',
-  };
-
   const roleLabels: Record<typeof servicePath[0]['yourRole'], string> = {
     lead: 'YOU LEAD',
     silent: 'SILENT',
@@ -244,8 +236,7 @@ export default function TodaysServicePath() {
                     roleColors[step.yourRole]
                   }`}
                 >
-                  <span>{roleIcons[step.yourRole]}</span>
-                  <span>{roleLabels[step.yourRole]}</span>
+                  {roleLabels[step.yourRole]}
                 </span>
                 <h3 className="text-lg font-bold text-[#1A1A2E]">{step.section}</h3>
               </div>
@@ -271,7 +262,7 @@ export default function TodaysServicePath() {
           {Object.entries(roleLabels).map(([role, label]) => (
             <div key={role} className="flex items-center gap-2">
               <span className={`px-3 py-1 rounded-full text-xs font-bold ${roleColors[role as keyof typeof roleColors]}`}>
-                {roleIcons[role as keyof typeof roleIcons]} {label}
+                {label}
               </span>
             </div>
           ))}

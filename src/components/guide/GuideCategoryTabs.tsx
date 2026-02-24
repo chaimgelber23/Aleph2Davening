@@ -51,7 +51,7 @@ export function GuideCategoryTabs({ selected, onSelect }: GuideCategoryTabsProps
           }`}
           style={selected === cat.id ? { backgroundColor: cat.color } : undefined}
         >
-          {cat.icon} {cat.title}
+          {cat.icon && <>{cat.icon} </>}{cat.title}
         </button>
       ))}
     </div>

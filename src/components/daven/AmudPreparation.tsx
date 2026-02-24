@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import TodaysServicePath from './TodaysServicePath';
 import ServiceScopeOverview from './ServiceScopeOverview';
 import ServiceRehearsalScript from './ServiceRehearsalScript';
@@ -15,33 +15,29 @@ interface AmudPreparationProps {
 export default function AmudPreparation({ defaultLevel = 'quick' }: AmudPreparationProps) {
   const [level, setLevel] = useState<PreparationLevel>(defaultLevel);
 
-  const levels: { id: PreparationLevel; title: string; description: string; icon: string; time: string }[] = [
+  const levels: { id: PreparationLevel; title: string; description: string; time: string }[] = [
     {
       id: 'guide',
       title: 'Learn the Roles',
       description: 'First time? Understand what prayer roles mean and how services work.',
-      icon: '',
       time: '5 min read',
     },
     {
       id: 'quick',
       title: 'Quick Path',
       description: 'High-level roadmap. See the flow and your key moments.',
-      icon: '',
       time: '10 min review',
     },
     {
       id: 'full',
       title: 'Full Scope',
       description: 'Complete picture. Every section, timing, variations, and critical moments.',
-      icon: '',
       time: '20 min review',
     },
     {
       id: 'rehearsal',
       title: 'Complete Rehearsal',
       description: 'Word-for-word script. Every line you\'ll say, every pause, every response.',
-      icon: '',
       time: '30-60 min practice',
     },
   ];
@@ -65,7 +61,6 @@ export default function AmudPreparation({ defaultLevel = 'quick' }: AmudPreparat
                     : 'border-gray-200 bg-white hover:border-[#5FA8D3] hover:shadow-sm'
                 }`}
               >
-                <div className="text-2xl mb-2">{l.icon}</div>
                 <div className="font-bold text-[#1A1A2E] mb-1">{l.title}</div>
                 <div className="text-xs text-gray-600 mb-2">{l.description}</div>
                 <div className="text-xs text-[#1B4965] font-medium">{l.time}</div>

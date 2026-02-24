@@ -6,12 +6,43 @@ import { useUserStore } from '@/stores/userStore';
 import { AmudBadge } from './AmudBadge';
 import type { DaveningService, ServiceSegment, ServiceItem } from '@/types';
 
-const ROLE_ICONS: Record<string, string> = {
-  shaliach_tzibbur: '',
-  congregation: '',
-  both: '',
-  silent_individual: '',
-};
+function RoleIcon({ role }: { role: string }) {
+  const cls = 'w-3.5 h-3.5';
+  switch (role) {
+    case 'shaliach_tzibbur':
+      return (
+        <svg className={cls} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M12 1a3 3 0 0 0-3 3v4a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8" />
+        </svg>
+      );
+    case 'congregation':
+      return (
+        <svg className={cls} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
+      );
+    case 'both':
+      return (
+        <svg className={cls} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
+      );
+    case 'silent_individual':
+      return (
+        <svg className={cls} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+          <circle cx="12" cy="7" r="4" />
+        </svg>
+      );
+    default:
+      return null;
+  }
+}
 
 const TYPE_LABELS: Record<string, string> = {
   kaddish: 'Kaddish',
@@ -252,8 +283,8 @@ function SegmentCard({
 
                       {/* Role icon */}
                       {showAmudCues && (
-                        <span className="text-xs shrink-0">
-                          {ROLE_ICONS[item.amud.role]}
+                        <span className="text-gray-400 shrink-0">
+                          <RoleIcon role={item.amud.role} />
                         </span>
                       )}
 
