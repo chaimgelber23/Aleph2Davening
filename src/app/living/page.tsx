@@ -428,29 +428,31 @@ function BrachaReader({ prayer, onBack }: { prayer: Prayer; onBack: () => void }
           </div>
         )}
 
-        {/* Listen to Full Bracha button */}
-        <button
-          onClick={handlePlayAll}
-          disabled={isLoading}
-          className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold bg-[#6B4C9A] text-white hover:bg-[#5a3d85] transition-colors"
-        >
-          {isPlaying ? (
-            <>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <rect x="6" y="4" width="4" height="16" rx="1" />
-                <rect x="14" y="4" width="4" height="16" rx="1" />
-              </svg>
-              Stop
-            </>
-          ) : (
-            <>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M8 5v14l11-7z" />
-              </svg>
-              Listen to Full Bracha
-            </>
-          )}
-        </button>
+        {/* Listen to Full Bracha button — right-aligned */}
+        <div className="flex justify-end">
+          <button
+            onClick={handlePlayAll}
+            disabled={isLoading}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold bg-[#6B4C9A] text-white hover:bg-[#5a3d85] transition-colors"
+          >
+            {isPlaying ? (
+              <>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <rect x="6" y="4" width="4" height="16" rx="1" />
+                  <rect x="14" y="4" width="4" height="16" rx="1" />
+                </svg>
+                Stop
+              </>
+            ) : (
+              <>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+                Listen All
+              </>
+            )}
+          </button>
+        </div>
 
         {/* Sections with word-by-word highlighting */}
         {prayer.sections.map((section, idx) => {
