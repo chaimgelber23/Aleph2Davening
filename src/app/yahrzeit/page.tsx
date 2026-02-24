@@ -388,6 +388,13 @@ export default function YahrzeitPage() {
         {/* === KADDISH TAB === */}
         {activeTab === 'kaddish' && (
           <div className="space-y-4">
+            {/* Intro */}
+            <p className="text-sm text-gray-600 leading-relaxed">
+              During davening services, you will hear several versions of Kaddish.
+              Only one — the <strong>Mourner&apos;s Kaddish</strong> — is yours to say.
+              The others are said by the prayer leader. You just listen and respond &ldquo;Amen.&rdquo;
+            </p>
+
             {/* Learn to Say Kaddish — primary CTA */}
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
               <div className="bg-white rounded-2xl border-2 border-[#5C4033]/15 p-5 shadow-sm">
@@ -405,15 +412,6 @@ export default function YahrzeitPage() {
                   Learn to Say Kaddish
                 </button>
               </div>
-            </motion.div>
-
-            {/* Understanding Kaddish */}
-            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                During davening services, you will hear several versions of Kaddish.
-                Only one — the <strong>Mourner&apos;s Kaddish</strong> — is yours to say.
-                The others are said by the prayer leader. You just listen and respond &ldquo;Amen.&rdquo;
-              </p>
             </motion.div>
 
             {/* Other types */}
