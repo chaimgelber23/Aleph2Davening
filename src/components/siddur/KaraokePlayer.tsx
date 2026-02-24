@@ -15,6 +15,8 @@ export function KaraokePlayer({
   onWordTap,
   isPlaying,
   isLoading,
+  dismissedLayers,
+  onDismissLayer,
 }: {
   section: PrayerSection;
   prayerId: string;
@@ -26,6 +28,8 @@ export function KaraokePlayer({
   onWordTap?: () => void;
   isPlaying: boolean;
   isLoading: boolean;
+  dismissedLayers?: Set<string>;
+  onDismissLayer?: (key: string) => void;
 }) {
   const displaySettings = useUserStore((s) => s.displaySettings);
   const audioSpeed = useUserStore((s) => s.profile.audioSpeed);
@@ -156,8 +160,19 @@ export function KaraokePlayer({
         </div>
 
         {/* Transliteration with matching highlight */}
-        {displaySettings.showTransliteration && (
-          <div className="mt-3 pt-3 border-t border-gray-50">
+        {displaySettings.showTransliteration && !dismissedLayers?.has('showTransliteration') && (
+          <div className="mt-3 pt-3 border-t border-gray-50 relative">
+            {onDismissLayer && (
+              <button
+                onClick={() => onDismissLayer('showTransliteration')}
+                className="absolute top-2 right-0 w-5 h-5 flex items-center justify-center rounded-full text-gray-300 hover:text-gray-500 hover:bg-gray-100 transition-colors"
+                aria-label="Dismiss transliteration"
+              >
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+              </button>
+            )}
             <p className="text-[10px] uppercase tracking-widest text-primary/30 font-semibold mb-1 text-center">
               How to say it
             </p>
@@ -182,8 +197,19 @@ export function KaraokePlayer({
         )}
 
         {/* Translation */}
-        {displaySettings.showTranslation && section.translation && (
-          <div className="mt-3 pt-3 border-t border-gray-50 text-center">
+        {displaySettings.showTranslation && !dismissedLayers?.has('showTranslation') && section.translation && (
+          <div className="mt-3 pt-3 border-t border-gray-50 text-center relative">
+            {onDismissLayer && (
+              <button
+                onClick={() => onDismissLayer('showTranslation')}
+                className="absolute top-2 right-0 w-5 h-5 flex items-center justify-center rounded-full text-gray-300 hover:text-gray-500 hover:bg-gray-100 transition-colors"
+                aria-label="Dismiss translation"
+              >
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+              </button>
+            )}
             <p className="text-[10px] uppercase tracking-widest text-primary/30 font-semibold mb-1">
               What it means
             </p>
@@ -192,15 +218,37 @@ export function KaraokePlayer({
         )}
 
         {/* Notes */}
-        {displaySettings.showInstructions && section.notes && (
-          <div className="mt-3 pt-3 border-t border-gray-50">
+        {displaySettings.showInstructions && !dismissedLayers?.has('showInstructions') && section.notes && (
+          <div className="mt-3 pt-3 border-t border-gray-50 relative">
+            {onDismissLayer && (
+              <button
+                onClick={() => onDismissLayer('showInstructions')}
+                className="absolute top-2 right-0 w-5 h-5 flex items-center justify-center rounded-full text-gray-300 hover:text-gray-500 hover:bg-gray-100 transition-colors"
+                aria-label="Dismiss instructions"
+              >
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+              </button>
+            )}
             <p className="text-sm text-gray-500">{section.notes}</p>
           </div>
         )}
 
         {/* Amud annotation */}
-        {displaySettings.showAmudCues && section.amud && (
-          <div className="mt-3 pt-3 border-t border-gray-50 space-y-2">
+        {displaySettings.showAmudCues && !dismissedLayers?.has('showAmudCues') && section.amud && (
+          <div className="mt-3 pt-3 border-t border-gray-50 space-y-2 relative">
+            {onDismissLayer && (
+              <button
+                onClick={() => onDismissLayer('showAmudCues')}
+                className="absolute top-2 right-0 w-5 h-5 flex items-center justify-center rounded-full text-gray-300 hover:text-gray-500 hover:bg-gray-100 transition-colors z-10"
+                aria-label="Dismiss amud cues"
+              >
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+              </button>
+            )}
             {section.amud.instruction && (
               <p className="text-xs text-primary font-medium text-center">
                 {section.amud.instruction}

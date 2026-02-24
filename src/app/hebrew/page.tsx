@@ -108,8 +108,6 @@ export default function HebrewPage() {
     ]
   );
 
-  const vowelGroupColors = Object.values(VOWEL_COLORS);
-
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -219,13 +217,21 @@ export default function HebrewPage() {
                   )}
 
                   {section.title === 'Vowels' && (
-                    <div className="flex gap-1 mt-2">
-                      {vowelGroupColors.map((color, idx) => (
-                        <div
-                          key={idx}
-                          className="w-2 h-2 rounded-full"
-                          style={{ backgroundColor: color }}
-                        />
+                    <div className="flex gap-2.5 mt-2 items-baseline" dir="rtl">
+                      {[
+                        { letter: 'בַ', color: VOWEL_COLORS.ah, label: 'AH' },
+                        { letter: 'בֵ', color: VOWEL_COLORS.eh, label: 'EH' },
+                        { letter: 'בִ', color: VOWEL_COLORS.ee, label: 'EE' },
+                        { letter: 'בֹ', color: VOWEL_COLORS.oh, label: 'OH' },
+                        { letter: 'בוּ', color: VOWEL_COLORS.oo, label: 'OO' },
+                      ].map((v) => (
+                        <span
+                          key={v.label}
+                          className="font-[var(--font-hebrew-serif)] text-base leading-none"
+                          style={{ color: v.color }}
+                        >
+                          {v.letter}
+                        </span>
                       ))}
                     </div>
                   )}

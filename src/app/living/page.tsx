@@ -255,10 +255,13 @@ function BrachaReader({ prayer, onBack }: { prayer: Prayer; onBack: () => void }
   const playingSectionIndexRef = useRef(playingSectionIndex);
   playingSectionIndexRef.current = playingSectionIndex;
 
+  // Refs for auto-scrolling to active section
+  const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const activeWordRef = useRef<HTMLSpanElement | null>(null);
+
   const handleAudioEnded = useCallback(() => {
     const currentIdx = playingSectionIndexRef.current;
     if (currentIdx >= 0 && currentIdx < prayer.sections.length - 1) {
-      // Auto-advance to next section
       setPlayingSectionIndex(currentIdx + 1);
       setAutoPlayNext(true);
     } else {
@@ -270,7 +273,7 @@ function BrachaReader({ prayer, onBack }: { prayer: Prayer; onBack: () => void }
     () => ({ speed: audioSpeed, onEnded: handleAudioEnded }),
     [audioSpeed, handleAudioEnded]
   );
-  const { play, stop, isPlaying, isLoading } = useAudio(audioOptions);
+  const { play, stop, pause, resume, seek, isPlaying, isLoading, currentTime, duration } = useAudio(audioOptions);
 
   // Auto-play the next section after advance
   useEffect(() => {
@@ -285,6 +288,26 @@ function BrachaReader({ prayer, onBack }: { prayer: Prayer; onBack: () => void }
       }
     }
   }, [autoPlayNext, playingSectionIndex, prayer, audioSpeed, play]);
+
+  // Auto-scroll to active section when it changes
+  useEffect(() => {
+    if (playingSectionIndex >= 0 && sectionRefs.current[playingSectionIndex]) {
+      sectionRefs.current[playingSectionIndex]?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+  }, [playingSectionIndex]);
+
+  // Auto-scroll to active word during playback
+  useEffect(() => {
+    if (activeWordRef.current) {
+      activeWordRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+  }, [currentTime]);
 
   const handlePlaySection = useCallback((sectionIndex: number) => {
     if (isPlaying && playingSectionIndex === sectionIndex) {
@@ -308,6 +331,61 @@ function BrachaReader({ prayer, onBack }: { prayer: Prayer; onBack: () => void }
       play(section.hebrewText, 'hebrew', audioSpeed, prayer.id, section.id);
     }
   }, [isPlaying, stop, play, audioSpeed, prayer]);
+
+  const handlePauseResume = useCallback(() => {
+    if (isPlaying) {
+      pause();
+    } else if (playingSectionIndex >= 0) {
+      resume();
+    } else {
+      // Nothing playing yet — start from beginning
+      handlePlayAll();
+    }
+  }, [isPlaying, playingSectionIndex, pause, resume, handlePlayAll]);
+
+  const handleSkipBack = useCallback(() => {
+    if (playingSectionIndex < 0) return;
+    // If near start of section, go to previous section
+    if (currentTime < 1 && playingSectionIndex > 0) {
+      const prevIdx = playingSectionIndex - 1;
+      const section = prayer.sections[prevIdx];
+      setPlayingSectionIndex(prevIdx);
+      play(section.hebrewText, 'hebrew', audioSpeed, prayer.id, section.id);
+    } else {
+      seek(Math.max(0, currentTime - 5));
+    }
+  }, [playingSectionIndex, currentTime, seek, prayer, play, audioSpeed]);
+
+  const handleSkipForward = useCallback(() => {
+    if (playingSectionIndex < 0) return;
+    const remaining = duration - currentTime;
+    // If near end or short section, skip to next section
+    if (remaining < 5 && playingSectionIndex < prayer.sections.length - 1) {
+      const nextIdx = playingSectionIndex + 1;
+      const section = prayer.sections[nextIdx];
+      setPlayingSectionIndex(nextIdx);
+      play(section.hebrewText, 'hebrew', audioSpeed, prayer.id, section.id);
+    } else {
+      seek(Math.min(duration, currentTime + 5));
+    }
+  }, [playingSectionIndex, currentTime, duration, seek, prayer, play, audioSpeed]);
+
+  // Calculate active word index for a section
+  const getActiveWordIndex = useCallback((sectionIndex: number, words: string[]) => {
+    if (playingSectionIndex !== sectionIndex || !isPlaying || duration <= 0) return -1;
+    const progress = Math.min(currentTime / duration, 1);
+    return Math.min(Math.floor(progress * words.length), words.length - 1);
+  }, [playingSectionIndex, isPlaying, currentTime, duration]);
+
+  const isTransportVisible = playingSectionIndex >= 0;
+  const progressPercent = duration > 0 ? Math.min((currentTime / duration) * 100, 100) : 0;
+
+  // Format time as m:ss
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60);
+    return `${m}:${s.toString().padStart(2, '0')}`;
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -335,7 +413,7 @@ function BrachaReader({ prayer, onBack }: { prayer: Prayer; onBack: () => void }
         </div>
       </div>
 
-      <div className="max-w-md mx-auto px-6 py-6 space-y-5 pb-32">
+      <div className="max-w-md mx-auto px-6 py-6 space-y-5 pb-44">
         {/* Context */}
         <div className="bg-[#6B4C9A]/5 rounded-2xl p-4">
           <p className="text-sm font-medium text-[#6B4C9A] mb-1">When to say</p>
@@ -350,48 +428,90 @@ function BrachaReader({ prayer, onBack }: { prayer: Prayer; onBack: () => void }
           </div>
         )}
 
-        {/* Play All button */}
-        {prayer.sections.length > 1 && (
-          <button
-            onClick={handlePlayAll}
-            disabled={isLoading}
-            className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold bg-[#6B4C9A] text-white hover:bg-[#5a3d85] transition-colors"
-          >
-            {isPlaying ? (
-              <>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                  <rect x="6" y="4" width="4" height="16" rx="1" />
-                  <rect x="14" y="4" width="4" height="16" rx="1" />
-                </svg>
-                Stop
-              </>
-            ) : (
-              <>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M8 5v14l11-7z" />
-                </svg>
-                Listen to Full Bracha
-              </>
-            )}
-          </button>
-        )}
+        {/* Listen to Full Bracha button */}
+        <button
+          onClick={handlePlayAll}
+          disabled={isLoading}
+          className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold bg-[#6B4C9A] text-white hover:bg-[#5a3d85] transition-colors"
+        >
+          {isPlaying ? (
+            <>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <rect x="6" y="4" width="4" height="16" rx="1" />
+                <rect x="14" y="4" width="4" height="16" rx="1" />
+              </svg>
+              Stop
+            </>
+          ) : (
+            <>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+              Listen to Full Bracha
+            </>
+          )}
+        </button>
 
-        {/* Sections */}
+        {/* Sections with word-by-word highlighting */}
         {prayer.sections.map((section, idx) => {
           const isSectionPlaying = isPlaying && playingSectionIndex === idx;
+          const isSectionDone = playingSectionIndex > idx && playingSectionIndex >= 0;
+          const words = section.hebrewText.split(/\s+/);
+          const activeWordIdx = getActiveWordIndex(idx, words);
+
           return (
             <div
               key={section.id}
-              className={`bg-white rounded-2xl border p-6 space-y-3 transition-colors ${
-                isSectionPlaying ? 'border-[#6B4C9A]/30 shadow-sm' : 'border-gray-100'
+              ref={(el) => { sectionRefs.current[idx] = el; }}
+              className={`bg-white rounded-2xl border p-6 space-y-3 transition-all ${
+                isSectionPlaying
+                  ? 'border-[#6B4C9A]/40 shadow-md ring-1 ring-[#6B4C9A]/10'
+                  : isSectionDone
+                    ? 'border-[#4A7C59]/20 bg-[#4A7C59]/3'
+                    : 'border-gray-100'
               }`}
             >
-              {/* Hebrew text */}
+              {/* Section indicator */}
+              {prayer.sections.length > 1 && (
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[10px] font-medium text-gray-300 uppercase tracking-wider">
+                    Part {idx + 1} of {prayer.sections.length}
+                  </span>
+                  {isSectionDone && (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4A7C59" strokeWidth="3">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  )}
+                </div>
+              )}
+
+              {/* Hebrew text with word highlighting */}
               <p
-                className="font-['Noto_Serif_Hebrew'] text-2xl text-[#1A1A2E] leading-[1.8] text-right"
+                className="font-['Noto_Serif_Hebrew'] text-2xl text-[#1A1A2E] leading-[2.2] text-right"
                 dir="rtl"
               >
-                {section.hebrewText}
+                {words.map((word, wi) => {
+                  const isActiveWord = isSectionPlaying && wi === activeWordIdx;
+                  const isReadWord = isSectionPlaying && wi < activeWordIdx;
+                  const isDoneSection = isSectionDone;
+                  return (
+                    <span
+                      key={wi}
+                      ref={isActiveWord ? (el) => { activeWordRef.current = el; } : undefined}
+                      className={
+                        isActiveWord
+                          ? 'bg-[#6B4C9A]/20 text-[#6B4C9A] rounded-md px-1 py-0.5 transition-colors duration-200'
+                          : isReadWord
+                            ? 'text-[#6B4C9A]/50 transition-colors duration-200'
+                            : isDoneSection
+                              ? 'text-[#4A7C59]/70'
+                              : ''
+                      }
+                    >
+                      {word}{wi < words.length - 1 ? ' ' : ''}
+                    </span>
+                  );
+                })}
               </p>
 
               {/* Transliteration */}
@@ -409,29 +529,26 @@ function BrachaReader({ prayer, onBack }: { prayer: Prayer; onBack: () => void }
                 <p className="text-xs text-gray-400 bg-gray-50 rounded-lg p-3">{section.notes}</p>
               )}
 
-              {/* Play button */}
-              <button
-                onClick={() => handlePlaySection(idx)}
-                disabled={isLoading}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-[#6B4C9A] hover:bg-[#6B4C9A]/5 transition-colors"
-              >
-                {isLoading && playingSectionIndex === idx ? (
-                  <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
-                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" opacity="0.25" />
-                    <path d="M4 12a8 8 0 018-8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                  </svg>
-                ) : isSectionPlaying ? (
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <rect x="6" y="4" width="4" height="16" rx="1" />
-                    <rect x="14" y="4" width="4" height="16" rx="1" />
-                  </svg>
-                ) : (
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M8 5v14l11-7z" />
-                  </svg>
-                )}
-                {isSectionPlaying ? 'Pause' : 'Listen'}
-              </button>
+              {/* Tap to play this section */}
+              {!isSectionPlaying && (
+                <button
+                  onClick={() => handlePlaySection(idx)}
+                  disabled={isLoading}
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-[#6B4C9A] hover:bg-[#6B4C9A]/5 transition-colors"
+                >
+                  {isLoading && playingSectionIndex === idx ? (
+                    <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" opacity="0.25" />
+                      <path d="M4 12a8 8 0 018-8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                    </svg>
+                  ) : (
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  )}
+                  Listen
+                </button>
+              )}
             </div>
           );
         })}
@@ -443,6 +560,78 @@ function BrachaReader({ prayer, onBack }: { prayer: Prayer; onBack: () => void }
           </div>
         )}
       </div>
+
+      {/* Sticky Audio Transport Bar */}
+      {isTransportVisible && (
+        <div className="fixed bottom-0 left-0 right-0 z-40">
+          {/* Progress bar at very top of transport */}
+          <div className="h-1 bg-gray-200">
+            <div
+              className="h-full bg-[#6B4C9A] transition-all duration-200"
+              style={{ width: `${progressPercent}%` }}
+            />
+          </div>
+
+          <div className="bg-white/95 backdrop-blur-md border-t border-gray-100 shadow-lg">
+            <div className="max-w-md mx-auto px-6 py-3">
+              {/* Section indicator + time */}
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[11px] text-gray-400 font-medium">
+                  {prayer.sections.length > 1
+                    ? `Part ${playingSectionIndex + 1} of ${prayer.sections.length}`
+                    : prayer.nameEnglish
+                  }
+                </span>
+                <span className="text-[11px] text-gray-400 font-mono">
+                  {formatTime(currentTime)} / {formatTime(duration)}
+                </span>
+              </div>
+
+              {/* Transport controls */}
+              <div className="flex items-center justify-center gap-6">
+                {/* Skip back */}
+                <button
+                  onClick={handleSkipBack}
+                  className="flex items-center justify-center w-12 h-12 rounded-full text-gray-500 hover:text-[#6B4C9A] hover:bg-[#6B4C9A]/5 active:bg-[#6B4C9A]/10 transition-colors"
+                >
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M11 19l-7-7 7-7" />
+                    <path d="M18 19l-7-7 7-7" />
+                  </svg>
+                </button>
+
+                {/* Play / Pause */}
+                <button
+                  onClick={handlePauseResume}
+                  className="flex items-center justify-center w-14 h-14 rounded-full bg-[#6B4C9A] text-white hover:bg-[#5a3d85] active:bg-[#4e3475] transition-colors shadow-md"
+                >
+                  {isPlaying ? (
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                      <rect x="6" y="4" width="4" height="16" rx="1" />
+                      <rect x="14" y="4" width="4" height="16" rx="1" />
+                    </svg>
+                  ) : (
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  )}
+                </button>
+
+                {/* Skip forward */}
+                <button
+                  onClick={handleSkipForward}
+                  className="flex items-center justify-center w-12 h-12 rounded-full text-gray-500 hover:text-[#6B4C9A] hover:bg-[#6B4C9A]/5 active:bg-[#6B4C9A]/10 transition-colors"
+                >
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M13 5l7 7-7 7" />
+                    <path d="M6 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

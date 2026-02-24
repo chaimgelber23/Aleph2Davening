@@ -98,7 +98,7 @@ function HomeOverview() {
   // Signup prompt
   const showSignup =
     authStatus === 'unauthenticated' &&
-    (bootcampCompletedDays >= 2 || Object.keys(skillProgress).length >= 5);
+    (bootcampProgress.enrolled || Object.keys(skillProgress).length >= 1);
 
   // Section cards
   const sections = useMemo(

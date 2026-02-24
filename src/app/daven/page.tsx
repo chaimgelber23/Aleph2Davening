@@ -34,6 +34,9 @@ export default function DavenPage() {
   const [showCoaching, setShowCoaching] = useState(false);
   const [chazanGuideFromList, setChazanGuideFromList] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showWalkthrough, setShowWalkthrough] = useState(false);
+  const [dismissedLayers, setDismissedLayers] = useState<Set<string>>(new Set());
+  const [settingsHint, setSettingsHint] = useState<string | null>(null);
 
   // Audio source selection
   const [selectedAudioSource, setSelectedAudioSource] = useState<AudioSourceId>('google-tts');
@@ -46,7 +49,6 @@ export default function DavenPage() {
   // Store
   const audioSpeed = useUserStore((s) => s.profile.audioSpeed);
   const updateProfile = useUserStore((s) => s.updateProfile);
-  const hasDismissedDavenWalkthrough = useUserStore((s) => s.hasDismissedDavenWalkthrough);
   const displaySettings = useUserStore((s) => s.displaySettings);
   const updateServicePosition = useUserStore((s) => s.updateServicePosition);
 
@@ -207,6 +209,12 @@ export default function DavenPage() {
     updateProfile({ audioSpeed: newSpeed });
   }, [updateProfile]);
 
+  const handleDismissLayer = useCallback((key: string) => {
+    setDismissedLayers(prev => new Set([...prev, key]));
+    setSettingsHint('Turned off for now');
+    setTimeout(() => setSettingsHint(null), 4000);
+  }, []);
+
   // === VIEWS ===
 
   // List view
@@ -292,18 +300,67 @@ export default function DavenPage() {
               }}
             />
           </div>
+
+          {/* Quick Controls: View mode + Auto-advance + Guide */}
+          <div className="max-w-md mx-auto flex items-center justify-between mt-2 px-4 pb-1">
+            {/* View mode toggle */}
+            <div className="flex gap-0.5 bg-gray-100 rounded-lg p-0.5">
+              <button
+                onClick={() => setViewMode('section')}
+                className={`px-3 py-1.5 text-[11px] font-semibold rounded-md transition-colors ${
+                  viewMode === 'section' ? 'bg-white text-primary shadow-sm' : 'text-gray-400'
+                }`}
+              >
+                Section
+              </button>
+              <button
+                onClick={() => setViewMode('full')}
+                className={`px-3 py-1.5 text-[11px] font-semibold rounded-md transition-colors ${
+                  viewMode === 'full' ? 'bg-white text-primary shadow-sm' : 'text-gray-400'
+                }`}
+              >
+                Full
+              </button>
+            </div>
+
+            {/* Auto-advance toggle */}
+            <button
+              onClick={() => setAutoAdvanceEnabled(!autoAdvanceEnabled)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-colors ${
+                autoAdvanceEnabled ? 'bg-success/10 text-success' : 'bg-gray-100 text-gray-400'
+              }`}
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <polygon points="5,3 19,12 5,21" />
+              </svg>
+              Auto-play {autoAdvanceEnabled ? 'ON' : 'OFF'}
+            </button>
+
+            {/* Guide button */}
+            <button
+              onClick={() => setShowWalkthrough(true)}
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-primary bg-primary/5 hover:bg-primary/10 transition-colors"
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                <line x1="12" y1="17" x2="12.01" y2="17" />
+              </svg>
+              Guide
+            </button>
+          </div>
         </div>
 
         <div className="max-w-md mx-auto px-6 py-6 space-y-5 pb-32">
           {/* Prayer Context */}
-          {currentSectionIndex === 0 && displaySettings.showInstructions && (
+          {currentSectionIndex === 0 && displaySettings.showInstructions && !dismissedLayers.has('showInstructions') && (
             <p className="text-xs text-gray-400 text-center">
               {selectedPrayer.whenSaid}
             </p>
           )}
 
           {/* Amud Badge */}
-          {displaySettings.showAmudCues && currentSection?.amud && (
+          {displaySettings.showAmudCues && !dismissedLayers.has('showAmudCues') && currentSection?.amud && (
             <div className="flex items-center justify-center gap-2">
               <AmudBadge role={currentSection.amud.role} />
               {currentSection.amud.physicalActions?.map((action) => (
@@ -356,6 +413,8 @@ export default function DavenPage() {
               onWordTap={handleReplay}
               isPlaying={isPlaying}
               isLoading={isLoading}
+              dismissedLayers={dismissedLayers}
+              onDismissLayer={handleDismissLayer}
             />
           )}
 
@@ -504,7 +563,7 @@ export default function DavenPage() {
                     )}
 
                     {/* Transliteration with matching highlight on current */}
-                    {displaySettings.showTransliteration && section.transliteration && (
+                    {displaySettings.showTransliteration && !dismissedLayers.has('showTransliteration') && section.transliteration && (
                       isCurrent ? (
                         <div className="flex flex-wrap justify-center gap-x-1.5 gap-y-0.5 mt-2">
                           {section.transliteration.split(' ').map((word, i) => (
@@ -525,14 +584,14 @@ export default function DavenPage() {
                       )
                     )}
 
-                    {displaySettings.showTranslation && section.translation && (
+                    {displaySettings.showTranslation && !dismissedLayers.has('showTranslation') && section.translation && (
                       <p className={`text-sm mt-2 ${isCurrent ? 'text-gray-600' : 'text-gray-400'}`}>
                         {section.translation}
                       </p>
                     )}
 
                     {/* Amud cues on current section */}
-                    {isCurrent && displaySettings.showAmudCues && section.amud && (
+                    {isCurrent && displaySettings.showAmudCues && !dismissedLayers.has('showAmudCues') && section.amud && (
                       <div className="mt-3 pt-3 border-t border-gray-100 space-y-2">
                         {section.amud.instruction && (
                           <p className="text-xs text-primary font-medium text-center">
@@ -666,16 +725,38 @@ export default function DavenPage() {
         </AnimatePresence>
 
         <AnimatePresence>
-          {!hasDismissedDavenWalkthrough && (
+          {showWalkthrough && (
             <DavenWelcomeWalkthrough
               prayerId={selectedPrayer.id}
-              onClose={() => {}}
+              onClose={() => setShowWalkthrough(false)}
               selectedAudioSource={selectedAudioSource}
               onSelectAudioSource={(sourceId, entry) => {
                 setSelectedAudioSource(sourceId);
                 setSelectedAudioEntry(entry);
               }}
             />
+          )}
+        </AnimatePresence>
+
+        {/* Settings hint toast */}
+        <AnimatePresence>
+          {settingsHint && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              className="fixed bottom-20 inset-x-0 flex justify-center z-50"
+            >
+              <div className="bg-gray-800 text-white text-xs px-4 py-2.5 rounded-full shadow-lg flex items-center gap-2">
+                <span>{settingsHint}</span>
+                <button
+                  onClick={() => { setSettingsHint(null); setShowSettingsModal(true); }}
+                  className="text-[#5FA8D3] font-semibold underline"
+                >
+                  Settings
+                </button>
+              </div>
+            </motion.div>
           )}
         </AnimatePresence>
       </div>

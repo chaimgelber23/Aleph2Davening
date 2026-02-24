@@ -473,8 +473,8 @@ export const useUserStore = create<UserState>()(
       displaySettings: {
         showTransliteration: true,
         showTranslation: true,
-        showInstructions: false,
-        showAmudCues: false,
+        showInstructions: true,
+        showAmudCues: true,
       },
 
       updateDisplaySettings: (updates) =>
