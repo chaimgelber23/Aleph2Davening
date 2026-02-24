@@ -91,6 +91,10 @@ interface UserState {
   markGuideRead: (guideId: string) => void;
   toggleGuideBookmark: (guideId: string) => void;
   completeGuideQuiz: (guideId: string, score: number, total: number) => void;
+
+  // Daven walkthrough
+  hasDismissedDavenWalkthrough: boolean;
+  dismissDavenWalkthrough: () => void;
 }
 
 const DEFAULT_PROFILE: UserProfile = {
@@ -469,8 +473,8 @@ export const useUserStore = create<UserState>()(
       displaySettings: {
         showTransliteration: true,
         showTranslation: true,
-        showInstructions: true,
-        showAmudCues: true,
+        showInstructions: false,
+        showAmudCues: false,
       },
 
       updateDisplaySettings: (updates) =>
@@ -541,16 +545,23 @@ export const useUserStore = create<UserState>()(
             },
           },
         })),
+
+      // Daven walkthrough
+      hasDismissedDavenWalkthrough: false,
+      dismissDavenWalkthrough: () => set({ hasDismissedDavenWalkthrough: true }),
     }),
     {
       name: 'aleph2davening-user',
-      version: 2,
+      version: 3,
       migrate: (persistedState: unknown, version: number) => {
         const state = persistedState as Record<string, unknown>;
         if (version < 2) {
           // Migration: audioSource moved from profile to per-prayer selection
           const profile = (state.profile ?? {}) as Record<string, unknown>;
           delete profile.audioSource;
+        }
+        if (version < 3) {
+          state.hasDismissedDavenWalkthrough = false;
         }
         return state;
       },

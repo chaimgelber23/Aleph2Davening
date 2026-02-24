@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { BottomNav } from '@/components/ui/BottomNav';
@@ -17,6 +17,7 @@ import { KaraokePlayer } from '@/components/siddur/KaraokePlayer';
 import { AmudBadge } from '@/components/siddur/AmudBadge';
 import { TefillahPrepSheet } from '@/components/siddur/TefillahPrepSheet';
 import { AudioSourcePicker } from '@/components/siddur/AudioSourcePicker';
+import { DavenWelcomeWalkthrough } from '@/components/siddur/DavenWelcomeWalkthrough';
 import { track } from '@/lib/analytics';
 import type { Prayer, DaveningService, ServiceItem } from '@/types';
 import type { AudioSourceId, PrayerAudioEntry } from '@/lib/content/audio-sources';
@@ -31,12 +32,11 @@ export default function DavenPage() {
   const [selectedService, setSelectedService] = useState<DaveningService | null>(null);
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [showCoaching, setShowCoaching] = useState(false);
-  const [dismissedBanner, setDismissedBanner] = useState(false);
   const [chazanGuideFromList, setChazanGuideFromList] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   // Audio source selection
-  const [selectedAudioSource, setSelectedAudioSource] = useState<AudioSourceId>('siddur-audio');
+  const [selectedAudioSource, setSelectedAudioSource] = useState<AudioSourceId>('google-tts');
   const [selectedAudioEntry, setSelectedAudioEntry] = useState<PrayerAudioEntry | null>(null);
 
   // Prayer view mode
@@ -46,14 +46,13 @@ export default function DavenPage() {
   // Store
   const audioSpeed = useUserStore((s) => s.profile.audioSpeed);
   const updateProfile = useUserStore((s) => s.updateProfile);
-  const hasUsedCoaching = useUserStore((s) => s.hasUsedCoaching);
-  const isPrayerFullyCoached = useUserStore((s) => s.isPrayerFullyCoached);
+  const hasDismissedDavenWalkthrough = useUserStore((s) => s.hasDismissedDavenWalkthrough);
   const displaySettings = useUserStore((s) => s.displaySettings);
   const updateServicePosition = useUserStore((s) => s.updateServicePosition);
 
   // Auto-advance state
-  const [autoAdvanceEnabled, setAutoAdvanceEnabled] = useState(false);
-  const [autoPlayNext, setAutoPlayNext] = useState(false);
+  const [autoAdvanceEnabled, setAutoAdvanceEnabled] = useState(true);
+  const autoPlayNextRef = useRef(false);
 
   // Audio — auto-advance to next section when audio ends (if enabled)
   const handleAudioEnded = useCallback(() => {
@@ -61,7 +60,7 @@ export default function DavenPage() {
     const total = selectedPrayer.sections.length;
     setCurrentSectionIndex((prev) => {
       if (prev < total - 1) {
-        setAutoPlayNext(true);
+        autoPlayNextRef.current = true;
         return prev + 1;
       }
       return prev;
@@ -69,8 +68,8 @@ export default function DavenPage() {
   }, [selectedPrayer, autoAdvanceEnabled]);
 
   const audioOptions = useMemo(
-    () => ({ speed: audioSpeed, onEnded: handleAudioEnded }),
-    [audioSpeed, handleAudioEnded]
+    () => ({ speed: audioSpeed, onEnded: handleAudioEnded, forceTTS: selectedAudioSource === 'google-tts' }),
+    [audioSpeed, handleAudioEnded, selectedAudioSource]
   );
   const { play, stop, isPlaying, isLoading } = useAudio(audioOptions);
 
@@ -86,16 +85,16 @@ export default function DavenPage() {
     speed: audioSpeed,
   });
 
-  // Auto-play the next section after auto-advance
+  // Auto-play the next section after auto-advance (ref avoids cleanup race condition)
   useEffect(() => {
-    if (autoPlayNext && currentSection && selectedPrayer) {
-      setAutoPlayNext(false);
-      const timer = setTimeout(() => {
-        play(currentSection.hebrewText, 'hebrew', audioSpeed, selectedPrayer.id, currentSection.id);
-      }, 300);
-      return () => clearTimeout(timer);
-    }
-  }, [autoPlayNext, currentSection, selectedPrayer, audioSpeed, play]);
+    if (!autoPlayNextRef.current || !currentSection || !selectedPrayer) return;
+    autoPlayNextRef.current = false;
+    const timer = setTimeout(() => {
+      play(currentSection.hebrewText, 'hebrew', audioSpeed, selectedPrayer.id, currentSection.id);
+    }, 300);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentSectionIndex]);
 
   // Auto-scroll to current section in full view
   useEffect(() => {
@@ -249,9 +248,6 @@ export default function DavenPage() {
 
   // Prayer Reader
   if (view === 'prayer_reader' && selectedPrayer) {
-    const sectionIds = selectedPrayer.sections.map((s) => s.id);
-    const isCoached = isPrayerFullyCoached(selectedPrayer.id, sectionIds);
-    const showFirstTimeBanner = !hasUsedCoaching && !isCoached && !dismissedBanner;
     const totalSections = selectedPrayer.sections.length;
     const showCompactProgress = totalSections > 12;
 
@@ -285,33 +281,20 @@ export default function DavenPage() {
               </svg>
             </button>
           </div>
+          {/* Audio source quick-access */}
+          <div className="max-w-md mx-auto flex items-center justify-center mt-2">
+            <AudioSourcePicker
+              prayerId={selectedPrayer.id}
+              selectedSource={selectedAudioSource}
+              onSelectSource={(sourceId, entry) => {
+                setSelectedAudioSource(sourceId);
+                setSelectedAudioEntry(entry);
+              }}
+            />
+          </div>
         </div>
 
         <div className="max-w-md mx-auto px-6 py-6 space-y-5 pb-32">
-          {/* First-time coaching banner */}
-          {showFirstTimeBanner && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-gold/10 border border-gold/20 rounded-2xl p-4 flex items-center gap-3"
-            >
-              <div className="flex-1">
-                <p className="text-sm font-medium text-foreground">First time?</p>
-                <p className="text-xs text-gray-500">
-                  Tap &quot;Coach&quot; below to learn this step by step
-                </p>
-              </div>
-              <button
-                onClick={() => setDismissedBanner(true)}
-                className="text-gray-400 hover:text-gray-600 p-1"
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M18 6L6 18M6 6l12 12" />
-                </svg>
-              </button>
-            </motion.div>
-          )}
-
           {/* Prayer Context */}
           {currentSectionIndex === 0 && displaySettings.showInstructions && (
             <p className="text-xs text-gray-400 text-center">
@@ -581,7 +564,7 @@ export default function DavenPage() {
                 onClick={() => {
                   if (currentSectionIndex > 0) {
                     stop();
-                    setAutoPlayNext(false);
+                    autoPlayNextRef.current = false;
                     setCurrentSectionIndex(currentSectionIndex - 1);
                   }
                 }}
@@ -623,7 +606,7 @@ export default function DavenPage() {
                 onClick={() => {
                   if (currentSectionIndex < totalSections - 1) {
                     stop();
-                    setAutoPlayNext(false);
+                    autoPlayNextRef.current = false;
                     setCurrentSectionIndex(currentSectionIndex + 1);
                   }
                 }}
@@ -678,6 +661,20 @@ export default function DavenPage() {
               onChangeViewMode={setViewMode}
               showProgressSidebar={showProgressSidebar}
               onToggleProgressSidebar={() => setShowProgressSidebar(!showProgressSidebar)}
+            />
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {!hasDismissedDavenWalkthrough && (
+            <DavenWelcomeWalkthrough
+              prayerId={selectedPrayer.id}
+              onClose={() => {}}
+              selectedAudioSource={selectedAudioSource}
+              onSelectAudioSource={(sourceId, entry) => {
+                setSelectedAudioSource(sourceId);
+                setSelectedAudioEntry(entry);
+              }}
             />
           )}
         </AnimatePresence>
@@ -843,16 +840,21 @@ function DavenList({
                 </svg>
               </button>
               {showChazanPicker && (
-                <div className="px-5 pb-4 flex flex-wrap gap-2">
-                  {services.map((service) => (
-                    <button
-                      key={service.id}
-                      onClick={() => onOpenChazanGuide(service)}
-                      className="px-4 py-2 rounded-xl text-sm font-medium border border-primary/20 text-primary hover:bg-primary/5 transition-colors"
-                    >
-                      {service.name}
-                    </button>
-                  ))}
+                <div className="px-5 pb-4">
+                  <div className="rounded-xl border border-gray-100 overflow-hidden divide-y divide-gray-100">
+                    {services.map((service) => (
+                      <button
+                        key={service.id}
+                        onClick={() => onOpenChazanGuide(service)}
+                        className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-primary hover:bg-primary/5 transition-colors"
+                      >
+                        {service.name}
+                        <svg className="w-3.5 h-3.5 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>

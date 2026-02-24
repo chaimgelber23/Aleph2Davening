@@ -25,6 +25,8 @@ interface UseAudioOptions {
   onEnded?: () => void;
   pronunciation?: Pronunciation;
   voiceGender?: VoiceGender;
+  /** When true, skip static file lookup and go straight to TTS (used when AI Voice is selected) */
+  forceTTS?: boolean;
 }
 
 interface AudioTimeRange {
@@ -196,45 +198,48 @@ export function useAudio(options?: UseAudioOptions) {
     const pronunciation = options?.pronunciation ?? 'modern';
 
     try {
-      // 1. Try pre-generated static file per section
-      if (prayerId && sectionId) {
-        const staticUrl = await tryStaticFile(prayerId, sectionId, pronunciation);
-        if (staticUrl) {
-          await playAudioUrl(staticUrl, speed, false);
-          setIsLoading(false);
+      // When forceTTS is set (AI Voice selected), skip static files entirely
+      if (!options?.forceTTS) {
+        // 1. Try pre-generated static file per section
+        if (prayerId && sectionId) {
+          const staticUrl = await tryStaticFile(prayerId, sectionId, pronunciation);
+          if (staticUrl) {
+            await playAudioUrl(staticUrl, speed, false);
+            setIsLoading(false);
 
-          // Track audio play
-          track({
-            eventType: 'audio_play',
-            eventCategory: 'audio',
-            prayerId,
-            sectionId,
-            audioSource: 'siddur-audio',
-          });
+            // Track audio play
+            track({
+              eventType: 'audio_play',
+              eventCategory: 'audio',
+              prayerId,
+              sectionId,
+              audioSource: 'siddur-audio',
+            });
 
-          return;
+            return;
+          }
+        }
+
+        // 2. Try full-prayer Siddur Audio recording (skip in auto-advance — plays entire prayer)
+        if (prayerId) {
+          const siddurUrl = await trySiddurAudioFile(prayerId);
+          if (siddurUrl) {
+            await playAudioUrl(siddurUrl, speed, false);
+            setIsLoading(false);
+
+            // Track audio play
+            track({
+              eventType: 'audio_play',
+              eventCategory: 'audio',
+              prayerId,
+              audioSource: 'siddur-audio',
+            });
+            return;
+          }
         }
       }
 
-      // 2. Try full-prayer Siddur Audio recording
-      if (prayerId) {
-        const siddurUrl = await trySiddurAudioFile(prayerId);
-        if (siddurUrl) {
-          await playAudioUrl(siddurUrl, speed, false);
-          setIsLoading(false);
-
-          // Track audio play
-          track({
-            eventType: 'audio_play',
-            eventCategory: 'audio',
-            prayerId,
-            audioSource: 'siddur-audio',
-          });
-          return;
-        }
-      }
-
-      // 3. Fall back to Google Cloud TTS
+      // 3. AI Voice (Google Cloud TTS) — generates per-section audio
       const response = await fetch('/api/tts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -254,7 +259,7 @@ export function useAudio(options?: UseAudioOptions) {
     } finally {
       setIsLoading(false);
     }
-  }, [stop, options?.speed, options?.pronunciation, options?.voiceGender, playAudioUrl]);
+  }, [stop, options?.speed, options?.pronunciation, options?.voiceGender, options?.forceTTS, playAudioUrl]);
 
   /**
    * Play audio from a direct URL, optionally with a time range.

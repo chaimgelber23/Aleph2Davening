@@ -62,9 +62,9 @@ export const AUDIO_SOURCES: Record<AudioSourceId, AudioSource> = {
   },
   'google-tts': {
     id: 'google-tts',
-    label: 'Google Hebrew Voice',
-    shortLabel: 'Google',
-    description: 'Hebrew Wavenet voice — high quality',
+    label: 'AI Voice (Hebrew)',
+    shortLabel: 'AI Voice',
+    description: 'AI-generated Hebrew voice — high quality',
   },
 };
 

@@ -36,10 +36,10 @@ export function PrayerSettingsModal({
     const updateDisplaySettings = useUserStore((s) => s.updateDisplaySettings);
 
     const TOGGLES = [
-        { key: 'showTransliteration' as const, label: 'Transliteration' },
-        { key: 'showTranslation' as const, label: 'English Translation' },
-        { key: 'showInstructions' as const, label: 'Instructions & Tips' },
-        { key: 'showAmudCues' as const, label: 'Amud/Chazan Cues' },
+        { key: 'showTransliteration' as const, label: 'Transliteration', desc: 'Romanized pronunciation under each line' },
+        { key: 'showTranslation' as const, label: 'English Translation', desc: 'English meaning of the words' },
+        { key: 'showInstructions' as const, label: 'Instructions & Tips', desc: 'Context about when and why we say this' },
+        { key: 'showAmudCues' as const, label: 'Amud/Chazan Cues', desc: 'Who says what — leader vs. congregation' },
     ];
 
     if (!isOpen) return null;
@@ -70,7 +70,10 @@ export function PrayerSettingsModal({
 
                 {/* Header */}
                 <div className="flex items-center justify-between px-6 py-3 border-b border-gray-100 shrink-0">
-                    <h2 className="text-lg font-bold text-foreground">Settings</h2>
+                    <div>
+                        <h2 className="text-lg font-bold text-foreground">Customize Your Reader</h2>
+                        <p className="text-[11px] text-gray-400 mt-0.5">Change how you read, listen, and follow along</p>
+                    </div>
                     <button
                         onClick={onClose}
                         className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
@@ -82,27 +85,35 @@ export function PrayerSettingsModal({
                 </div>
 
                 {/* Content */}
-                <div className="flex-1 overflow-y-auto px-6 py-6 space-y-8">
+                <div className="flex-1 overflow-y-auto px-6 py-6 space-y-7">
 
                     {/* View Modes */}
                     <section className="space-y-3">
-                        <h3 className="text-xs uppercase tracking-wider text-gray-500 font-semibold">View Mode</h3>
+                        <div>
+                            <h3 className="text-xs uppercase tracking-wider text-gray-500 font-semibold">How to Read</h3>
+                            <p className="text-[11px] text-gray-400 mt-0.5">Choose how the prayer is presented</p>
+                        </div>
                         <div className="flex gap-2 bg-gray-100 p-1 rounded-xl">
                             <button
                                 onClick={() => onChangeViewMode('section')}
-                                className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-colors ${viewMode === 'section' ? 'bg-white text-primary shadow-sm' : 'text-gray-500'
+                                className={`flex-1 py-2.5 text-sm font-semibold rounded-lg transition-colors ${viewMode === 'section' ? 'bg-white text-primary shadow-sm' : 'text-gray-500'
                                     }`}
                             >
                                 Section by Section
                             </button>
                             <button
                                 onClick={() => onChangeViewMode('full')}
-                                className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-colors ${viewMode === 'full' ? 'bg-white text-primary shadow-sm' : 'text-gray-500'
+                                className={`flex-1 py-2.5 text-sm font-semibold rounded-lg transition-colors ${viewMode === 'full' ? 'bg-white text-primary shadow-sm' : 'text-gray-500'
                                     }`}
                             >
-                                View Full
+                                Full Prayer
                             </button>
                         </div>
+                        <p className="text-[11px] text-gray-400 px-1">
+                            {viewMode === 'section'
+                                ? 'Focus on one section at a time. Audio plays each section, then moves to the next.'
+                                : 'See the entire prayer. Audio plays through and the view scrolls to follow.'}
+                        </p>
 
                         <button
                             onClick={onToggleProgressSidebar}
@@ -118,10 +129,16 @@ export function PrayerSettingsModal({
 
                     {/* Audio Setup */}
                     <section className="space-y-3">
-                        <h3 className="text-xs uppercase tracking-wider text-gray-500 font-semibold">Audio Setup</h3>
+                        <div>
+                            <h3 className="text-xs uppercase tracking-wider text-gray-500 font-semibold">Audio</h3>
+                            <p className="text-[11px] text-gray-400 mt-0.5">Pick a voice and control playback</p>
+                        </div>
                         <div className="bg-white border border-gray-100 rounded-xl p-4 space-y-4 shadow-sm">
                             <div className="flex items-center justify-between">
-                                <span className="text-sm font-medium text-gray-700">Audio Voice</span>
+                                <div>
+                                    <span className="text-sm font-medium text-gray-700 block">Voice</span>
+                                    <span className="text-[11px] text-gray-400">Switch between AI and recorded voices</span>
+                                </div>
                                 <AudioSourcePicker
                                     prayerId={prayerId}
                                     selectedSource={selectedAudioSource}
@@ -134,11 +151,11 @@ export function PrayerSettingsModal({
                             <div className="flex items-center justify-between">
                                 <div>
                                     <span className="text-sm font-medium text-gray-700 block">Auto-Advance</span>
-                                    <span className="text-xs text-gray-400">Play next section automatically</span>
+                                    <span className="text-[11px] text-gray-400">Audio plays through every section, scrolling as it goes</span>
                                 </div>
                                 <button
                                     onClick={onToggleAutoAdvance}
-                                    className={`relative w-11 h-6 rounded-full transition-colors shrink-0 ${autoAdvanceEnabled ? 'bg-success' : 'bg-gray-300'
+                                    className={`relative w-11 h-6 rounded-full transition-colors shrink-0 ml-3 ${autoAdvanceEnabled ? 'bg-success' : 'bg-gray-300'
                                         }`}
                                 >
                                     <span
@@ -151,20 +168,26 @@ export function PrayerSettingsModal({
                     </section>
 
                     {/* Display Settings */}
-                    <section className="space-y-3 pb-6">
-                        <h3 className="text-xs uppercase tracking-wider text-gray-500 font-semibold">Display Options</h3>
+                    <section className="space-y-3">
+                        <div>
+                            <h3 className="text-xs uppercase tracking-wider text-gray-500 font-semibold">Display Layers</h3>
+                            <p className="text-[11px] text-gray-400 mt-0.5">Show or hide text layers under the Hebrew</p>
+                        </div>
                         <div className="bg-white border border-gray-100 rounded-xl divide-y divide-gray-100 shadow-sm">
-                            {TOGGLES.map(({ key, label }) => {
+                            {TOGGLES.map(({ key, label, desc }) => {
                                 const isOn = displaySettings[key];
                                 return (
                                     <button
                                         key={key}
                                         onClick={() => updateDisplaySettings({ [key]: !isOn })}
-                                        className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors first:rounded-t-xl last:rounded-b-xl"
+                                        className="w-full flex items-center justify-between px-4 py-3.5 hover:bg-gray-50 transition-colors first:rounded-t-xl last:rounded-b-xl"
                                     >
-                                        <span className="text-sm font-medium text-gray-700">{label}</span>
+                                        <div className="text-left">
+                                            <span className="text-sm font-medium text-gray-700 block">{label}</span>
+                                            <span className="text-[11px] text-gray-400">{desc}</span>
+                                        </div>
                                         <div
-                                            className={`relative w-11 h-6 rounded-full transition-colors shrink-0 ${isOn ? 'bg-primary' : 'bg-gray-300'
+                                            className={`relative w-11 h-6 rounded-full transition-colors shrink-0 ml-3 ${isOn ? 'bg-primary' : 'bg-gray-300'
                                                 }`}
                                         >
                                             <span
@@ -175,6 +198,27 @@ export function PrayerSettingsModal({
                                     </button>
                                 );
                             })}
+                        </div>
+                    </section>
+
+                    {/* What's Included */}
+                    <section className="space-y-3 pb-6">
+                        <h3 className="text-xs uppercase tracking-wider text-gray-500 font-semibold">What&apos;s Included</h3>
+                        <div className="bg-white border border-gray-100 rounded-xl p-4 shadow-sm space-y-3">
+                            {[
+                                { label: 'Audio for every prayer', desc: 'AI voice + multiple recorded voices', color: 'bg-primary' },
+                                { label: 'Auto-scroll & advance', desc: 'Plays through each section hands-free', color: 'bg-success' },
+                                { label: 'Transliteration & translation', desc: 'Read along in English, toggle on/off', color: 'bg-primary-light' },
+                                { label: 'Coach mode', desc: 'Tap the Coach button to learn step by step', color: 'bg-gold' },
+                            ].map((f) => (
+                                <div key={f.label} className="flex items-start gap-2.5">
+                                    <div className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${f.color}`} />
+                                    <div>
+                                        <p className="text-sm font-medium text-gray-700">{f.label}</p>
+                                        <p className="text-[11px] text-gray-400">{f.desc}</p>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </section>
 
