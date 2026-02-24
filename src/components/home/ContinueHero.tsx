@@ -34,30 +34,9 @@ export function ContinueHero() {
 
   const isNewUser = !bootcampEnrolled && Object.keys(skillProgress).length === 0;
 
-  // New user — hasn't started anything
+  // New user — let the section cards below serve as entry points
   if (isNewUser) {
-    return (
-      <Link href="/hebrew/bootcamp">
-        <div className="bg-white rounded-2xl shadow-sm border-2 border-gold/20 p-5 hover:shadow-md transition-all">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-[11px] text-gold font-semibold uppercase tracking-widest">
-                Your Journey Begins
-              </p>
-              <h2 className="text-lg font-serif font-bold text-foreground mt-1.5">
-                Start Learning Hebrew
-              </h2>
-              <p className="text-[13px] text-gray-400 mt-1">
-                Learn to read the aleph-bet in 5 short sessions
-              </p>
-            </div>
-            <div className="bg-gold text-white w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-lg shadow-gold/25">
-              <Play className="w-5 h-5" strokeWidth={2.5} fill="currentColor" />
-            </div>
-          </div>
-        </div>
-      </Link>
-    );
+    return null;
   }
 
   // Mid-bootcamp
