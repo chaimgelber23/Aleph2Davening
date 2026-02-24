@@ -46,6 +46,59 @@ export interface MilestoneRow {
   earned_at: string;
 }
 
+export interface AnalyticsEventRow {
+  id: string;
+  user_id: string | null;
+  session_id: string | null;
+  event_type: string;
+  event_category: string | null;
+  prayer_id: string | null;
+  section_id: string | null;
+  audio_source: string | null;
+  coaching_phase: string | null;
+  lesson_id: string | null;
+  service_id: string | null;
+  duration_seconds: number | null;
+  completion_percentage: number | null;
+  user_agent: string | null;
+  device_type: string | null;
+  created_at: string;
+}
+
+export interface DailyAnalyticsSummaryRow {
+  id: string;
+  date: string;
+  total_users: number;
+  new_users: number;
+  active_users: number;
+  returning_users: number;
+  prayer_views: Record<string, number>;
+  total_prayer_views: number;
+  prayers_completed: number;
+  audio_plays: Record<string, number>;
+  total_audio_plays: number;
+  audio_sources_used: Record<string, number>;
+  coaching_sessions_started: number;
+  coaching_sessions_completed: number;
+  coaching_phases_breakdown: Record<string, number>;
+  lessons_started: number;
+  lessons_completed: number;
+  bootcamp_completions: number;
+  service_views: Record<string, number>;
+  avg_session_duration_seconds: number | null;
+  total_study_minutes: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AdminUserRow {
+  id: string;
+  user_id: string;
+  email: string;
+  granted_by: string | null;
+  granted_at: string;
+}
+
 export type Database = {
   public: {
     Tables: {
@@ -68,6 +121,21 @@ export type Database = {
         Row: MilestoneRow;
         Insert: Omit<MilestoneRow, 'id'>;
         Update: Partial<Omit<MilestoneRow, 'id'>>;
+      };
+      analytics_events: {
+        Row: AnalyticsEventRow;
+        Insert: Omit<AnalyticsEventRow, 'id' | 'created_at'>;
+        Update: Partial<Omit<AnalyticsEventRow, 'id' | 'created_at'>>;
+      };
+      daily_analytics_summary: {
+        Row: DailyAnalyticsSummaryRow;
+        Insert: Omit<DailyAnalyticsSummaryRow, 'id' | 'created_at' | 'updated_at'>;
+        Update: Partial<Omit<DailyAnalyticsSummaryRow, 'id' | 'created_at' | 'updated_at'>>;
+      };
+      admin_users: {
+        Row: AdminUserRow;
+        Insert: Omit<AdminUserRow, 'id' | 'granted_at'>;
+        Update: Partial<Omit<AdminUserRow, 'id' | 'granted_at'>>;
       };
     };
   };

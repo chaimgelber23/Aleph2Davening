@@ -4,7 +4,6 @@ import { Suspense, useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { RequireAuth } from '@/components/RequireAuth';
 import { useAuthStore } from '@/stores/authStore';
 import { useUserStore } from '@/stores/userStore';
 import type { Nusach, TransliterationMode, DisplaySettings } from '@/types';
@@ -12,9 +11,7 @@ import type { Nusach, TransliterationMode, DisplaySettings } from '@/types';
 export default function SettingsPage() {
   return (
     <Suspense>
-      <RequireAuth>
-        <SettingsContent />
-      </RequireAuth>
+      <SettingsContent />
     </Suspense>
   );
 }
@@ -123,101 +120,104 @@ function SettingsContent() {
             ← Home
           </Link>
           <h1 className="text-2xl font-bold mt-2">Settings</h1>
-          <p className="text-primary-light text-sm mt-1">{user?.email}</p>
+          {user && <p className="text-primary-light text-sm mt-1">{user.email}</p>}
         </div>
       </div>
 
       <div className="max-w-md mx-auto px-6 py-8 space-y-6">
-        {/* Account Section */}
-        <SettingsSection title="Account">
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-1.5">
-                Display Name
-              </label>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
-                  className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-sm"
-                  placeholder="Your name"
-                />
-                <button
-                  onClick={handleSaveName}
-                  className="px-4 py-2.5 rounded-xl bg-primary text-white text-sm font-medium hover:bg-[#163d55] transition-colors"
-                >
-                  Save
-                </button>
+        {/* Account & Security — only when signed in */}
+        {user && (
+          <>
+            <SettingsSection title="Account">
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-1.5">
+                    Display Name
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={displayName}
+                      onChange={(e) => setDisplayName(e.target.value)}
+                      className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-sm"
+                      placeholder="Your name"
+                    />
+                    <button
+                      onClick={handleSaveName}
+                      className="px-4 py-2.5 rounded-xl bg-primary text-white text-sm font-medium hover:bg-[#163d55] transition-colors"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-1.5">
+                    Change Email
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="email"
+                      value={newEmail}
+                      onChange={(e) => setNewEmail(e.target.value)}
+                      className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-sm"
+                      placeholder="new@email.com"
+                    />
+                    <button
+                      onClick={handleChangeEmail}
+                      disabled={!newEmail}
+                      className="px-4 py-2.5 rounded-xl bg-primary text-white text-sm font-medium hover:bg-[#163d55] transition-colors disabled:opacity-50"
+                    >
+                      Update
+                    </button>
+                  </div>
+                </div>
+
+                {accountMsg && (
+                  <p className="text-sm text-success">{accountMsg}</p>
+                )}
               </div>
-            </div>
+            </SettingsSection>
 
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-1.5">
-                Change Email
-              </label>
-              <div className="flex gap-2">
-                <input
-                  type="email"
-                  value={newEmail}
-                  onChange={(e) => setNewEmail(e.target.value)}
-                  className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-sm"
-                  placeholder="new@email.com"
-                />
+            <SettingsSection title="Security" id="password-section">
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-1.5">
+                    New Password
+                  </label>
+                  <input
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-sm"
+                    placeholder="At least 8 characters"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-1.5">
+                    Confirm New Password
+                  </label>
+                  <input
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-sm"
+                    placeholder="••••••••"
+                  />
+                </div>
                 <button
-                  onClick={handleChangeEmail}
-                  disabled={!newEmail}
-                  className="px-4 py-2.5 rounded-xl bg-primary text-white text-sm font-medium hover:bg-[#163d55] transition-colors disabled:opacity-50"
+                  onClick={handleChangePassword}
+                  disabled={!newPassword}
+                  className="px-6 py-2.5 rounded-xl bg-primary text-white text-sm font-medium hover:bg-[#163d55] transition-colors disabled:opacity-50"
                 >
-                  Update
+                  Update Password
                 </button>
+                {passwordError && <p className="text-sm text-error">{passwordError}</p>}
+                {passwordMsg && <p className="text-sm text-success">{passwordMsg}</p>}
               </div>
-            </div>
-
-            {accountMsg && (
-              <p className="text-sm text-success">{accountMsg}</p>
-            )}
-          </div>
-        </SettingsSection>
-
-        {/* Security Section */}
-        <SettingsSection title="Security" id="password-section">
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-1.5">
-                New Password
-              </label>
-              <input
-                type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-sm"
-                placeholder="At least 8 characters"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-1.5">
-                Confirm New Password
-              </label>
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-sm"
-                placeholder="••••••••"
-              />
-            </div>
-            <button
-              onClick={handleChangePassword}
-              disabled={!newPassword}
-              className="px-6 py-2.5 rounded-xl bg-primary text-white text-sm font-medium hover:bg-[#163d55] transition-colors disabled:opacity-50"
-            >
-              Update Password
-            </button>
-            {passwordError && <p className="text-sm text-error">{passwordError}</p>}
-            {passwordMsg && <p className="text-sm text-success">{passwordMsg}</p>}
-          </div>
-        </SettingsSection>
+            </SettingsSection>
+          </>
+        )}
 
         {/* Learning Preferences */}
         <SettingsSection title="Learning Preferences">
@@ -375,56 +375,69 @@ function SettingsContent() {
           </div>
         </SettingsSection>
 
-        {/* Sign Out */}
-        <button
-          onClick={handleSignOut}
-          className="w-full py-3 rounded-xl border-2 border-gray-200 text-gray-600 font-medium hover:border-primary hover:text-primary transition-colors"
-        >
-          Sign Out
-        </button>
-
-        {/* Danger Zone */}
-        <SettingsSection title="Danger Zone" danger>
-          <p className="text-sm text-gray-600 mb-4">
-            Permanently delete your account and all your progress data. This cannot be undone.
-          </p>
-          {!showDeleteConfirm ? (
+        {/* Sign Out & Danger Zone — only when signed in */}
+        {user && (
+          <>
             <button
-              onClick={() => setShowDeleteConfirm(true)}
-              className="px-6 py-2.5 rounded-xl border-2 border-error text-error text-sm font-medium hover:bg-error/5 transition-colors"
+              onClick={handleSignOut}
+              className="w-full py-3 rounded-xl border-2 border-gray-200 text-gray-600 font-medium hover:border-primary hover:text-primary transition-colors"
             >
-              Delete Account
+              Sign Out
             </button>
-          ) : (
-            <div className="space-y-3 bg-error/5 rounded-xl p-4">
-              <p className="text-sm font-medium text-error">
-                Type <strong>DELETE</strong> to confirm:
+
+            <SettingsSection title="Danger Zone" danger>
+              <p className="text-sm text-gray-600 mb-4">
+                Permanently delete your account and all your progress data. This cannot be undone.
               </p>
-              <input
-                type="text"
-                value={deleteInput}
-                onChange={(e) => setDeleteInput(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl border border-error/30 focus:border-error outline-none text-sm"
-                placeholder="DELETE"
-              />
-              <div className="flex gap-2">
+              {!showDeleteConfirm ? (
                 <button
-                  onClick={handleDeleteAccount}
-                  disabled={deleteInput !== 'DELETE' || deleting}
-                  className="px-6 py-2.5 rounded-xl bg-error text-white text-sm font-medium disabled:opacity-50 transition-colors"
+                  onClick={() => setShowDeleteConfirm(true)}
+                  className="px-6 py-2.5 rounded-xl border-2 border-error text-error text-sm font-medium hover:bg-error/5 transition-colors"
                 >
-                  {deleting ? 'Deleting...' : 'Permanently Delete'}
+                  Delete Account
                 </button>
-                <button
-                  onClick={() => { setShowDeleteConfirm(false); setDeleteInput(''); }}
-                  className="px-6 py-2.5 rounded-xl border border-gray-200 text-gray-600 text-sm font-medium hover:bg-gray-50 transition-colors"
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          )}
-        </SettingsSection>
+              ) : (
+                <div className="space-y-3 bg-error/5 rounded-xl p-4">
+                  <p className="text-sm font-medium text-error">
+                    Type <strong>DELETE</strong> to confirm:
+                  </p>
+                  <input
+                    type="text"
+                    value={deleteInput}
+                    onChange={(e) => setDeleteInput(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-xl border border-error/30 focus:border-error outline-none text-sm"
+                    placeholder="DELETE"
+                  />
+                  <div className="flex gap-2">
+                    <button
+                      onClick={handleDeleteAccount}
+                      disabled={deleteInput !== 'DELETE' || deleting}
+                      className="px-6 py-2.5 rounded-xl bg-error text-white text-sm font-medium disabled:opacity-50 transition-colors"
+                    >
+                      {deleting ? 'Deleting...' : 'Permanently Delete'}
+                    </button>
+                    <button
+                      onClick={() => { setShowDeleteConfirm(false); setDeleteInput(''); }}
+                      className="px-6 py-2.5 rounded-xl border border-gray-200 text-gray-600 text-sm font-medium hover:bg-gray-50 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+            </SettingsSection>
+          </>
+        )}
+
+        {/* Sign in prompt for guests */}
+        {!user && (
+          <Link
+            href="/auth"
+            className="block w-full py-3 rounded-xl border-2 border-primary text-primary font-medium text-center hover:bg-primary/5 transition-colors"
+          >
+            Sign in to sync your progress
+          </Link>
+        )}
       </div>
     </div>
   );

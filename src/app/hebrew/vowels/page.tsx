@@ -77,7 +77,7 @@ export default function VowelLearnPage() {
       setTeachIndex(vowelLearnSession.teachIndex);
       setDrillIndex(vowelLearnSession.drillIndex);
       setDrillScore(vowelLearnSession.drillScore);
-      track('vowel_lesson_resumed', { lesson: vowelLearnSession.currentLesson });
+      track({ eventType: 'lesson_start', eventCategory: 'learning', lessonId: String(vowelLearnSession.currentLesson) });
     }
     setShowResumePrompt(false);
   };
@@ -158,10 +158,11 @@ export default function VowelLearnPage() {
         setDrillIndex(drillIndex + 1);
       } else {
         checkAndUpdateStreak();
-        track('vowel_lesson_complete', {
-          lesson: currentLesson,
-          score: drillScore,
-          total: drillTotal + 1,
+        track({
+          eventType: 'lesson_complete',
+          eventCategory: 'learning',
+          lessonId: String(currentLesson),
+          completionPercentage: drillScore / (drillTotal + 1),
         });
         clearVowelLearnSession();
         setPhase('complete');
@@ -236,8 +237,8 @@ export default function VowelLearnPage() {
             phase === 'teach'
               ? (teachIndex / lessonVowels.length) * 0.3
               : phase === 'drill'
-              ? 0.3 + (drillIndex / drillsPerLesson) * 0.7
-              : 1
+                ? 0.3 + (drillIndex / drillsPerLesson) * 0.7
+                : 1
           }
           size="sm"
           className="max-w-md mx-auto mt-2"
@@ -353,11 +354,10 @@ export default function VowelLearnPage() {
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className={`text-center py-3 rounded-xl ${
-                    selectedAnswer === drillCorrectVowel.id
+                  className={`text-center py-3 rounded-xl ${selectedAnswer === drillCorrectVowel.id
                       ? 'bg-success/10 text-success'
                       : 'bg-error/10 text-error'
-                  }`}
+                    }`}
                 >
                   {selectedAnswer === drillCorrectVowel.id
                     ? '✓ Correct!'

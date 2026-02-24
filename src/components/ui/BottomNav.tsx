@@ -10,6 +10,7 @@ interface NavItemConfig {
 }
 
 const NAV_ITEMS: NavItemConfig[] = [
+  { href: '/', label: 'Home', icon: HomeNavIcon },
   { href: '/hebrew', label: 'Hebrew', icon: HebrewIcon },
   { href: '/daven', label: 'Daven', icon: DavenIcon },
   { href: '/yahrzeit', label: 'Yahrzeit', icon: YahrzeitIcon },
@@ -28,7 +29,9 @@ export function BottomNav() {
         <div className="bg-white/80 backdrop-blur-xl border-t border-gray-200/60 shadow-[0_-1px_3px_rgba(0,0,0,0.04)]">
           <div className="max-w-md mx-auto flex items-center justify-around px-2 pb-[env(safe-area-inset-bottom)]">
             {NAV_ITEMS.map((item) => {
-              const active = pathname.startsWith(item.href);
+              const active = item.href === '/'
+                ? pathname === '/'
+                : pathname.startsWith(item.href);
               return (
                 <NavLink
                   key={item.label}
@@ -78,6 +81,25 @@ function NavLink({
         {label}
       </span>
     </Link>
+  );
+}
+
+// Home — dashboard grid
+function HomeNavIcon({ active }: { active: boolean }) {
+  return active ? (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <rect x="3" y="3" width="8" height="8" rx="2" />
+      <rect x="13" y="3" width="8" height="8" rx="2" />
+      <rect x="3" y="13" width="8" height="8" rx="2" />
+      <rect x="13" y="13" width="8" height="8" rx="2" />
+    </svg>
+  ) : (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" xmlns="http://www.w3.org/2000/svg">
+      <rect x="3" y="3" width="8" height="8" rx="2" />
+      <rect x="13" y="3" width="8" height="8" rx="2" />
+      <rect x="3" y="13" width="8" height="8" rx="2" />
+      <rect x="13" y="13" width="8" height="8" rx="2" />
+    </svg>
   );
 }
 

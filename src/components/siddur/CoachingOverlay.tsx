@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUserStore } from '@/stores/userStore';
+import { track } from '@/lib/analytics';
 import { CoachingStepNav, PHASE_ORDER } from './CoachingStepNav';
 import { ContextPhase } from './phases/ContextPhase';
 import { ListenPhase } from './phases/ListenPhase';
@@ -49,9 +50,28 @@ export function CoachingOverlay({
   const totalSections = prayer.sections.length;
   const isLastSection = currentSectionIndex === totalSections - 1;
 
+  // Track coaching start on mount
+  useEffect(() => {
+    track({
+      eventType: 'coaching_start',
+      eventCategory: 'coaching',
+      prayerId: prayer.id,
+      sectionId: currentSection?.id,
+    });
+  }, [prayer.id, currentSection?.id]);
+
   // Advance to the next coaching phase
   const advancePhase = useCallback(() => {
     setCompletedPhases((prev) => new Set([...prev, phase]));
+
+    // Track phase completion
+    track({
+      eventType: 'coaching_phase_complete',
+      eventCategory: 'coaching',
+      prayerId: prayer.id,
+      sectionId: currentSection.id,
+      coachingPhase: phase,
+    });
 
     const phaseTransitions: Record<CoachingPhase, CoachingPhase> = {
       context: 'listen',
@@ -91,6 +111,14 @@ export function CoachingOverlay({
     (feedback: CoachingFeedback) => {
       applyCoachingFeedback(feedback);
       updatePrayerProgress(prayer.id, { status: 'mastered' });
+
+      // Track coaching completion
+      track({
+        eventType: 'coaching_complete',
+        eventCategory: 'coaching',
+        prayerId: prayer.id,
+      });
+
       onClose();
     },
     [applyCoachingFeedback, updatePrayerProgress, prayer.id, onClose]

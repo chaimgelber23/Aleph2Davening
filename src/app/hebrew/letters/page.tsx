@@ -59,7 +59,7 @@ export default function LearnPage() {
       setTeachIndex(learnSession.teachIndex);
       setDrillIndex(learnSession.drillIndex);
       setDrillScore(learnSession.drillScore);
-      track('lesson_resumed', { lesson: learnSession.currentLesson });
+      track({ eventType: 'lesson_start', eventCategory: 'learning', lessonId: String(learnSession.currentLesson) });
     }
     setShowResumePrompt(false);
   };
@@ -155,7 +155,7 @@ export default function LearnPage() {
           earnMilestone('full_alephbet');
           setMilestone('full_alephbet');
         }
-        track('lesson_complete', { lesson: currentLesson, score: drillScore, total: drillTotal + 1 });
+        track({ eventType: 'lesson_complete', eventCategory: 'learning', lessonId: String(currentLesson), completionPercentage: drillScore / (drillTotal + 1) });
         clearLearnSession();
         setPhase('complete');
       }
@@ -229,8 +229,8 @@ export default function LearnPage() {
             phase === 'teach'
               ? teachIndex / lessonLetters.length * 0.3
               : phase === 'drill'
-              ? 0.3 + (drillIndex / 9) * 0.7
-              : 1
+                ? 0.3 + (drillIndex / 9) * 0.7
+                : 1
           }
           size="sm"
           className="max-w-md mx-auto mt-2"
@@ -343,11 +343,10 @@ export default function LearnPage() {
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className={`text-center py-3 rounded-xl ${
-                    selectedAnswer === drillCorrectLetter.id
+                  className={`text-center py-3 rounded-xl ${selectedAnswer === drillCorrectLetter.id
                       ? 'bg-success/10 text-success'
                       : 'bg-error/10 text-error'
-                  }`}
+                    }`}
                 >
                   {selectedAnswer === drillCorrectLetter.id
                     ? '✓ Correct!'

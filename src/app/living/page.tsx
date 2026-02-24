@@ -6,22 +6,42 @@ import Link from 'next/link';
 import { BottomNav } from '@/components/ui/BottomNav';
 import { getBrachotPrayers } from '@/lib/content/prayers';
 import { GUIDES } from '@/lib/content/guides';
+import { GUIDE_CATEGORIES } from '@/lib/content/guides';
 import { GuideCategoryTabs } from '@/components/guide/GuideCategoryTabs';
 import { GuideCard } from '@/components/guide/GuideCard';
 import { GuideReader } from '@/components/guide/GuideReader';
 import { useUserStore } from '@/stores/userStore';
+import { useAudio } from '@/hooks/useAudio';
 import type { Prayer, Guide, GuideCategory } from '@/types';
 
-type Section = 'brachot' | 'guides';
+type Section = 'halachos' | 'brachot' | 'guides';
+
+// Daily halachos: categories relevant to daily practice
+const DAILY_CATEGORIES: GuideCategory[] = ['morning_routine', 'personal_care', 'daily_items', 'brachot_food'];
+
+function getTodaysHalacha(): Guide {
+  const dailyGuides = GUIDES.filter((g) => DAILY_CATEGORIES.includes(g.category as GuideCategory));
+  const dayOfYear = Math.floor(
+    (Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000
+  );
+  return dailyGuides[dayOfYear % dailyGuides.length];
+}
 
 export default function LivingPage() {
-  const [activeSection, setActiveSection] = useState<Section>('brachot');
+  const [activeSection, setActiveSection] = useState<Section>('halachos');
   const [selectedGuide, setSelectedGuide] = useState<Guide | null>(null);
+  const [selectedBracha, setSelectedBracha] = useState<Prayer | null>(null);
   const [guideCategory, setGuideCategory] = useState<GuideCategory | 'all'>('all');
 
   const guideProgress = useUserStore((s) => s.guideProgress);
 
   const brachotPrayers = getBrachotPrayers();
+  const todaysHalacha = useMemo(() => getTodaysHalacha(), []);
+
+  // Daily halacha guides grouped by category
+  const dailyGuides = useMemo(() => {
+    return GUIDES.filter((g) => DAILY_CATEGORIES.includes(g.category as GuideCategory));
+  }, []);
 
   // Filter guides by category
   const filteredGuides = useMemo(() => {
@@ -43,6 +63,24 @@ export default function LivingPage() {
   const handleBackFromGuide = useCallback(() => {
     setSelectedGuide(null);
   }, []);
+
+  const handleSelectBracha = useCallback((prayer: Prayer) => {
+    setSelectedBracha(prayer);
+  }, []);
+
+  const handleBackFromBracha = useCallback(() => {
+    setSelectedBracha(null);
+  }, []);
+
+  // Bracha Reader view
+  if (selectedBracha) {
+    return (
+      <BrachaReader
+        prayer={selectedBracha}
+        onBack={handleBackFromBracha}
+      />
+    );
+  }
 
   // Guide Reader view
   if (selectedGuide) {
@@ -71,7 +109,7 @@ export default function LivingPage() {
           </div>
           <h1 className="text-2xl font-bold mt-2">Jewish Living</h1>
           <p className="text-white/60 text-sm mt-1">
-            Brachot and practical Jewish living guides
+            Daily halachos, brachot, and practical guides
           </p>
         </div>
       </div>
@@ -80,22 +118,86 @@ export default function LivingPage() {
         {/* Section tabs */}
         <div className="flex gap-1 bg-gray-100 rounded-xl p-1 mb-6">
           {[
+            { id: 'halachos' as Section, label: 'Daily Halachos' },
             { id: 'brachot' as Section, label: 'Brachot' },
             { id: 'guides' as Section, label: 'Guides' },
           ].map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveSection(tab.id)}
-              className={`flex-1 py-2.5 rounded-lg text-sm font-semibold transition-colors ${
-                activeSection === tab.id
-                  ? 'bg-white text-[#6B4C9A] shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
+              className={`flex-1 py-2.5 rounded-lg text-sm font-semibold transition-colors ${activeSection === tab.id
+                ? 'bg-white text-[#6B4C9A] shadow-sm'
+                : 'text-gray-500 hover:text-gray-700'
+                }`}
             >
               {tab.label}
             </button>
           ))}
         </div>
+
+        {/* === DAILY HALACHOS === */}
+        {activeSection === 'halachos' && (
+          <div className="space-y-5">
+            {/* Today's Halacha - featured */}
+            <div>
+              <p className="text-xs uppercase tracking-wider text-gray-400 font-semibold mb-3">
+                {"Today's Halacha"}
+              </p>
+              <button
+                onClick={() => handleSelectGuide(todaysHalacha)}
+                className="w-full bg-white rounded-2xl border border-[#6B4C9A]/20 p-5 text-left hover:shadow-md transition-all"
+              >
+                <div className="flex items-start gap-3">
+                  <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center text-white text-sm font-bold shrink-0"
+                    style={{ backgroundColor: GUIDE_CATEGORIES.find((c) => c.id === todaysHalacha.category)?.color || '#6B4C9A' }}
+                  >
+                    {todaysHalacha.title.charAt(0)}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-foreground text-base">{todaysHalacha.title}</h3>
+                    {todaysHalacha.titleHebrew && (
+                      <p dir="rtl" className="font-[var(--font-hebrew-serif)] text-sm text-gray-400 mt-0.5">
+                        {todaysHalacha.titleHebrew}
+                      </p>
+                    )}
+                    <p className="text-sm text-gray-500 mt-1.5 line-clamp-2">
+                      {todaysHalacha.summary}
+                    </p>
+                    <span className="inline-block text-xs font-medium text-[#6B4C9A] mt-2">
+                      Read today&apos;s halacha &rarr;
+                    </span>
+                  </div>
+                </div>
+              </button>
+            </div>
+
+            {/* Daily practice guides by category */}
+            {DAILY_CATEGORIES.map((catId) => {
+              const category = GUIDE_CATEGORIES.find((c) => c.id === catId);
+              const guides = dailyGuides.filter((g) => g.category === catId);
+              if (!category || guides.length === 0) return null;
+
+              return (
+                <div key={catId}>
+                  <p className="text-xs uppercase tracking-wider text-gray-400 font-semibold mb-3">
+                    {category.title}
+                  </p>
+                  <div className="space-y-2">
+                    {guides.map((guide) => (
+                      <GuideCard
+                        key={guide.id}
+                        guide={guide}
+                        progress={guideProgress[guide.id]}
+                        onClick={() => handleSelectGuide(guide)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
 
         {/* === BRACHOT === */}
         {activeSection === 'brachot' && (
@@ -110,7 +212,7 @@ export default function LivingPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.04 }}
               >
-                <BrachaCard prayer={prayer} />
+                <BrachaCard prayer={prayer} onSelect={handleSelectBracha} />
               </motion.div>
             ))}
           </div>
@@ -155,23 +257,22 @@ export default function LivingPage() {
 // Bracha Card
 // ==========================
 
-function BrachaCard({ prayer }: { prayer: Prayer }) {
+function BrachaCard({ prayer, onSelect }: { prayer: Prayer; onSelect: (p: Prayer) => void }) {
   const isPrayerCoached = useUserStore((s) =>
     s.isPrayerFullyCoached(prayer.id, prayer.sections.map((sec) => sec.id))
   );
 
   return (
-    <Link
-      href="/daven"
+    <button
+      onClick={() => onSelect(prayer)}
       className="block w-full rounded-2xl border bg-white border-gray-100 hover:shadow-md hover:border-[#6B4C9A]/20 cursor-pointer p-4 text-left transition-all"
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${
-            isPrayerCoached
-              ? 'bg-success/10 text-success'
-              : 'bg-[#6B4C9A]/10 text-[#6B4C9A]'
-          }`}>
+          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${isPrayerCoached
+            ? 'bg-success/10 text-success'
+            : 'bg-[#6B4C9A]/10 text-[#6B4C9A]'
+            }`}>
             {isPrayerCoached ? (
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                 <polyline points="20 6 9 17 4 12" />
@@ -191,6 +292,130 @@ function BrachaCard({ prayer }: { prayer: Prayer }) {
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
         </svg>
       </div>
-    </Link>
+    </button>
+  );
+}
+
+// ==========================
+// Bracha Reader
+// ==========================
+
+function BrachaReader({ prayer, onBack }: { prayer: Prayer; onBack: () => void }) {
+  const displaySettings = useUserStore((s) => s.displaySettings);
+  const audioSpeed = useUserStore((s) => s.profile.audioSpeed);
+  const { play, stop, isPlaying, isLoading } = useAudio({ speed: audioSpeed });
+
+  const handlePlaySection = useCallback((sectionHebrewText: string, sectionId: string) => {
+    if (isPlaying) {
+      stop();
+    } else {
+      play(sectionHebrewText, 'hebrew', audioSpeed, prayer.id, sectionId);
+    }
+  }, [isPlaying, stop, play, audioSpeed, prayer.id]);
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Top Bar */}
+      <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-100 px-4 py-3 z-30">
+        <div className="max-w-md mx-auto flex items-center justify-between">
+          <button
+            onClick={() => { stop(); onBack(); }}
+            className="flex items-center justify-center w-10 h-10 -ml-2 text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            <span className="sr-only">Back</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M19 12H5M12 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <div className="flex flex-col items-center justify-center">
+            <span className="text-sm font-bold text-gray-800">
+              {prayer.nameEnglish}
+            </span>
+            <span dir="rtl" className="text-xs font-[var(--font-hebrew-serif)] text-gray-400">
+              {prayer.nameHebrew}
+            </span>
+          </div>
+          <div className="w-10" />
+        </div>
+      </div>
+
+      <div className="max-w-md mx-auto px-6 py-6 space-y-5 pb-32">
+        {/* Context */}
+        <div className="bg-[#6B4C9A]/5 rounded-2xl p-4">
+          <p className="text-sm font-medium text-[#6B4C9A] mb-1">When to say</p>
+          <p className="text-sm text-gray-600">{prayer.whenSaid}</p>
+        </div>
+
+        {/* Why we say it */}
+        {prayer.whySaid && (
+          <div className="bg-gray-50 rounded-2xl p-4">
+            <p className="text-sm font-medium text-gray-700 mb-1">Why we say it</p>
+            <p className="text-sm text-gray-500">{prayer.whySaid}</p>
+          </div>
+        )}
+
+        {/* Sections */}
+        {prayer.sections.map((section) => (
+          <div
+            key={section.id}
+            className="bg-white rounded-2xl border border-gray-100 p-6 space-y-3"
+          >
+            {/* Hebrew text */}
+            <p
+              className="font-['Noto_Serif_Hebrew'] text-2xl text-[#1A1A2E] leading-[1.8] text-right"
+              dir="rtl"
+            >
+              {section.hebrewText}
+            </p>
+
+            {/* Transliteration */}
+            {displaySettings.showTransliteration && section.transliteration && (
+              <p className="text-sm text-gray-500 italic">{section.transliteration}</p>
+            )}
+
+            {/* Translation */}
+            {displaySettings.showTranslation && section.translation && (
+              <p className="text-sm text-gray-600">{section.translation}</p>
+            )}
+
+            {/* Notes */}
+            {displaySettings.showInstructions && section.notes && (
+              <p className="text-xs text-gray-400 bg-gray-50 rounded-lg p-3">{section.notes}</p>
+            )}
+
+            {/* Play button */}
+            <button
+              onClick={() => handlePlaySection(section.hebrewText, section.id)}
+              disabled={isLoading}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-[#6B4C9A] hover:bg-[#6B4C9A]/5 transition-colors"
+            >
+              {isLoading ? (
+                <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" opacity="0.25" />
+                  <path d="M4 12a8 8 0 018-8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+              ) : isPlaying ? (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <rect x="6" y="4" width="4" height="16" rx="1" />
+                  <rect x="14" y="4" width="4" height="16" rx="1" />
+                </svg>
+              ) : (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              )}
+              {isPlaying ? 'Pause' : 'Listen'}
+            </button>
+          </div>
+        ))}
+
+        {/* Inspiration */}
+        {prayer.inspirationText && (
+          <div className="bg-[#C6973F]/5 border border-[#C6973F]/15 rounded-2xl p-4">
+            <p className="text-sm text-gray-600 italic">{prayer.inspirationText}</p>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

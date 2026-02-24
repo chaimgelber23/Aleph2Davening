@@ -10,13 +10,14 @@ import { useAudio } from '@/hooks/useAudio';
 import { useKaraokeSync } from '@/hooks/useKaraokeSync';
 import { useUserStore } from '@/stores/userStore';
 import { CoachingOverlay } from '@/components/siddur/CoachingOverlay';
-import { DisplayToggleBar } from '@/components/siddur/DisplayToggleBar';
+import { PrayerSettingsModal } from '@/components/siddur/PrayerSettingsModal';
 import { ServiceCard } from '@/components/siddur/ServiceCard';
 import { ServiceRoadmap } from '@/components/siddur/ServiceRoadmap';
 import { KaraokePlayer } from '@/components/siddur/KaraokePlayer';
 import { AmudBadge } from '@/components/siddur/AmudBadge';
 import { TefillahPrepSheet } from '@/components/siddur/TefillahPrepSheet';
 import { AudioSourcePicker } from '@/components/siddur/AudioSourcePicker';
+import { track } from '@/lib/analytics';
 import type { Prayer, DaveningService, ServiceItem } from '@/types';
 import type { AudioSourceId, PrayerAudioEntry } from '@/lib/content/audio-sources';
 
@@ -31,6 +32,8 @@ export default function DavenPage() {
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [showCoaching, setShowCoaching] = useState(false);
   const [dismissedBanner, setDismissedBanner] = useState(false);
+  const [chazanGuideFromList, setChazanGuideFromList] = useState(false);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   // Audio source selection
   const [selectedAudioSource, setSelectedAudioSource] = useState<AudioSourceId>('siddur-audio');
@@ -105,11 +108,25 @@ export default function DavenPage() {
     setSelectedPrayer(prayer);
     setCurrentSectionIndex(0);
     setView('prayer_reader');
+
+    // Track prayer view
+    track({
+      eventType: 'prayer_view',
+      eventCategory: 'prayer',
+      prayerId: prayer.id,
+    });
   }, []);
 
   const handleSelectService = useCallback((service: DaveningService) => {
     setSelectedService(service);
     setView('service_roadmap');
+
+    // Track service view
+    track({
+      eventType: 'service_view',
+      eventCategory: 'service',
+      serviceId: service.id,
+    });
   }, []);
 
   const handleServiceItemSelect = useCallback(
@@ -132,6 +149,7 @@ export default function DavenPage() {
   );
 
   const handleOpenChazanGuide = useCallback(() => {
+    setChazanGuideFromList(false);
     setView('chazan_guide');
   }, []);
 
@@ -149,11 +167,17 @@ export default function DavenPage() {
       setView('list');
       setSelectedService(null);
     } else if (view === 'chazan_guide') {
-      setView('service_roadmap');
+      if (chazanGuideFromList) {
+        setView('list');
+        setSelectedService(null);
+        setChazanGuideFromList(false);
+      } else {
+        setView('service_roadmap');
+      }
     } else {
       setView('list');
     }
-  }, [view, selectedService, stop]);
+  }, [view, selectedService, chazanGuideFromList, stop]);
 
   const handleTogglePlay = useCallback(() => {
     if (isPlaying) {
@@ -178,7 +202,17 @@ export default function DavenPage() {
 
   // List view
   if (view === 'list') {
-    return <DavenList onSelectPrayer={handleSelectPrayer} onSelectService={handleSelectService} />;
+    return (
+      <DavenList
+        onSelectPrayer={handleSelectPrayer}
+        onSelectService={handleSelectService}
+        onOpenChazanGuide={(service: DaveningService) => {
+          setSelectedService(service);
+          setChazanGuideFromList(true);
+          setView('chazan_guide');
+        }}
+      />
+    );
   }
 
   // Service Roadmap
@@ -214,20 +248,32 @@ export default function DavenPage() {
     return (
       <div className="min-h-screen bg-background">
         {/* Top Bar */}
-        <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-100 px-6 py-3 z-10">
-          <div className="max-w-md mx-auto">
-            <div className="flex items-center justify-between">
-              <button onClick={handleBack} className="text-gray-400 hover:text-gray-600">
-                ← Back
-              </button>
-              <span className="text-sm font-medium text-gray-600">
+        <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-100 px-4 py-3 z-30">
+          <div className="max-w-md mx-auto flex items-center justify-between">
+            <button onClick={handleBack} className="flex items-center justify-center w-10 h-10 -ml-2 text-gray-400 hover:text-gray-600 transition-colors">
+              <span className="sr-only">Back</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <div className="flex flex-col items-center justify-center">
+              <span className="text-sm font-bold text-gray-800">
                 {selectedPrayer.nameEnglish}
               </span>
-              <span className="text-sm text-gray-400">
-                {currentSectionIndex + 1}/{totalSections}
+              <span className="text-[10px] font-medium text-gray-400 uppercase tracking-wider">
+                {currentSectionIndex + 1} OF {totalSections}
               </span>
             </div>
-            <DisplayToggleBar />
+            <button
+              onClick={() => setShowSettingsModal(true)}
+              className="flex items-center justify-center w-10 h-10 -mr-2 text-gray-400 hover:text-primary transition-colors"
+              title="View Modes & Settings"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="3" />
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+              </svg>
+            </button>
           </div>
         </div>
 
@@ -278,42 +324,7 @@ export default function DavenPage() {
             </div>
           )}
 
-          {/* Controls Row: Audio Source, Auto-Advance, View Mode, Progress */}
-          <div className="flex items-center justify-center gap-2 flex-wrap">
-            <AudioSourcePicker
-              prayerId={selectedPrayer.id}
-              selectedSource={selectedAudioSource}
-              onSelectSource={(sourceId, entry) => {
-                setSelectedAudioSource(sourceId);
-                setSelectedAudioEntry(entry);
-              }}
-            />
-            <button
-              onClick={() => setAutoAdvanceEnabled(!autoAdvanceEnabled)}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-                autoAdvanceEnabled
-                  ? 'bg-[#4A7C59] text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-              title={autoAdvanceEnabled ? 'Auto-advance ON - plays next section automatically' : 'Manual mode - click Next to advance'}
-            >
-              {autoAdvanceEnabled ? 'Auto' : 'Manual'}
-            </button>
-            <button
-              onClick={() => setViewMode(viewMode === 'section' ? 'full' : 'section')}
-              className="px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
-              title={viewMode === 'section' ? 'Switch to full prayer view' : 'Switch to section-by-section view'}
-            >
-              {viewMode === 'section' ? 'View Full' : 'View Sections'}
-            </button>
-            <button
-              onClick={() => setShowProgressSidebar(!showProgressSidebar)}
-              className="px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
-              title="Toggle prayer outline"
-            >
-              Outline
-            </button>
-          </div>
+          {/* Controls row and display toggles have been unified into the View Modes & Settings modal */}
 
           {/* Progress Sidebar/Outline */}
           {showProgressSidebar && (
@@ -327,11 +338,10 @@ export default function DavenPage() {
                       stop();
                       setCurrentSectionIndex(idx);
                     }}
-                    className={`w-full text-left px-3 py-2 rounded-lg text-xs transition-colors ${
-                      idx === currentSectionIndex
-                        ? 'bg-primary text-white font-medium'
-                        : 'hover:bg-gray-50 text-gray-600'
-                    }`}
+                    className={`w-full text-left px-3 py-2 rounded-lg text-xs transition-colors ${idx === currentSectionIndex
+                      ? 'bg-primary text-white font-medium'
+                      : 'hover:bg-gray-50 text-gray-600'
+                      }`}
                   >
                     <span className="font-medium">{idx + 1}.</span> {section.hebrewText.slice(0, 30)}...
                   </button>
@@ -365,9 +375,8 @@ export default function DavenPage() {
               {selectedPrayer.sections.map((section, idx) => (
                 <div
                   key={section.id}
-                  className={`bg-white rounded-xl border p-6 ${
-                    idx === currentSectionIndex ? 'border-primary shadow-md' : 'border-gray-200'
-                  }`}
+                  className={`bg-white rounded-xl border p-6 ${idx === currentSectionIndex ? 'border-primary shadow-md' : 'border-gray-200'
+                    }`}
                 >
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-xs font-semibold text-gray-500">Section {idx + 1}/{totalSections}</span>
@@ -394,69 +403,66 @@ export default function DavenPage() {
 
           {/* Section Navigation (only in section view) */}
           {viewMode === 'section' && (
-          <div className="flex items-center justify-between">
-            <button
-              onClick={() => {
-                if (currentSectionIndex > 0) {
-                  stop();
-                  setAutoPlayNext(false);
-                  setCurrentSectionIndex(currentSectionIndex - 1);
-                }
-              }}
-              disabled={currentSectionIndex === 0}
-              className={`px-4 py-2 rounded-lg text-sm font-medium ${
-                currentSectionIndex === 0
+            <div className="flex items-center justify-between">
+              <button
+                onClick={() => {
+                  if (currentSectionIndex > 0) {
+                    stop();
+                    setAutoPlayNext(false);
+                    setCurrentSectionIndex(currentSectionIndex - 1);
+                  }
+                }}
+                disabled={currentSectionIndex === 0}
+                className={`px-4 py-2 rounded-lg text-sm font-medium ${currentSectionIndex === 0
                   ? 'text-gray-300'
                   : 'text-primary hover:bg-primary/5'
-              }`}
-            >
-              ← Previous
-            </button>
+                  }`}
+              >
+                ← Previous
+              </button>
 
-            {showCompactProgress ? (
-              <div className="flex items-center gap-2">
-                <div className="w-24 h-1.5 bg-gray-200 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-primary rounded-full transition-all duration-300"
-                    style={{ width: `${((currentSectionIndex + 1) / totalSections) * 100}%` }}
-                  />
+              {showCompactProgress ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-24 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-primary rounded-full transition-all duration-300"
+                      style={{ width: `${((currentSectionIndex + 1) / totalSections) * 100}%` }}
+                    />
+                  </div>
+                  <span className="text-xs text-gray-400">
+                    {currentSectionIndex + 1}/{totalSections}
+                  </span>
                 </div>
-                <span className="text-xs text-gray-400">
-                  {currentSectionIndex + 1}/{totalSections}
-                </span>
-              </div>
-            ) : (
-              <div className="flex gap-1">
-                {selectedPrayer.sections.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => { stop(); setCurrentSectionIndex(i); }}
-                    className={`w-2.5 h-2.5 rounded-full transition-colors ${
-                      i === currentSectionIndex ? 'bg-primary' : 'bg-gray-200 hover:bg-gray-300'
-                    }`}
-                  />
-                ))}
-              </div>
-            )}
+              ) : (
+                <div className="flex gap-1">
+                  {selectedPrayer.sections.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => { stop(); setCurrentSectionIndex(i); }}
+                      className={`w-2.5 h-2.5 rounded-full transition-colors ${i === currentSectionIndex ? 'bg-primary' : 'bg-gray-200 hover:bg-gray-300'
+                        }`}
+                    />
+                  ))}
+                </div>
+              )}
 
-            <button
-              onClick={() => {
-                if (currentSectionIndex < totalSections - 1) {
-                  stop();
-                  setAutoPlayNext(false);
-                  setCurrentSectionIndex(currentSectionIndex + 1);
-                }
-              }}
-              disabled={currentSectionIndex === totalSections - 1}
-              className={`px-4 py-2 rounded-lg text-sm font-medium ${
-                currentSectionIndex === totalSections - 1
+              <button
+                onClick={() => {
+                  if (currentSectionIndex < totalSections - 1) {
+                    stop();
+                    setAutoPlayNext(false);
+                    setCurrentSectionIndex(currentSectionIndex + 1);
+                  }
+                }}
+                disabled={currentSectionIndex === totalSections - 1}
+                className={`px-4 py-2 rounded-lg text-sm font-medium ${currentSectionIndex === totalSections - 1
                   ? 'text-gray-300'
                   : 'text-primary hover:bg-primary/5'
-              }`}
-            >
-              Next →
-            </button>
-          </div>
+                  }`}
+              >
+                Next →
+              </button>
+            </div>
           )}
         </div>
 
@@ -481,12 +487,42 @@ export default function DavenPage() {
             />
           )}
         </AnimatePresence>
+
+        <AnimatePresence>
+          {showSettingsModal && (
+            <PrayerSettingsModal
+              isOpen={showSettingsModal}
+              onClose={() => setShowSettingsModal(false)}
+              prayerId={selectedPrayer.id}
+              selectedAudioSource={selectedAudioSource}
+              onSelectAudioSource={(sourceId, entry) => {
+                setSelectedAudioSource(sourceId);
+                setSelectedAudioEntry(entry);
+              }}
+              autoAdvanceEnabled={autoAdvanceEnabled}
+              onToggleAutoAdvance={() => setAutoAdvanceEnabled(!autoAdvanceEnabled)}
+              viewMode={viewMode}
+              onChangeViewMode={setViewMode}
+              showProgressSidebar={showProgressSidebar}
+              onToggleProgressSidebar={() => setShowProgressSidebar(!showProgressSidebar)}
+            />
+          )}
+        </AnimatePresence>
       </div>
     );
   }
 
   // Fallback
-  return <DavenList onSelectPrayer={handleSelectPrayer} onSelectService={handleSelectService} />;
+  return (
+    <DavenList
+      onSelectPrayer={handleSelectPrayer}
+      onSelectService={handleSelectService}
+      onOpenChazanGuide={(service: DaveningService) => {
+        setSelectedService(service);
+        setView('chazan_guide');
+      }}
+    />
+  );
 }
 
 // ==========================
@@ -505,11 +541,10 @@ function PrayerCard({ prayer, onSelect }: { prayer: Prayer; onSelect: (p: Prayer
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${
-            isPrayerCoached
-              ? 'bg-success/10 text-success'
-              : 'bg-primary/10 text-primary'
-          }`}>
+          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${isPrayerCoached
+            ? 'bg-success/10 text-success'
+            : 'bg-primary/10 text-primary'
+            }`}>
             {isPrayerCoached ? (
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                 <polyline points="20 6 9 17 4 12" />
@@ -552,9 +587,11 @@ function PrayerCard({ prayer, onSelect }: { prayer: Prayer; onSelect: (p: Prayer
 function DavenList({
   onSelectPrayer,
   onSelectService,
+  onOpenChazanGuide,
 }: {
   onSelectPrayer: (prayer: Prayer) => void;
   onSelectService: (service: DaveningService) => void;
+  onOpenChazanGuide: (service: DaveningService) => void;
 }) {
   const [activeTab, setActiveTab] = useState<Tab>('services');
   const [searchQuery, setSearchQuery] = useState('');
@@ -604,11 +641,10 @@ function DavenList({
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 py-2.5 rounded-lg text-sm font-semibold transition-colors ${
-                activeTab === tab.id
-                  ? 'bg-white text-primary shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
+              className={`flex-1 py-2.5 rounded-lg text-sm font-semibold transition-colors ${activeTab === tab.id
+                ? 'bg-white text-primary shadow-sm'
+                : 'text-gray-500 hover:text-gray-700'
+                }`}
             >
               {tab.label}
             </button>
@@ -618,6 +654,25 @@ function DavenList({
         {/* === SERVICES TAB === */}
         {activeTab === 'services' && (
           <div className="space-y-6">
+            {/* Chazan Guide quick-access */}
+            <div className="bg-white rounded-2xl border border-gray-100 p-5">
+              <h2 className="text-sm font-bold text-foreground mb-1">Chazan Guide</h2>
+              <p className="text-xs text-gray-400 mb-3">
+                Full service map with amud cues, congregation responses, and timing
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {services.map((service) => (
+                  <button
+                    key={service.id}
+                    onClick={() => onOpenChazanGuide(service)}
+                    className="px-4 py-2 rounded-xl text-sm font-medium border border-primary/20 text-primary hover:bg-primary/5 transition-colors"
+                  >
+                    {service.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Weekday Services */}
             <div>
               <h2 className="text-xs uppercase tracking-wider text-gray-400 font-semibold mb-3">
@@ -627,12 +682,25 @@ function DavenList({
                 {services
                   .filter((s) => s.type === 'weekday')
                   .map((service, i) => (
-                    <ServiceCard
-                      key={service.id}
-                      service={service}
-                      onSelect={onSelectService}
-                      index={i}
-                    />
+                    <div key={service.id} className="relative">
+                      <ServiceCard
+                        service={service}
+                        onSelect={onSelectService}
+                        index={i}
+                      />
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onOpenChazanGuide(service);
+                        }}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-gray-50 hover:bg-gray-100 rounded-full text-gray-500 shrink-0 border border-gray-100"
+                        title="Chazan Guide"
+                      >
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
+                        </svg>
+                      </button>
+                    </div>
                   ))}
               </div>
             </div>
@@ -647,12 +715,25 @@ function DavenList({
                   {services
                     .filter((s) => s.type === 'shabbat')
                     .map((service, i) => (
-                      <ServiceCard
-                        key={service.id}
-                        service={service}
-                        onSelect={onSelectService}
-                        index={i}
-                      />
+                      <div key={service.id} className="relative">
+                        <ServiceCard
+                          service={service}
+                          onSelect={onSelectService}
+                          index={i}
+                        />
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onOpenChazanGuide(service);
+                          }}
+                          className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-gray-50 hover:bg-gray-100 rounded-full text-gray-500 shrink-0 border border-gray-100"
+                          title="Chazan Guide"
+                        >
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
+                          </svg>
+                        </button>
+                      </div>
                     ))}
                 </div>
               </div>

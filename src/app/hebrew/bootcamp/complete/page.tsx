@@ -26,7 +26,7 @@ export default function BootcampGraduationPage() {
       if (!hasMilestone('full_alephbet')) {
         earnMilestone('full_alephbet');
       }
-      track('bootcamp_complete');
+      track({ eventType: 'bootcamp_complete', eventCategory: 'learning' });
     }
 
     // Grand confetti

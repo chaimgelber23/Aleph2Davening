@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useCallback } from 'react';
+import { track } from '@/lib/analytics';
 import type { Pronunciation, VoiceGender } from '@/types';
 
 type AudioMode = 'hebrew' | 'transliteration';
@@ -201,6 +202,16 @@ export function useAudio(options?: UseAudioOptions) {
         if (staticUrl) {
           await playAudioUrl(staticUrl, speed, false);
           setIsLoading(false);
+
+          // Track audio play
+          track({
+            eventType: 'audio_play',
+            eventCategory: 'audio',
+            prayerId,
+            sectionId,
+            audioSource: 'siddur-audio',
+          });
+
           return;
         }
       }
@@ -211,6 +222,14 @@ export function useAudio(options?: UseAudioOptions) {
         if (siddurUrl) {
           await playAudioUrl(siddurUrl, speed, false);
           setIsLoading(false);
+
+          // Track audio play
+          track({
+            eventType: 'audio_play',
+            eventCategory: 'audio',
+            prayerId,
+            audioSource: 'siddur-audio',
+          });
           return;
         }
       }

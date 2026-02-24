@@ -561,3 +561,41 @@ export interface GuideProgress {
   quizCompletedAt?: string;
 }
 
+// ==========================================
+// ANALYTICS TYPES
+// ==========================================
+
+export type AnalyticsEventType =
+  | 'prayer_view'
+  | 'prayer_complete'
+  | 'audio_play'
+  | 'audio_complete'
+  | 'coaching_start'
+  | 'coaching_phase_complete'
+  | 'coaching_complete'
+  | 'lesson_start'
+  | 'lesson_complete'
+  | 'bootcamp_complete'
+  | 'service_view'
+  | 'service_item_select';
+
+export type AnalyticsEventCategory =
+  | 'prayer'
+  | 'audio'
+  | 'coaching'
+  | 'learning'
+  | 'service';
+
+export interface AnalyticsEvent {
+  eventType: AnalyticsEventType;
+  eventCategory: AnalyticsEventCategory;
+  prayerId?: string;
+  sectionId?: string;
+  audioSource?: string;
+  coachingPhase?: CoachingPhase;
+  lessonId?: string;
+  serviceId?: string;
+  durationSeconds?: number;
+  completionPercentage?: number;
+}
+
