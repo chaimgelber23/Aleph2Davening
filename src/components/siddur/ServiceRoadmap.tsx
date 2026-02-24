@@ -6,44 +6,6 @@ import { useUserStore } from '@/stores/userStore';
 import { AmudBadge } from './AmudBadge';
 import type { DaveningService, ServiceSegment, ServiceItem } from '@/types';
 
-function RoleIcon({ role }: { role: string }) {
-  const cls = 'w-3.5 h-3.5';
-  switch (role) {
-    case 'shaliach_tzibbur':
-      return (
-        <svg className={cls} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M12 1a3 3 0 0 0-3 3v4a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
-          <path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8" />
-        </svg>
-      );
-    case 'congregation':
-      return (
-        <svg className={cls} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-          <circle cx="9" cy="7" r="4" />
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-        </svg>
-      );
-    case 'both':
-      return (
-        <svg className={cls} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-          <circle cx="9" cy="7" r="4" />
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-        </svg>
-      );
-    case 'silent_individual':
-      return (
-        <svg className={cls} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-          <circle cx="12" cy="7" r="4" />
-        </svg>
-      );
-    default:
-      return null;
-  }
-}
-
 const TYPE_LABELS: Record<string, string> = {
   kaddish: 'Kaddish',
   instruction: 'Note',
@@ -85,33 +47,34 @@ export function ServiceRoadmap({
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[#FAFAF8]">
       {/* Header */}
-      <div className="bg-primary text-white px-6 py-6 rounded-b-3xl">
+      <div className="bg-gradient-to-b from-[#1B4965] to-[#163D55] text-white px-6 py-8 rounded-b-3xl">
         <div className="max-w-md mx-auto">
-          <button onClick={onBack} className="text-primary-light text-sm hover:text-white">
+          <button onClick={onBack} className="text-white/50 text-sm hover:text-white transition-colors">
             ← Back
           </button>
 
-          <div className="flex items-center justify-between mt-3">
+          <div className="flex items-end justify-between mt-4">
             <div>
-              <h1 className="text-xl font-bold">{service.name}</h1>
-              <p dir="rtl" className="font-[var(--font-hebrew-serif)] text-primary-light text-sm mt-0.5">
+              <h1 className="text-2xl font-bold tracking-tight">{service.name}</h1>
+              <p dir="rtl" className="font-[var(--font-hebrew-serif)] text-white/50 text-sm mt-1">
                 {service.nameHebrew}
               </p>
             </div>
-            <span className="text-xs text-white/50">~{service.estimatedMinutes} min</span>
+            <span className="text-xs text-white/40 font-medium pb-1">~{service.estimatedMinutes} min</span>
           </div>
 
-          {/* Overall progress bar */}
-          <div className="mt-4">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-[10px] text-white/50 uppercase tracking-wider">Progress</span>
-              <span className="text-xs text-white/70">{Math.round(progressPercent)}%</span>
+          {/* Progress */}
+          <div className="mt-6">
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-[10px] text-white/40 uppercase tracking-widest font-semibold">Progress</span>
+              <span className="text-[11px] text-white/60 font-medium">{Math.round(progressPercent)}%</span>
             </div>
-            <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+            <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
               <motion.div
-                className="h-full bg-primary-light rounded-full"
+                className="h-full rounded-full"
+                style={{ background: 'linear-gradient(90deg, #5FA8D3, #C6973F)' }}
                 initial={{ width: 0 }}
                 animate={{ width: `${progressPercent}%` }}
                 transition={{ duration: 0.6, ease: 'easeOut' }}
@@ -124,11 +87,11 @@ export function ServiceRoadmap({
                 return (
                   <div
                     key={segment.id}
-                    className="h-1 rounded-full"
+                    className="h-0.5 rounded-full"
                     style={{
                       width: `${segmentPercent}%`,
                       backgroundColor: segment.color,
-                      opacity: 0.6,
+                      opacity: 0.5,
                     }}
                   />
                 );
@@ -136,11 +99,11 @@ export function ServiceRoadmap({
             </div>
           </div>
 
-          {/* Action Buttons */}
-          <div className="mt-4">
+          {/* Chazan Guide button */}
+          <div className="mt-5">
             <button
               onClick={onOpenChazanGuide}
-              className="w-full py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition-colors flex items-center justify-center gap-2"
+              className="w-full py-3 rounded-xl bg-white/8 hover:bg-white/15 text-white text-sm font-medium transition-colors border border-white/10"
             >
               Chazan Guide
             </button>
@@ -149,7 +112,7 @@ export function ServiceRoadmap({
       </div>
 
       {/* Segment List */}
-      <div className="max-w-md mx-auto px-6 py-4 space-y-3 pb-28">
+      <div className="max-w-md mx-auto px-6 py-5 space-y-3 pb-28">
         {service.segments.map((segment, segIdx) => (
           <SegmentCard
             key={segment.id}
@@ -198,35 +161,36 @@ function SegmentCard({
       {/* Segment Header */}
       <button onClick={onToggle} className="w-full text-left">
         <div
-          className={`rounded-2xl border-2 p-4 transition-all ${
+          className={`rounded-2xl p-4 transition-all ${
             isExpanded
-              ? 'border-current bg-opacity-5'
-              : 'border-gray-100 bg-white hover:border-gray-200'
+              ? 'bg-white shadow-sm'
+              : 'bg-white border border-gray-100 hover:shadow-sm'
           }`}
-          style={isExpanded ? { borderColor: segment.color, backgroundColor: segment.color + '0D' } : undefined}
+          style={isExpanded ? { borderLeft: `3px solid ${segment.color}` } : undefined}
         >
           <div className="flex items-center gap-3">
-            {/* Color indicator */}
-            <div
-              className="w-3 h-10 rounded-full shrink-0"
-              style={{ backgroundColor: segment.color }}
-            />
+            {/* Color accent */}
+            {!isExpanded && (
+              <div
+                className="w-1 h-8 rounded-full shrink-0"
+                style={{ backgroundColor: segment.color }}
+              />
+            )}
 
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between">
-                <h3 className="font-bold text-foreground text-sm">{segment.title}</h3>
-                <div className="flex items-center gap-2">
+                <h3 className="font-bold text-foreground text-[15px] tracking-tight">{segment.title}</h3>
+                <div className="flex items-center gap-3 text-gray-400">
                   {minutes > 0 && (
-                    <span className="text-[10px] text-gray-400">~{minutes} min</span>
+                    <span className="text-[10px] font-medium">~{minutes} min</span>
                   )}
-                  <span className="text-xs text-gray-400">{segment.items.length}</span>
-                  <span
-                    className={`text-gray-400 transition-transform text-xs ${
-                      isExpanded ? 'rotate-180' : ''
-                    }`}
+                  <span className="text-[10px] font-medium">{segment.items.length}</span>
+                  <svg
+                    className={`w-3.5 h-3.5 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
                   >
-                    
-                  </span>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
                 </div>
               </div>
               {segment.titleHebrew && (
@@ -253,11 +217,11 @@ function SegmentCard({
             className="overflow-hidden"
           >
             {segment.description && (
-              <p className="text-xs text-gray-500 mt-2 ml-7 mb-2">{segment.description}</p>
+              <p className="text-xs text-gray-500 mt-2 ml-5 mb-2 leading-relaxed">{segment.description}</p>
             )}
             <div
-              className="mt-2 ml-4 border-l-2 pl-4 space-y-1.5"
-              style={{ borderColor: segment.color + '40' }}
+              className="mt-2 ml-3 border-l pl-4 space-y-0.5"
+              style={{ borderColor: segment.color + '30' }}
             >
               {segment.items.map((item, itemIdx) => {
                 const isCurrent = isCurrentItem(segmentIndex, itemIdx);
@@ -267,25 +231,18 @@ function SegmentCard({
                     onClick={() => onSelectItem(item, segmentIndex, itemIdx)}
                     className={`w-full text-left rounded-xl px-3 py-2.5 transition-all ${
                       isCurrent
-                        ? 'bg-primary/10 border border-primary/20'
-                        : 'hover:bg-gray-50'
+                        ? 'bg-primary/5 border border-primary/15'
+                        : 'hover:bg-gray-50/80'
                     }`}
                   >
-                    <div className="flex items-center gap-2">
-                      {/* "You are here" dot */}
+                    <div className="flex items-center gap-2.5">
+                      {/* Current indicator */}
                       {isCurrent && (
                         <motion.div
-                          className="w-2 h-2 rounded-full bg-primary shrink-0"
+                          className="w-1.5 h-1.5 rounded-full bg-primary shrink-0"
                           animate={{ scale: [1, 1.3, 1] }}
                           transition={{ repeat: Infinity, duration: 2 }}
                         />
-                      )}
-
-                      {/* Role icon */}
-                      {showAmudCues && (
-                        <span className="text-gray-400 shrink-0">
-                          <RoleIcon role={item.amud.role} />
-                        </span>
                       )}
 
                       {/* Label */}
@@ -299,13 +256,13 @@ function SegmentCard({
                             {item.label}
                           </span>
                           {item.type !== 'prayer' && item.type !== 'instruction' && (
-                            <span className="text-[9px] bg-gray-100 text-gray-400 px-1.5 py-0.5 rounded-full">
+                            <span className="text-[9px] bg-gray-100 text-gray-400 px-1.5 py-0.5 rounded-full font-medium">
                               {TYPE_LABELS[item.type] || item.type}
                             </span>
                           )}
                         </div>
                         {item.labelHebrew && (
-                          <p dir="rtl" className="font-[var(--font-hebrew-serif)] text-xs text-gray-400">
+                          <p dir="rtl" className="font-[var(--font-hebrew-serif)] text-xs text-gray-400 mt-0.5">
                             {item.labelHebrew}
                           </p>
                         )}
@@ -319,7 +276,7 @@ function SegmentCard({
 
                     {/* Instruction text */}
                     {showAmudCues && item.amud.instruction && (
-                      <p className="text-[10px] text-gray-400 mt-1 ml-4">
+                      <p className="text-[10px] text-gray-400 mt-1 leading-relaxed">
                         {item.amud.instruction}
                       </p>
                     )}
