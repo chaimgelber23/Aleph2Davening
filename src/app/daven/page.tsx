@@ -302,7 +302,7 @@ export default function DavenPage() {
           </div>
 
           {/* Quick Controls: View mode + Auto-advance + Guide */}
-          <div className="max-w-md mx-auto flex items-center justify-between mt-2 px-4 pb-1">
+          <div className="max-w-md mx-auto flex items-center justify-center gap-3 mt-2 px-4 pb-1">
             {/* View mode toggle */}
             <div className="flex gap-0.5 bg-gray-100 rounded-lg p-0.5">
               <button
