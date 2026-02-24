@@ -20,18 +20,17 @@ export function KaddishPrintGuide() {
 
   const mournersPrayer = getServicePrayer('kaddish-mourners');
   const serviceData = KADDISH_IN_SERVICES.find((s) => s.serviceId === selectedService);
-  const service = getService(selectedService);
 
   const mournerCount = serviceData?.occurrences.filter((o) => o.type === 'mourners').length ?? 0;
   const totalKaddish = serviceData?.occurrences.length ?? 0;
 
   return (
     <div>
-      {/* Controls — hidden when printing */}
-      <div className="no-print space-y-4 mb-6">
+      {/* On-screen controls only */}
+      <div className="no-print space-y-4">
         <h2 className="text-base font-bold text-foreground">Printable Kaddish Guide</h2>
-        <p className="text-xs text-gray-500">
-          Choose a service and print a one-page reference card to bring with you.
+        <p className="text-xs text-gray-500 leading-relaxed">
+          Print a one-page reference card for a specific service. Bring it to shul so you know exactly when to stand and say your Kaddish.
         </p>
 
         <div className="flex gap-2">
@@ -73,91 +72,93 @@ export function KaddishPrintGuide() {
         </button>
       </div>
 
-      {/* Printable content — designed to fit on one page */}
+      {/* ========================================
+          PRINT-ONLY: hidden on screen, shown when printing.
+          Sized to fit one page (US Letter / A4).
+          ======================================== */}
       {serviceData && (
-        <div className="print-content">
-          {/* Print-only title */}
-          <div className="print-only hidden mb-3">
-            <h1 className="text-lg font-bold">Kaddish Guide — {serviceData.service}</h1>
+        <div className="kaddish-print-sheet">
+          {/* Title */}
+          <h1 style={{ fontSize: '16pt', fontWeight: 700, marginBottom: '2pt' }}>
+            Kaddish Guide — {serviceData.service}
+          </h1>
+          <p style={{ fontSize: '9pt', color: '#666', marginBottom: '12pt' }}>
+            {serviceData.timeOfDay} service — ~{serviceData.estimatedMinutes} minutes
+            {' | '}{totalKaddish} Kaddish moments — you say Mourner&apos;s Kaddish {mournerCount} {mournerCount === 1 ? 'time' : 'times'}
+          </p>
+
+          {/* Quick reference box */}
+          <div style={{ border: '1.5pt solid #5C4033', borderRadius: '6pt', padding: '8pt 10pt', marginBottom: '12pt', background: '#faf6f3' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12pt' }}>
+              <div>
+                <p style={{ fontSize: '7pt', textTransform: 'uppercase', letterSpacing: '1.5pt', fontWeight: 700, color: '#5C4033', marginBottom: '3pt' }}>
+                  Your response — say this during every Kaddish
+                </p>
+                <p dir="rtl" style={{ fontFamily: 'var(--font-hebrew-serif), Noto Serif Hebrew, serif', fontSize: '14pt', color: '#1A1A2E', lineHeight: 1.6 }}>
+                  {CONGREGATION_RESPONSE.hebrew}
+                </p>
+                <p style={{ fontSize: '8pt', color: '#666', fontStyle: 'italic' }}>
+                  {CONGREGATION_RESPONSE.transliteration} — &ldquo;{CONGREGATION_RESPONSE.translation}&rdquo;
+                </p>
+              </div>
+              <div style={{ borderLeft: '1pt solid #5C4033', paddingLeft: '10pt', minWidth: '140pt', flexShrink: 0 }}>
+                <p style={{ fontSize: '7pt', textTransform: 'uppercase', letterSpacing: '1.5pt', fontWeight: 700, color: '#5C4033', marginBottom: '3pt' }}>
+                  At your Kaddish
+                </p>
+                <p style={{ fontSize: '8pt', color: '#333', lineHeight: 1.5 }}>
+                  Stand up. Say the Mourner&apos;s Kaddish. At the end, take three steps back and bow — left, right, center.
+                </p>
+              </div>
+            </div>
           </div>
 
-          {/* Service header with summary */}
-          <div className="prep-segment border border-gray-200 rounded-xl p-4 mb-4">
-            <div className="flex items-baseline justify-between mb-1">
-              <div className="flex items-baseline gap-2">
-                <h3 className="text-base font-bold text-foreground">{serviceData.service}</h3>
-                <span dir="rtl" className="font-[var(--font-hebrew-serif)] text-sm text-gray-400">
-                  {serviceData.serviceHebrew}
-                </span>
-              </div>
-              <span className="text-xs text-gray-400">
-                {serviceData.timeOfDay} — ~{serviceData.estimatedMinutes} min
-              </span>
-            </div>
-            <p className="text-xs text-[#5C4033] font-medium mb-3">
-              {totalKaddish} total Kaddish moments — you say Mourner&apos;s Kaddish {mournerCount} {mournerCount === 1 ? 'time' : 'times'}
-            </p>
-
-            {/* Compact kaddish timeline */}
-            <div className="space-y-1.5">
+          {/* Kaddish timeline */}
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '9pt', marginBottom: '10pt' }}>
+            <thead>
+              <tr style={{ borderBottom: '1.5pt solid #333' }}>
+                <th style={{ textAlign: 'left', padding: '3pt 6pt', fontWeight: 700, fontSize: '8pt', textTransform: 'uppercase', letterSpacing: '0.5pt', color: '#666' }}>#</th>
+                <th style={{ textAlign: 'left', padding: '3pt 6pt', fontWeight: 700, fontSize: '8pt', textTransform: 'uppercase', letterSpacing: '0.5pt', color: '#666' }}>Type</th>
+                <th style={{ textAlign: 'left', padding: '3pt 6pt', fontWeight: 700, fontSize: '8pt', textTransform: 'uppercase', letterSpacing: '0.5pt', color: '#666' }}>When</th>
+                <th style={{ textAlign: 'left', padding: '3pt 6pt', fontWeight: 700, fontSize: '8pt', textTransform: 'uppercase', letterSpacing: '0.5pt', color: '#666' }}>You</th>
+              </tr>
+            </thead>
+            <tbody>
               {serviceData.occurrences.map((occ, j) => {
                 const isMourners = occ.type === 'mourners';
                 return (
-                  <div
-                    key={j}
-                    className={`flex items-center gap-2 py-1.5 px-2.5 rounded-lg text-xs ${
-                      isMourners
-                        ? 'bg-[#5C4033]/8 border border-[#5C4033]/10 prep-response print-color'
-                        : 'bg-gray-50'
-                    }`}
-                  >
-                    <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${isMourners ? 'bg-[#5C4033]' : 'bg-gray-300'}`} />
-                    <span className={`font-semibold shrink-0 ${isMourners ? 'text-[#5C4033]' : 'text-gray-600'}`}>
-                      {isMourners && 'YOU — '}{TYPE_LABELS[occ.type]}
-                    </span>
-                    <span className="text-gray-500">{occ.when}</span>
-                    {isMourners && <span className="text-[#5C4033]/60 ml-auto shrink-0">Stand</span>}
-                  </div>
+                  <tr key={j} style={{ borderBottom: '0.5pt solid #ddd', background: isMourners ? '#f5ebe4' : 'transparent' }}>
+                    <td style={{ padding: '4pt 6pt', color: '#999', fontWeight: 500 }}>{j + 1}</td>
+                    <td style={{ padding: '4pt 6pt', fontWeight: isMourners ? 700 : 500, color: isMourners ? '#5C4033' : '#333' }}>
+                      {TYPE_LABELS[occ.type]}
+                    </td>
+                    <td style={{ padding: '4pt 6pt', color: '#555' }}>{occ.when}</td>
+                    <td style={{ padding: '4pt 6pt', fontWeight: 700, color: isMourners ? '#5C4033' : '#999' }}>
+                      {isMourners ? 'YOU SAY' : 'Listen + Amen'}
+                    </td>
+                  </tr>
                 );
               })}
-            </div>
-          </div>
+            </tbody>
+          </table>
 
-          {/* Quick reference */}
-          <div className="prep-segment bg-gray-50 rounded-xl p-3 mb-4 prep-response print-color">
-            <div className="flex items-start gap-3">
-              <div className="flex-1">
-                <p className="text-[10px] uppercase tracking-widest font-bold text-gray-500 mb-1">
-                  Respond during every Kaddish
-                </p>
-                <p dir="rtl" className="font-[var(--font-hebrew-serif)] text-base text-[#1A1A2E] leading-relaxed">
-                  {CONGREGATION_RESPONSE.hebrew}
-                </p>
-                <p className="text-[11px] text-gray-500 italic">
-                  {CONGREGATION_RESPONSE.transliteration}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Full text — only if toggled */}
+          {/* Full Mourner's Kaddish text — optional */}
           {showFullText && mournersPrayer && (
-            <div className="prep-segment border-t border-gray-200 pt-3">
-              <h3 className="text-sm font-bold text-foreground mb-2">
+            <div style={{ borderTop: '1pt solid #ccc', paddingTop: '8pt' }}>
+              <p style={{ fontSize: '10pt', fontWeight: 700, marginBottom: '6pt' }}>
                 Mourner&apos;s Kaddish — Full Text
-              </h3>
-              <div className="space-y-2">
+              </p>
+              <div style={{ columnCount: 2, columnGap: '16pt' }}>
                 {mournersPrayer.sections.map((section) => (
-                  <div key={section.id} className="space-y-0">
-                    <p dir="rtl" className="font-[var(--font-hebrew-serif)] text-sm text-[#1A1A2E] leading-[1.8]">
+                  <div key={section.id} style={{ breakInside: 'avoid', marginBottom: '6pt' }}>
+                    <p dir="rtl" style={{ fontFamily: 'var(--font-hebrew-serif), Noto Serif Hebrew, serif', fontSize: '10pt', color: '#1A1A2E', lineHeight: 1.7 }}>
                       {section.hebrewText}
                     </p>
-                    <p className="text-[10px] text-gray-400 italic leading-tight">
+                    <p style={{ fontSize: '7pt', color: '#888', fontStyle: 'italic', lineHeight: 1.3 }}>
                       {section.transliteration}
                     </p>
                     {section.amud?.congregationResponse && (
-                      <p className="text-[9px] text-[#5C4033] font-medium">
-                        Congregation: {section.amud.congregationResponseTransliteration || section.amud.congregationResponse}
+                      <p style={{ fontSize: '7pt', color: '#5C4033', fontWeight: 600 }}>
+                        Cong: {section.amud.congregationResponseTransliteration || section.amud.congregationResponse}
                       </p>
                     )}
                   </div>
@@ -166,9 +167,9 @@ export function KaddishPrintGuide() {
             </div>
           )}
 
-          {/* Footer tip */}
-          <p className="text-[10px] text-gray-400 mt-3 italic">
-            At each Mourner&apos;s Kaddish: stand, recite the prayer, take three steps back at the end and bow left, right, center.
+          {/* Footer */}
+          <p style={{ fontSize: '7pt', color: '#aaa', marginTop: '8pt', textAlign: 'center' }}>
+            Aleph2Davening — aleph2davening.com
           </p>
         </div>
       )}

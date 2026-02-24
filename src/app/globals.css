@@ -56,8 +56,29 @@ html {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Kaddish print sheet — hidden on screen */
+.kaddish-print-sheet {
+  display: none;
+}
+
 /* Print styles for Prep Sheet and Kaddish Guide */
 @media print {
+  /* Hide everything on the page */
+  body > * { display: none !important; }
+  /* Then show only the print sheet */
+  .kaddish-print-sheet {
+    display: block !important;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: auto;
+    padding: 0.4in 0.5in;
+    background: white !important;
+    z-index: 99999;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  /* Also support general prep sheet printing */
   .no-print { display: none !important; }
   .print-only { display: block !important; }
   body { background: white !important; }
