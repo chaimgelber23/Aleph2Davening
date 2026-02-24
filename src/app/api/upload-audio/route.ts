@@ -17,10 +17,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing file, folder, or filename' }, { status: 400 });
     }
 
-    // Only allow mp3/m4a/wav
-    const allowed = ['audio/mpeg', 'audio/mp4', 'audio/wav', 'audio/x-m4a', 'audio/mp3'];
-    if (!allowed.includes(file.type) && !file.name.match(/\.(mp3|m4a|wav)$/i)) {
-      return NextResponse.json({ error: 'Only MP3, M4A, or WAV files allowed' }, { status: 400 });
+    // Allow common audio types including WAV from recordings
+    const allowed = ['audio/mpeg', 'audio/mp4', 'audio/wav', 'audio/x-m4a', 'audio/mp3', 'audio/webm', 'audio/ogg', 'audio/x-wav'];
+    if (!allowed.includes(file.type) && !file.name.match(/\.(mp3|m4a|wav|webm|ogg)$/i)) {
+      return NextResponse.json({ error: 'Audio files only (MP3, WAV, M4A, WebM)' }, { status: 400 });
     }
 
     const path = `${folder}/${filename}`;
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
     const { error } = await supabase.storage
       .from('audio-uploads')
       .upload(path, buffer, {
-        contentType: file.type || 'audio/mpeg',
+        contentType: file.type || 'audio/wav',
         upsert: true,
       });
 
@@ -45,32 +45,31 @@ export async function POST(req: NextRequest) {
   }
 }
 
+// Recursively list files up to 3 levels deep
+async function listFilesRecursive(prefix: string, depth = 0): Promise<string[]> {
+  if (depth > 3) return [];
+  const { data } = await supabase.storage
+    .from('audio-uploads')
+    .list(prefix, { limit: 500, sortBy: { column: 'name', order: 'asc' } });
+  if (!data) return [];
+
+  const files: string[] = [];
+  for (const item of data) {
+    const path = prefix ? `${prefix}/${item.name}` : item.name;
+    const isFile = /\.\w+$/.test(item.name);
+    if (isFile) {
+      files.push(path);
+    } else {
+      const subFiles = await listFilesRecursive(path, depth + 1);
+      files.push(...subFiles);
+    }
+  }
+  return files;
+}
+
 export async function GET() {
   try {
-    // List all uploaded files
-    const { data, error } = await supabase.storage
-      .from('audio-uploads')
-      .list('', { limit: 500, sortBy: { column: 'name', order: 'asc' } });
-
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-
-    // Get files from each folder
-    const folders = data?.filter(item => !item.name.includes('.')) || [];
-    const allFiles: string[] = [];
-
-    for (const folder of folders) {
-      const { data: files } = await supabase.storage
-        .from('audio-uploads')
-        .list(folder.name, { limit: 100 });
-      if (files) {
-        for (const f of files) {
-          allFiles.push(`${folder.name}/${f.name}`);
-        }
-      }
-    }
-
+    const allFiles = await listFilesRecursive('');
     return NextResponse.json({ files: allFiles });
   } catch (err) {
     console.error('[upload] List error:', err);
