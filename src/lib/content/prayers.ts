@@ -1618,10 +1618,124 @@ const BRACHOS: Prayer[] = [
 ];
 
 // ==========================================
+// BRACHOT ACHRONOT (After-Blessings)
+// ==========================================
+
+const BRACHOT_ACHRONOT: Prayer[] = [
+  {
+    id: 'borei-nefashot',
+    slug: 'borei-nefashot',
+    nameHebrew: 'בּוֹרֵא נְפָשׁוֹת',
+    nameEnglish: 'Borei Nefashot',
+    category: 'brachot_achronot',
+    sortOrder: 1,
+    whenSaid: 'After eating meat, vegetables, fruit (not from the 7 species), water, juice, candy, eggs, and most other foods',
+    whySaid: 'We thank God for creating many living things and providing for all their needs.',
+    inspirationText: 'This short bracha packs a powerful idea: God created everything we need to sustain life. Every sip of water, every bite of food — all part of a grand design.',
+    requiredLevel: 2,
+    estimatedReadSeconds: 12,
+    sections: [
+      {
+        id: 'bn-1',
+        sortOrder: 1,
+        hebrewText: 'בָּרוּךְ אַתָּה ה׳ אֱלֹקֵינוּ מֶלֶךְ הָעוֹלָם בּוֹרֵא נְפָשׁוֹת רַבּוֹת וְחֶסְרוֹנָן',
+        transliteration: "Baruch Atah Adonai Elokeinu Melech ha'olam borei nefashot rabot v'chesronan",
+        translation: 'Blessed are You, Lord our God, King of the universe, who creates many living things and their needs',
+        notes: 'בּוֹרֵא נְפָשׁוֹת = who creates souls/living things. וְחֶסְרוֹנָן = and their deficiencies (needs).',
+      },
+      {
+        id: 'bn-2',
+        sortOrder: 2,
+        hebrewText: 'עַל כָּל מַה שֶּׁבָּרָאתָ לְהַחֲיוֹת בָּהֶם נֶפֶשׁ כָּל חָי',
+        transliteration: "al kol mah shebarata l'hachayot bahem nefesh kol chai",
+        translation: 'for everything You created to sustain every living soul',
+      },
+      {
+        id: 'bn-3',
+        sortOrder: 3,
+        hebrewText: 'בָּרוּךְ חֵי הָעוֹלָמִים',
+        transliteration: "Baruch Chei ha'olamim",
+        translation: 'Blessed is the Life of all worlds',
+        notes: 'This closing is unique — we don\'t say "Baruch Atah Hashem" again. Instead we say "Blessed is the Life of all worlds."',
+      },
+    ],
+  },
+  {
+    id: 'al-hamichya',
+    slug: 'al-hamichya',
+    nameHebrew: 'עַל הַמִּחְיָה',
+    nameEnglish: 'Al HaMichya',
+    category: 'brachot_achronot',
+    sortOrder: 2,
+    whenSaid: 'After eating grain products (Mezonot), grapes/wine, or fruits of the 7 species (figs, pomegranates, olives, dates)',
+    whySaid: 'A special after-bracha for foods connected to the Land of Israel and its seven species.',
+    inspirationText: 'The seven species aren\'t just agricultural — they represent God\'s special relationship with the Land of Israel. This bracha connects your snack to sacred geography.',
+    requiredLevel: 3,
+    estimatedReadSeconds: 25,
+    sections: [
+      {
+        id: 'ah-1',
+        sortOrder: 1,
+        hebrewText: 'בָּרוּךְ אַתָּה ה׳ אֱלֹקֵינוּ מֶלֶךְ הָעוֹלָם עַל הַמִּחְיָה וְעַל הַכַּלְכָּלָה וְעַל תְּנוּבַת הַשָּׂדֶה וְעַל אֶרֶץ חֶמְדָּה טוֹבָה וּרְחָבָה שֶׁרָצִיתָ וְהִנְחַלְתָּ לַאֲבוֹתֵינוּ לֶאֱכוֹל מִפִּרְיָהּ וְלִשְׂבּוֹעַ מִטּוּבָהּ',
+        transliteration: "Baruch Atah Adonai Elokeinu Melech ha'olam al hamichya v'al hakalkalah v'al t'nuvat hasadeh v'al eretz chemdah tovah ur'chavah sheratizta v'hinchalta la'avoteinu le'echol mipiryah v'lisboa mituvah",
+        translation: 'Blessed are You... for the sustenance and nourishment, for the produce of the field, and for the desirable, good, and spacious land that You gave our ancestors to eat of its fruit and be satisfied with its goodness',
+        notes: 'This version is for grain products (Mezonot). The text changes slightly for wine (על הגפן) or fruits of the 7 species (על העץ).',
+      },
+      {
+        id: 'ah-2',
+        sortOrder: 2,
+        hebrewText: 'רַחֶם נָא ה׳ אֱלֹקֵינוּ עַל יִשְׂרָאֵל עַמֶּךָ וְעַל יְרוּשָׁלַיִם עִירֶךָ וְעַל צִיּוֹן מִשְׁכַּן כְּבוֹדֶךָ וְעַל מִזְבְּחֶךָ וְעַל הֵיכָלֶךָ וּבְנֵה יְרוּשָׁלַיִם עִיר הַקֹּדֶשׁ בִּמְהֵרָה בְיָמֵינוּ',
+        transliteration: "Rachem na Adonai Elokeinu al Yisrael amecha v'al Yerushalayim irecha v'al Tzion mishkan k'vodecha v'al mizbachecha v'al heichalecha uv'nei Yerushalayim ir hakodesh bimheirah v'yameinu",
+        translation: 'Have mercy, Lord our God, on Israel Your people, on Jerusalem Your city, on Zion the dwelling of Your glory, on Your altar and Your Temple. Rebuild Jerusalem the holy city speedily in our days.',
+      },
+      {
+        id: 'ah-3',
+        sortOrder: 3,
+        hebrewText: 'וְהַעֲלֵנוּ לְתוֹכָהּ וְשַׂמְּחֵנוּ בְּבִנְיָנָהּ וְנֹאכַל מִפִּרְיָהּ וְנִשְׂבַּע מִטּוּבָהּ וּנְבָרֶכְךָ עָלֶיהָ בִּקְדֻשָּׁה וּבְטָהֳרָה. כִּי אַתָּה ה׳ טוֹב וּמֵטִיב לַכֹּל וְנוֹדֶה לְּךָ עַל הָאָרֶץ וְעַל הַמִּחְיָה. בָּרוּךְ אַתָּה ה׳ עַל הָאָרֶץ וְעַל הַמִּחְיָה',
+        transliteration: "V'ha'aleinu l'tochah v'sam'cheinu b'vinyanah v'nochal mipiryah v'nisba mituvah un'varechecha aleha bikdushah uv'tahorah. Ki Atah Adonai tov umeitiv lakol v'nodeh l'cha al ha'aretz v'al hamichya. Baruch Atah Adonai al ha'aretz v'al hamichya",
+        translation: 'Bring us up to it, gladden us in its rebuilding, and we will eat of its fruit and be satisfied with its goodness, and bless You for it in holiness and purity. For You, God, are good and do good to all, and we thank You for the land and for the sustenance. Blessed are You, Lord, for the land and for the sustenance.',
+        notes: 'The ending changes: for wine say "על הגפן ועל פרי הגפן", for fruit say "על העץ ועל פרי העץ".',
+      },
+    ],
+  },
+  {
+    id: 'birkat-hamazon-short',
+    slug: 'birkat-hamazon-short',
+    nameHebrew: 'בִּרְכַּת הַמָּזוֹן',
+    nameEnglish: 'Birkat Hamazon',
+    category: 'brachot_achronot',
+    sortOrder: 3,
+    whenSaid: 'After eating a meal with bread — this is a Torah-level obligation',
+    whySaid: 'The Torah commands: "You shall eat and be satisfied and bless the Lord your God" (Deuteronomy 8:10). This is the only after-bracha explicitly required by the Torah.',
+    inspirationText: 'Birkat Hamazon is the full Grace After Meals — a multi-paragraph prayer of thanks. Many people read it from a "bentcher" (small booklet). Start by learning the first paragraph and build from there.',
+    requiredLevel: 3,
+    estimatedReadSeconds: 120,
+    sections: [
+      {
+        id: 'bh-1',
+        sortOrder: 1,
+        hebrewText: 'בָּרוּךְ אַתָּה ה׳ אֱלֹקֵינוּ מֶלֶךְ הָעוֹלָם הַזָּן אֶת הָעוֹלָם כֻּלּוֹ בְּטוּבוֹ בְּחֵן בְּחֶסֶד וּבְרַחֲמִים הוּא נוֹתֵן לֶחֶם לְכָל בָּשָׂר כִּי לְעוֹלָם חַסְדּוֹ',
+        transliteration: "Baruch Atah Adonai Elokeinu Melech ha'olam hazan et ha'olam kulo b'tuvo b'chen b'chesed uv'rachamim hu noten lechem l'chol basar ki l'olam chasdo",
+        translation: 'Blessed are You, Lord our God, King of the universe, who nourishes the entire world in His goodness — with grace, kindness, and mercy. He gives food to all flesh, for His kindness endures forever.',
+        notes: 'This is the opening of the first bracha (Birkat HaZan). The full Birkat Hamazon has 4 main brachot. Start by learning this opening — it captures the essence of the entire prayer.',
+      },
+      {
+        id: 'bh-2',
+        sortOrder: 2,
+        hebrewText: 'וּבְטוּבוֹ הַגָּדוֹל תָּמִיד לֹא חָסַר לָנוּ וְאַל יֶחְסַר לָנוּ מָזוֹן לְעוֹלָם וָעֶד. בַּעֲבוּר שְׁמוֹ הַגָּדוֹל כִּי הוּא אֵל זָן וּמְפַרְנֵס לַכֹּל וּמֵטִיב לַכֹּל וּמֵכִין מָזוֹן לְכָל בְּרִיּוֹתָיו אֲשֶׁר בָּרָא. בָּרוּךְ אַתָּה ה׳ הַזָּן אֶת הַכֹּל',
+        transliteration: "Uv'tuvo hagadol tamid lo chasar lanu v'al yechsar lanu mazon l'olam va'ed. Ba'avur sh'mo hagadol ki hu El zan um'farnes lakol umeitiv lakol umechin mazon l'chol b'riyotav asher bara. Baruch Atah Adonai hazan et hakol",
+        translation: 'Through His great goodness, we have never lacked food, and may we never lack it forever. For the sake of His great name, for He is God who feeds and sustains all, does good to all, and prepares food for all His creatures which He created. Blessed are You, Lord, who feeds all.',
+        notes: 'This completes the first bracha. The full Birkat Hamazon continues with three more brachot: thanks for the Land, request to rebuild Jerusalem, and general thanks for God\'s goodness.',
+      },
+    ],
+  },
+];
+
+// ==========================================
 // Combined Export
 // ==========================================
 
-export const PRAYERS: Prayer[] = [...TEFILLAH_PRAYERS, ...BRACHOS];
+export const PRAYERS: Prayer[] = [...TEFILLAH_PRAYERS, ...BRACHOS, ...BRACHOT_ACHRONOT];
 
 export function getPrayerBySlug(slug: string): Prayer | undefined {
   return PRAYERS.find(p => p.slug === slug);
@@ -1637,6 +1751,10 @@ export function getTefillahPrayers(): Prayer[] {
 
 export function getBrachotPrayers(): Prayer[] {
   return getPrayersByCategory('brachot');
+}
+
+export function getBrachotAchronotPrayers(): Prayer[] {
+  return getPrayersByCategory('brachot_achronot');
 }
 
 export function getAllPrayers(): Prayer[] {

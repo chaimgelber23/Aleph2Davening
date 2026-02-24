@@ -97,6 +97,16 @@ export default function DavenPage() {
     }
   }, [autoPlayNext, currentSection, selectedPrayer, audioSpeed, play]);
 
+  // Auto-scroll to current section in full view
+  useEffect(() => {
+    if (viewMode === 'full') {
+      document.getElementById(`full-section-${currentSectionIndex}`)?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+  }, [currentSectionIndex, viewMode]);
+
   // Prayer map for AmudMode
   const prayerMap = useMemo(() => {
     const all = getAllPrayers();
@@ -366,38 +376,201 @@ export default function DavenPage() {
             />
           )}
 
-          {/* Full Prayer View: All Sections */}
+          {/* Full Prayer View: All Sections with Audio */}
           {viewMode === 'full' && (
-            <div className="space-y-6">
-              <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-sm text-blue-800">
-                Viewing full prayer - Switch back to "View Sections" to practice section-by-section
-              </div>
-              {selectedPrayer.sections.map((section, idx) => (
-                <div
-                  key={section.id}
-                  className={`bg-white rounded-xl border p-6 ${idx === currentSectionIndex ? 'border-primary shadow-md' : 'border-gray-200'
+            <div className="space-y-4">
+              {/* Audio Controls */}
+              <div className="bg-white rounded-2xl border border-gray-100 p-4 sticky top-[60px] z-20 shadow-sm">
+                <div className="flex items-center gap-3">
+                  {/* Replay */}
+                  <button
+                    onClick={handleReplay}
+                    disabled={isLoading}
+                    className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${
+                      isLoading ? 'bg-gray-100 text-gray-300' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
                     }`}
-                >
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs font-semibold text-gray-500">Section {idx + 1}/{totalSections}</span>
-                    {idx === currentSectionIndex && (
-                      <span className="text-xs font-medium text-primary">Current</span>
-                    )}
-                  </div>
-                  <p
-                    className="font-['Noto_Serif_Hebrew'] text-2xl text-[#1A1A2E] leading-[1.8] text-right mb-3"
-                    dir="rtl"
                   >
-                    {section.hebrewText}
-                  </p>
-                  {displaySettings.showTransliteration && section.transliteration && (
-                    <p className="text-sm text-gray-600 italic mb-2">{section.transliteration}</p>
-                  )}
-                  {displaySettings.showTranslation && section.translation && (
-                    <p className="text-sm text-gray-700">{section.translation}</p>
-                  )}
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <polyline points="1 4 1 10 7 10" />
+                      <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+                    </svg>
+                  </button>
+
+                  {/* Play/Pause */}
+                  <button
+                    onClick={handleTogglePlay}
+                    disabled={isLoading}
+                    className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 shadow-md ${
+                      isPlaying
+                        ? 'bg-error text-white'
+                        : isLoading
+                        ? 'bg-gray-200 text-gray-400'
+                        : 'bg-primary text-white hover:bg-[#163d55]'
+                    }`}
+                  >
+                    {isLoading ? (
+                      <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <circle cx="12" cy="12" r="10" strokeOpacity="0.3" />
+                        <path d="M12 2a10 10 0 0 1 10 10" strokeLinecap="round" />
+                      </svg>
+                    ) : isPlaying ? (
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <rect x="6" y="4" width="4" height="16" rx="1" />
+                        <rect x="14" y="4" width="4" height="16" rx="1" />
+                      </svg>
+                    ) : (
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="5,3 19,12 5,21" />
+                      </svg>
+                    )}
+                  </button>
+
+                  {/* Progress bar */}
+                  <div className="flex-1">
+                    <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-primary rounded-full transition-all duration-100"
+                        style={{ width: `${progress * 100}%` }}
+                      />
+                    </div>
+                    <div className="flex justify-between mt-1">
+                      <span className="text-[10px] text-gray-400">
+                        Section {currentSectionIndex + 1}/{totalSections}
+                      </span>
+                      <span className="text-[10px] font-medium text-primary">{audioSpeed}x</span>
+                    </div>
+                  </div>
                 </div>
-              ))}
+
+                {/* Speed slider */}
+                <div className="flex items-center gap-2 mt-2">
+                  <span className="text-[10px] text-gray-300">Slow</span>
+                  <input
+                    type="range"
+                    min={0.5}
+                    max={2}
+                    step={0.25}
+                    value={audioSpeed}
+                    onChange={(e) => handleSpeedChange(parseFloat(e.target.value))}
+                    className="flex-1 accent-primary h-1"
+                  />
+                  <span className="text-[10px] text-gray-300">Fast</span>
+                </div>
+              </div>
+
+              {/* All Sections */}
+              {selectedPrayer.sections.map((section, idx) => {
+                const isCurrent = idx === currentSectionIndex;
+                const sectionWords = section.hebrewText.split(' ');
+
+                return (
+                  <button
+                    key={section.id}
+                    onClick={() => {
+                      stop();
+                      setCurrentSectionIndex(idx);
+                    }}
+                    className={`w-full text-left rounded-2xl border p-5 transition-all ${
+                      isCurrent
+                        ? 'border-primary shadow-md bg-white'
+                        : 'border-gray-100 bg-white/80 hover:border-gray-200'
+                    }`}
+                    id={`full-section-${idx}`}
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
+                        Section {idx + 1}
+                      </span>
+                      {isCurrent && (
+                        <span className="text-[10px] font-bold text-primary uppercase tracking-wider">
+                          Now Playing
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Hebrew text — with karaoke highlighting on current section */}
+                    {isCurrent ? (
+                      <div dir="rtl" className="flex flex-wrap justify-center gap-x-2 gap-y-0.5 leading-[2.2]">
+                        {sectionWords.map((word, i) => {
+                          const isPast = i < currentWordIndex;
+                          const isCurrentWord = i === currentWordIndex;
+                          const isFuture = i > currentWordIndex;
+                          return (
+                            <span
+                              key={i}
+                              className={`
+                                font-[var(--font-hebrew-serif)] text-2xl px-1 py-0.5 rounded-lg transition-all duration-200
+                                ${isCurrentWord ? 'bg-primary-light/25 text-primary scale-105' : ''}
+                                ${isPast && isPlaying ? 'text-primary/40' : ''}
+                                ${isFuture && isPlaying ? 'text-[#1A1A2E]' : ''}
+                                ${!isPlaying ? 'text-[#1A1A2E]' : ''}
+                              `}
+                            >
+                              {word}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <p
+                        className="font-[var(--font-hebrew-serif)] text-xl text-[#1A1A2E]/70 leading-[1.8] text-right"
+                        dir="rtl"
+                      >
+                        {section.hebrewText}
+                      </p>
+                    )}
+
+                    {/* Transliteration with matching highlight on current */}
+                    {displaySettings.showTransliteration && section.transliteration && (
+                      isCurrent ? (
+                        <div className="flex flex-wrap justify-center gap-x-1.5 gap-y-0.5 mt-2">
+                          {section.transliteration.split(' ').map((word, i) => (
+                            <span
+                              key={i}
+                              className={`text-sm transition-all duration-200 ${
+                                i === currentWordIndex
+                                  ? 'text-primary font-semibold'
+                                  : 'text-gray-400 italic'
+                              }`}
+                            >
+                              {word}
+                            </span>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-sm text-gray-400 italic mt-2">{section.transliteration}</p>
+                      )
+                    )}
+
+                    {displaySettings.showTranslation && section.translation && (
+                      <p className={`text-sm mt-2 ${isCurrent ? 'text-gray-600' : 'text-gray-400'}`}>
+                        {section.translation}
+                      </p>
+                    )}
+
+                    {/* Amud cues on current section */}
+                    {isCurrent && displaySettings.showAmudCues && section.amud && (
+                      <div className="mt-3 pt-3 border-t border-gray-100 space-y-2">
+                        {section.amud.instruction && (
+                          <p className="text-xs text-primary font-medium text-center">
+                            {section.amud.instruction}
+                          </p>
+                        )}
+                        {section.amud.congregationResponse && (
+                          <div className="bg-success/5 rounded-xl p-3">
+                            <p className="text-[10px] uppercase tracking-wider text-success font-semibold mb-0.5">
+                              Congregation responds
+                            </p>
+                            <p dir="rtl" className="font-[var(--font-hebrew-serif)] text-base text-success">
+                              {section.amud.congregationResponse}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           )}
 
@@ -595,6 +768,7 @@ function DavenList({
 }) {
   const [activeTab, setActiveTab] = useState<Tab>('services');
   const [searchQuery, setSearchQuery] = useState('');
+  const [showChazanPicker, setShowChazanPicker] = useState(false);
 
   const services = getAllServices();
   const tefillahPrayers = getTefillahPrayers();
@@ -654,23 +828,33 @@ function DavenList({
         {/* === SERVICES TAB === */}
         {activeTab === 'services' && (
           <div className="space-y-6">
-            {/* Chazan Guide quick-access */}
-            <div className="bg-white rounded-2xl border border-gray-100 p-5">
-              <h2 className="text-sm font-bold text-foreground mb-1">Chazan Guide</h2>
-              <p className="text-xs text-gray-400 mb-3">
-                Full service map with amud cues, congregation responses, and timing
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {services.map((service) => (
-                  <button
-                    key={service.id}
-                    onClick={() => onOpenChazanGuide(service)}
-                    className="px-4 py-2 rounded-xl text-sm font-medium border border-primary/20 text-primary hover:bg-primary/5 transition-colors"
-                  >
-                    {service.name}
-                  </button>
-                ))}
-              </div>
+            {/* Chazan Guide — compact collapsible */}
+            <div className="bg-white rounded-2xl border border-gray-100">
+              <button
+                onClick={() => setShowChazanPicker(!showChazanPicker)}
+                className="w-full flex items-center justify-between px-5 py-3.5"
+              >
+                <span className="text-sm font-semibold text-foreground">Chazan Guide</span>
+                <svg
+                  className={`w-4 h-4 text-gray-400 transition-transform ${showChazanPicker ? 'rotate-180' : ''}`}
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {showChazanPicker && (
+                <div className="px-5 pb-4 flex flex-wrap gap-2">
+                  {services.map((service) => (
+                    <button
+                      key={service.id}
+                      onClick={() => onOpenChazanGuide(service)}
+                      className="px-4 py-2 rounded-xl text-sm font-medium border border-primary/20 text-primary hover:bg-primary/5 transition-colors"
+                    >
+                      {service.name}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Weekday Services */}
@@ -682,25 +866,12 @@ function DavenList({
                 {services
                   .filter((s) => s.type === 'weekday')
                   .map((service, i) => (
-                    <div key={service.id} className="relative">
-                      <ServiceCard
-                        service={service}
-                        onSelect={onSelectService}
-                        index={i}
-                      />
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onOpenChazanGuide(service);
-                        }}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-gray-50 hover:bg-gray-100 rounded-full text-gray-500 shrink-0 border border-gray-100"
-                        title="Chazan Guide"
-                      >
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
-                        </svg>
-                      </button>
-                    </div>
+                    <ServiceCard
+                      key={service.id}
+                      service={service}
+                      onSelect={onSelectService}
+                      index={i}
+                    />
                   ))}
               </div>
             </div>
@@ -715,25 +886,12 @@ function DavenList({
                   {services
                     .filter((s) => s.type === 'shabbat')
                     .map((service, i) => (
-                      <div key={service.id} className="relative">
-                        <ServiceCard
-                          service={service}
-                          onSelect={onSelectService}
-                          index={i}
-                        />
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onOpenChazanGuide(service);
-                          }}
-                          className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-gray-50 hover:bg-gray-100 rounded-full text-gray-500 shrink-0 border border-gray-100"
-                          title="Chazan Guide"
-                        >
-                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
-                          </svg>
-                        </button>
-                      </div>
+                      <ServiceCard
+                        key={service.id}
+                        service={service}
+                        onSelect={onSelectService}
+                        index={i}
+                      />
                     ))}
                 </div>
               </div>

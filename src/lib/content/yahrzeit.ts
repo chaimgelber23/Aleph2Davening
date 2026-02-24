@@ -9,19 +9,45 @@ export interface KaddishInfo {
   nameHebrew: string;
   nameEnglish: string;
   description: string;
+  beginnerExplanation: string;
+  yourRole: string;
+  isYourKaddish: boolean;
   whenSaid: string[];
   whoSays: string;
   key_line?: string;
   key_line_transliteration?: string;
+  relatedPrayerId?: string;
 }
 
 export const KADDISH_TYPES: KaddishInfo[] = [
   {
+    type: 'mourners',
+    nameHebrew: 'קַדִּישׁ יָתוֹם',
+    nameEnglish: 'Mourner\'s Kaddish',
+    description:
+      'The Mourner\'s Kaddish never mentions death. It is an extraordinary declaration of faith — praising God precisely when it is hardest to do so. When you stand and say these words, the entire congregation stands with you, responding "Amen" as a community united in support.',
+    beginnerExplanation: 'This is YOUR Kaddish. You stand and say it, and the congregation responds. It is said near the end of every service.',
+    yourRole: 'You say this',
+    isYourKaddish: true,
+    whenSaid: [
+      'After Aleinu at the end of every service',
+      'After Psalm of the Day (at Shacharit)',
+      'After certain additional psalms or readings',
+    ],
+    whoSays: 'Mourners and those observing yahrzeit',
+    key_line: 'יְהֵא שְׁלָמָא רַבָּא מִן שְׁמַיָּא',
+    key_line_transliteration: 'Y\'hei sh\'lama raba min sh\'maya',
+    relatedPrayerId: 'kaddish-mourners',
+  },
+  {
     type: 'half',
     nameHebrew: 'חֲצִי קַדִּישׁ',
-    nameEnglish: 'Chatzi Kaddish (Half Kaddish)',
+    nameEnglish: 'Half Kaddish',
     description:
-      'The short form of kaddish, recited by the chazzan to mark transitions between sections of the service. It does not include any mourner-specific passages.',
+      'The short form of Kaddish, recited by the chazzan (prayer leader) to mark transitions between sections of the service. You will hear this several times during davening.',
+    beginnerExplanation: 'The prayer leader says this. You just listen and respond "Amen" when he pauses.',
+    yourRole: 'Listen and respond Amen',
+    isYourKaddish: false,
     whenSaid: [
       'Between Pesukei D\'Zimra and Barchhu',
       'Before the Amidah',
@@ -31,13 +57,17 @@ export const KADDISH_TYPES: KaddishInfo[] = [
     whoSays: 'Chazzan (prayer leader)',
     key_line: 'יִתְגַּדַּל וְיִתְקַדַּשׁ שְׁמֵהּ רַבָּא',
     key_line_transliteration: 'Yitgadal v\'yitkadash sh\'mei raba',
+    relatedPrayerId: 'kaddish-half',
   },
   {
     type: 'full',
     nameHebrew: 'קַדִּישׁ שָׁלֵם',
-    nameEnglish: 'Kaddish Shalem (Full Kaddish)',
+    nameEnglish: 'Full Kaddish',
     description:
-      'The complete kaddish, recited by the chazzan after the Amidah repetition. It includes the additional line "Titkabel" asking that our prayers be accepted.',
+      'The complete Kaddish, recited by the chazzan after the Amidah repetition. It includes the additional line "Titkabel" asking that our prayers be accepted.',
+    beginnerExplanation: 'The prayer leader says this after the main standing prayer. You just listen and respond "Amen."',
+    yourRole: 'Listen and respond Amen',
+    isYourKaddish: false,
     whenSaid: [
       'After the chazzan\'s repetition of the Amidah',
       'Near the end of the service',
@@ -45,28 +75,17 @@ export const KADDISH_TYPES: KaddishInfo[] = [
     whoSays: 'Chazzan (prayer leader)',
     key_line: 'תִּתְקַבַּל צְלוֹתְהוֹן וּבָעוּתְהוֹן',
     key_line_transliteration: 'Titkabel tz\'lot\'hon u\'va\'ut\'hon',
-  },
-  {
-    type: 'mourners',
-    nameHebrew: 'קַדִּישׁ יָתוֹם',
-    nameEnglish: 'Kaddish Yatom (Mourner\'s Kaddish)',
-    description:
-      'Recited by mourners during the first year after a parent\'s death and on each yahrzeit. It is also said by those observing yahrzeit for other close relatives. This kaddish is the same text as Half Kaddish with an additional paragraph.',
-    whenSaid: [
-      'After Aleinu at the end of every service',
-      'After Psalm of the Day',
-      'After certain additional psalms or readings',
-    ],
-    whoSays: 'Mourners and those observing yahrzeit',
-    key_line: 'יְהֵא שְׁלָמָא רַבָּא מִן שְׁמַיָּא',
-    key_line_transliteration: 'Y\'hei sh\'lama raba min sh\'maya',
+    relatedPrayerId: 'kaddish-full',
   },
   {
     type: 'derabanan',
     nameHebrew: 'קַדִּישׁ דְּרַבָּנָן',
-    nameEnglish: 'Kaddish D\'Rabbanan (Scholar\'s Kaddish)',
+    nameEnglish: 'Scholar\'s Kaddish',
     description:
-      'Recited after studying Torah she\'b\'al peh (Oral Torah) — Mishnah, Gemara, or Midrash. It includes a special prayer for Torah scholars and their students.',
+      'Recited after studying Torah she\'b\'al peh (Oral Torah) — Mishnah, Gemara, or Midrash. It includes a special prayer for Torah scholars and their students. You will usually hear this once at the beginning of Shacharit.',
+    beginnerExplanation: 'This is said after Torah study. You will hear it early in the morning service. Just respond "Amen."',
+    yourRole: 'Listen and respond Amen',
+    isYourKaddish: false,
     whenSaid: [
       'After learning Mishnah or Gemara in a group',
       'After reciting Birkot HaShachar section with rabbinic passages',
@@ -85,6 +104,10 @@ export const KADDISH_TYPES: KaddishInfo[] = [
 export interface KaddishInService {
   service: string;
   serviceHebrew: string;
+  serviceId: string;
+  timeOfDay: string;
+  estimatedMinutes: number;
+  beginnerTip: string;
   occurrences: {
     type: KaddishType;
     when: string;
@@ -94,8 +117,12 @@ export interface KaddishInService {
 
 export const KADDISH_IN_SERVICES: KaddishInService[] = [
   {
-    service: 'Shacharit (Weekday)',
+    service: 'Shacharit',
     serviceHebrew: 'שַׁחֲרִית',
+    serviceId: 'weekday-shacharit',
+    timeOfDay: 'Morning',
+    estimatedMinutes: 35,
+    beginnerTip: 'The morning service is the longest. Most shuls start between 6:30-8:00 AM. If you can only attend one service, this is the one.',
     occurrences: [
       { type: 'derabanan', when: 'After Birkot HaShachar / Korbanot section' },
       { type: 'half', when: 'After Yishtabach (before Barchhu)' },
@@ -109,6 +136,10 @@ export const KADDISH_IN_SERVICES: KaddishInService[] = [
   {
     service: 'Mincha',
     serviceHebrew: 'מִנְחָה',
+    serviceId: 'weekday-mincha',
+    timeOfDay: 'Afternoon',
+    estimatedMinutes: 15,
+    beginnerTip: 'The shortest service. Usually held in the late afternoon, about an hour before sunset. Quick but meaningful.',
     occurrences: [
       { type: 'half', when: 'After Ashrei (before Amidah)' },
       { type: 'full', when: 'After chazzan\'s repetition of the Amidah' },
@@ -118,6 +149,10 @@ export const KADDISH_IN_SERVICES: KaddishInService[] = [
   {
     service: 'Maariv',
     serviceHebrew: 'מַעֲרִיב',
+    serviceId: 'weekday-maariv',
+    timeOfDay: 'Evening',
+    estimatedMinutes: 15,
+    beginnerTip: 'The evening service. Often said right after Mincha in many shuls. A quiet, reflective service.',
     occurrences: [
       { type: 'half', when: 'Before the Amidah' },
       { type: 'full', when: 'After the Amidah', notes: 'Some communities say Half Kaddish here instead' },
@@ -134,58 +169,68 @@ export interface YahrzeitPractice {
   title: string;
   description: string;
   required: boolean;
+  sortOrder: number;
+  beginnerTip?: string;
 }
 
 export const YAHRZEIT_PRACTICES: YahrzeitPractice[] = [
-  {
-    title: 'Say Kaddish',
-    description:
-      'Attend all three daily services (Shacharit, Mincha, Maariv) and say the Mourner\'s Kaddish at each one. If you cannot attend all three, attend at least one.',
-    required: true,
-  },
   {
     title: 'Light a Yahrzeit Candle',
     description:
       'Light a 24-hour memorial candle at home before sunset on the evening the yahrzeit begins. The candle burns through the full day.',
     required: true,
+    sortOrder: 1,
+    beginnerTip: 'You can buy yahrzeit candles at most grocery stores or Judaica shops. Light it before sunset the evening before the yahrzeit date.',
+  },
+  {
+    title: 'Say Kaddish',
+    description:
+      'Attend daily services (Shacharit, Mincha, Maariv) and say the Mourner\'s Kaddish at each one. If you cannot attend all three, attend at least one.',
+    required: true,
+    sortOrder: 2,
+    beginnerTip: 'Let someone at the shul know it is your yahrzeit. They will help you know when to stand and say Kaddish.',
   },
   {
     title: 'Learn Torah',
     description:
       'Study Mishnah or other Torah in memory of the deceased. Some study chapters of Mishnah whose letters spell the deceased\'s Hebrew name, plus the letters of the word "neshamah" (soul).',
     required: false,
+    sortOrder: 3,
   },
   {
     title: 'Give Tzedakah',
     description:
-      'Make a charitable donation in memory of the deceased. This elevates the neshamah.',
+      'Make a charitable donation in memory of the deceased. This elevates the neshamah (soul) of the departed.',
     required: false,
+    sortOrder: 4,
+    beginnerTip: 'Any amount to any charity counts. Some people donate to a cause the deceased cared about.',
   },
   {
     title: 'Visit the Grave',
     description:
       'If possible, visit the gravesite. Recite Psalms (Tehillim) and the El Malei Rachamim prayer.',
     required: false,
+    sortOrder: 5,
   },
   {
     title: 'Lead the Davening',
     description:
       'If you are capable, serve as the chazzan (prayer leader) for one or more of the services on the yahrzeit day.',
     required: false,
-  },
-  {
-    title: 'Fast',
-    description:
-      'Some have the custom to fast on a parent\'s yahrzeit. This is not required but is practiced in some communities.',
-    required: false,
-  },
-  {
-    title: 'Get an Aliyah',
-    description:
-      'On the Shabbat before the yahrzeit, it is customary to receive an aliyah to the Torah. Let the gabbai know in advance.',
-    required: false,
+    sortOrder: 6,
   },
 ];
+
+// ==========================================
+// CONGREGATION RESPONSE — quick reference
+// ==========================================
+
+export const CONGREGATION_RESPONSE = {
+  hebrew: 'יְהֵא שְׁמֵהּ רַבָּא מְבָרַךְ לְעָלַם וּלְעָלְמֵי עָלְמַיָּא',
+  transliteration: 'Y\'hei sh\'mei raba m\'varach l\'alam ul\'almei almaya',
+  translation: 'May His great name be blessed forever and to all eternity',
+  explanation: 'This is the most important response during any Kaddish. When you hear the Kaddish being said, respond with these words loudly and with feeling. The Talmud says that whoever responds with all their strength has any negative decrees annulled.',
+};
 
 // ==========================================
 // HELPER FUNCTIONS

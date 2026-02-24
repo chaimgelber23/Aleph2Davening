@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useAuthStore } from '@/stores/authStore';
 import { useUserStore } from '@/stores/userStore';
-import type { Nusach, TransliterationMode, DisplaySettings } from '@/types';
+import type { Nusach, TransliterationMode, DisplaySettings, GuideLevel } from '@/types';
 
 export default function SettingsPage() {
   return (
@@ -264,6 +264,36 @@ function SettingsContent() {
                     }`}
                   >
                     {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Guide Content Level */}
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-1">
+                Guide Detail Level
+              </label>
+              <p className="text-xs text-gray-400 mb-2">
+                Controls how much detail the Jewish Living guides show
+              </p>
+              <div className="grid grid-cols-3 gap-2">
+                {([
+                  { value: 'beginner' as GuideLevel, label: 'Just Starting', desc: 'Simple essentials' },
+                  { value: 'intermediate' as GuideLevel, label: 'Practicing', desc: 'Traditional methods' },
+                  { value: 'advanced' as GuideLevel, label: 'Full Detail', desc: 'Complete halachic guide' },
+                ] as const).map((opt) => (
+                  <button
+                    key={opt.value}
+                    onClick={() => updateProfile({ guideContentLevel: opt.value })}
+                    className={`px-3 py-2 rounded-xl text-sm font-medium border-2 transition-colors text-center ${
+                      (profile.guideContentLevel || 'beginner') === opt.value
+                        ? 'border-primary bg-primary/5 text-primary'
+                        : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                    }`}
+                  >
+                    <span className="block">{opt.label}</span>
+                    <span className="block text-[10px] text-gray-400 font-normal mt-0.5">{opt.desc}</span>
                   </button>
                 ))}
               </div>

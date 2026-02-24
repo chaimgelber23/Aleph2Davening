@@ -108,6 +108,7 @@ const DEFAULT_PROFILE: UserProfile = {
   hebrewLevel: 'none',
   onboardingComplete: false,
   voiceGender: 'male',
+  guideContentLevel: 'beginner',
   streakFreezes: 1,
 };
 

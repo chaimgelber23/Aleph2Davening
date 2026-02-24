@@ -241,6 +241,7 @@ export interface UserProfile {
   hebrewLevel: HebrewLevel;
   onboardingComplete: boolean;
   voiceGender: VoiceGender;
+  guideContentLevel: GuideLevel;
   // Streak freeze
   streakFreezes: number; // available freezes (max 2)
   lastStreakFreezeWeek?: string; // ISO week string for weekly freeze grant

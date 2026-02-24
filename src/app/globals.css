@@ -56,11 +56,13 @@ html {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Print styles for Prep Sheet */
+/* Print styles for Prep Sheet and Kaddish Guide */
 @media print {
   .no-print { display: none !important; }
   .print-only { display: block !important; }
   body { background: white !important; }
   .prep-segment { break-inside: avoid; }
   .prep-response, .print-color { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .print-content { padding: 0 !important; }
+  .print-content > * + * { margin-top: 1.5rem; }
 }

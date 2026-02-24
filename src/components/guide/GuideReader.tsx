@@ -20,7 +20,13 @@ interface GuideReaderProps {
 export function GuideReader({ guide, onBack, onNavigate }: GuideReaderProps) {
   const [showQuiz, setShowQuiz] = useState(false);
   const [sourcesExpanded, setSourcesExpanded] = useState(false);
-  const [selectedLevel, setSelectedLevel] = useState<GuideLevel>('beginner');
+  const savedLevel = useUserStore((s) => s.profile.guideContentLevel || 'beginner');
+  const updateProfile = useUserStore((s) => s.updateProfile);
+  const [selectedLevel, setSelectedLevelLocal] = useState<GuideLevel>(savedLevel);
+  const handleLevelChange = (level: GuideLevel) => {
+    setSelectedLevelLocal(level);
+    updateProfile({ guideContentLevel: level });
+  };
   const guideProgress = useUserStore((s) => s.guideProgress);
   const markGuideRead = useUserStore((s) => s.markGuideRead);
   const toggleGuideBookmark = useUserStore((s) => s.toggleGuideBookmark);
@@ -135,7 +141,7 @@ export function GuideReader({ guide, onBack, onNavigate }: GuideReaderProps) {
 
         {/* Level Selector */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mt-4">
-          <LevelSelector selected={selectedLevel} onSelect={setSelectedLevel} />
+          <LevelSelector selected={selectedLevel} onSelect={handleLevelChange} />
         </motion.div>
 
         {/* Quick Answer - shows based on level */}
