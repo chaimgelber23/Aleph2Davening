@@ -3,16 +3,18 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { Sparkles, X, RefreshCw } from 'lucide-react';
+import { Sparkles, X, LogIn, Shield, User } from 'lucide-react';
 import { useUserStore } from '@/stores/userStore';
 import { useAuthStore } from '@/stores/authStore';
 import { useBootcampStore } from '@/stores/bootcampStore';
+import { useProfilePanelStore } from '@/stores/profilePanelStore';
 import { WelcomePage } from '@/components/WelcomePage';
 import { BottomNav } from '@/components/ui/BottomNav';
 import { ContinueHero } from '@/components/home/ContinueHero';
 import { DailyWisdom } from '@/components/home/DailyWisdom';
 import { QuickActionPills } from '@/components/home/QuickActionPills';
 import { TodaysGoals } from '@/components/home/TodaysGoals';
+import { AppTour } from '@/components/home/AppTour';
 import { LETTERS } from '@/lib/content/letters';
 import { VOWELS } from '@/lib/content/vowels';
 import {
@@ -38,6 +40,9 @@ function HomeOverview() {
   const authStatus = useAuthStore((s) => s.status);
   const bootcampProgress = useBootcampStore((s) => s.progress);
   const isBootcampComplete = useBootcampStore((s) => s.isBootcampComplete);
+  const openProfile = useProfilePanelStore((s) => s.open);
+  const hasCompletedAppTour = useUserStore((s) => s.hasCompletedAppTour);
+  const resetAppTour = useUserStore((s) => s.resetAppTour);
 
   // Greeting — Hebrew style
   const userName = profile.displayName?.trim() || '';
@@ -95,10 +100,8 @@ function HomeOverview() {
     }
   }, [profile.lastPracticeDate]);
 
-  // Signup prompt
-  const showSignup =
-    authStatus === 'unauthenticated' &&
-    (bootcampProgress.enrolled || Object.keys(skillProgress).length >= 1);
+  // Signup prompt — always show for unauthenticated users
+  const showSignup = authStatus === 'unauthenticated';
 
   // Section cards
   const sections = useMemo(
@@ -164,20 +167,24 @@ function HomeOverview() {
               Aleph2Davening
             </span>
             {authStatus === 'authenticated' ? (
-              <Link
-                href="/settings"
-                className="text-white/40 hover:text-white/70 transition-colors text-sm"
-                aria-label="Settings"
+              <button
+                onClick={openProfile}
+                className="flex items-center gap-1.5 bg-white/10 hover:bg-white/20 transition-colors rounded-full px-3 py-1.5"
+                aria-label="Open profile"
               >
-                Settings
-              </Link>
+                <User className="w-3.5 h-3.5 text-white/70" strokeWidth={2} />
+                <span className="text-xs font-medium text-white/80">
+                  {userName || 'Profile'}
+                </span>
+              </button>
             ) : (
-              <Link
-                href="/login"
-                className="text-white/40 hover:text-white/70 transition-colors text-sm"
+              <button
+                onClick={openProfile}
+                className="flex items-center gap-1.5 bg-white/15 hover:bg-white/25 transition-colors rounded-full px-3.5 py-1.5"
               >
-                Sign in
-              </Link>
+                <LogIn className="w-3.5 h-3.5 text-white/90" strokeWidth={2} />
+                <span className="text-xs font-semibold text-white/90">Sign In</span>
+              </button>
             )}
           </div>
 
@@ -195,9 +202,9 @@ function HomeOverview() {
           </div>
 
           {/* Stats row */}
-          <div className="flex items-center gap-3 mt-5">
+          <div className="flex items-center gap-3 mt-5" data-tour="tour-header">
             {/* Streak */}
-            <div className="bg-white/[0.08] backdrop-blur-sm rounded-xl px-4 py-2.5 flex-1">
+            <div className="bg-white/[0.08] backdrop-blur-sm rounded-xl px-4 py-2.5 flex-1" data-tour="tour-streak">
               <p className="text-[13px] font-semibold leading-tight">
                 {profile.streakDays}{' '}
                 {profile.streakDays === 1 ? 'day' : 'days'}
@@ -206,7 +213,7 @@ function HomeOverview() {
             </div>
 
             {/* Daily goal */}
-            <div className="flex items-center gap-2 bg-white/[0.08] backdrop-blur-sm rounded-xl px-4 py-2.5 flex-1">
+            <div className="flex items-center gap-2 bg-white/[0.08] backdrop-blur-sm rounded-xl px-4 py-2.5 flex-1" data-tour="tour-daily-goal">
               <div className="relative w-8 h-8 shrink-0">
                 <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
                   <circle
@@ -321,6 +328,7 @@ function HomeOverview() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
+          data-tour="tour-quick-actions"
         >
           <QuickActionPills />
         </motion.div>
@@ -345,6 +353,7 @@ function HomeOverview() {
             <Link
               href={section.href}
               className="block rounded-2xl bg-white border border-gray-100 hover:shadow-md hover:border-gray-200 transition-all p-5"
+              data-tour={`tour-section-${section.href.slice(1)}`}
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -404,6 +413,7 @@ function HomeOverview() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35 }}
           className="grid grid-cols-3 gap-2.5"
+          data-tour="tour-stats"
         >
           {[
             {
@@ -436,37 +446,56 @@ function HomeOverview() {
           ))}
         </motion.div>
 
-        {/* Signup Prompt */}
+        {/* Replay tour */}
+        {hasCompletedAppTour && (
+          <button
+            onClick={resetAppTour}
+            className="w-full text-center text-xs text-gray-400 hover:text-gray-500 transition-colors py-1"
+          >
+            Replay app tour
+          </button>
+        )}
+
+        {/* Sign In / Keep Progress Prompt */}
         {showSignup && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex items-center gap-4"
+            className="bg-gradient-to-br from-[#1B4965]/[0.04] to-[#5FA8D3]/[0.06] rounded-2xl border border-[#1B4965]/10 p-5"
           >
-            <div className="w-10 h-10 bg-primary/8 rounded-xl flex items-center justify-center shrink-0">
-              <RefreshCw
-                className="w-5 h-5 text-primary"
-                strokeWidth={1.5}
-              />
+            <div className="flex items-start gap-3.5 mb-4">
+              <div className="w-10 h-10 bg-[#1B4965]/10 rounded-xl flex items-center justify-center shrink-0 mt-0.5">
+                <Shield className="w-5 h-5 text-[#1B4965]" strokeWidth={1.5} />
+              </div>
+              <div>
+                <p className="text-[15px] font-semibold text-foreground">
+                  Keep your progress
+                </p>
+                <p className="text-[13px] text-gray-500 mt-1 leading-relaxed">
+                  Sign in to save your learning, sync across devices, and never lose your streak.
+                </p>
+              </div>
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-foreground">
-                Save your progress
-              </p>
-              <p className="text-xs text-gray-400 mt-0.5">
-                Sync across devices &amp; never lose your data
-              </p>
+            <div className="flex items-center gap-2.5">
+              <Link
+                href="/signup"
+                className="flex-1 text-center px-4 py-2.5 rounded-xl bg-[#1B4965] text-white text-sm font-semibold hover:bg-[#163d55] transition-colors shadow-sm"
+              >
+                Create Free Account
+              </Link>
+              <Link
+                href="/login"
+                className="flex-1 text-center px-4 py-2.5 rounded-xl bg-white text-[#1B4965] text-sm font-semibold border border-[#1B4965]/20 hover:border-[#1B4965]/40 transition-colors"
+              >
+                Sign In
+              </Link>
             </div>
-            <Link
-              href="/signup"
-              className="px-4 py-2 rounded-xl bg-primary text-white text-xs font-semibold hover:bg-primary/90 transition-colors whitespace-nowrap shadow-sm"
-            >
-              Sign Up
-            </Link>
           </motion.div>
         )}
       </div>
+
+      {!hasCompletedAppTour && <AppTour />}
 
       <BottomNav />
     </div>

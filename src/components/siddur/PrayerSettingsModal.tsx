@@ -76,7 +76,7 @@ export function PrayerSettingsModal({
                     </div>
                     <button
                         onClick={onClose}
-                        className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                        className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
                     >
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <path d="M18 6L6 18M6 6l12 12" />
@@ -151,7 +151,7 @@ export function PrayerSettingsModal({
                             <div className="flex items-center justify-between">
                                 <div>
                                     <span className="text-sm font-medium text-gray-700 block">Auto-Advance</span>
-                                    <span className="text-[11px] text-gray-400">Audio plays through every section, scrolling as it goes</span>
+                                    <span className="text-[11px] text-gray-400">Automatically plays the next section when audio finishes</span>
                                 </div>
                                 <button
                                     onClick={onToggleAutoAdvance}
@@ -170,8 +170,8 @@ export function PrayerSettingsModal({
                     {/* Display Settings */}
                     <section className="space-y-3">
                         <div>
-                            <h3 className="text-xs uppercase tracking-wider text-gray-500 font-semibold">Display Layers</h3>
-                            <p className="text-[11px] text-gray-400 mt-0.5">Show or hide text layers under the Hebrew</p>
+                            <h3 className="text-xs uppercase tracking-wider text-gray-500 font-semibold">Text Aids</h3>
+                            <p className="text-[11px] text-gray-400 mt-0.5">Show or hide helpers under the Hebrew text</p>
                         </div>
                         <div className="bg-white border border-gray-100 rounded-xl divide-y divide-gray-100 shadow-sm">
                             {TOGGLES.map(({ key, label, desc }) => {

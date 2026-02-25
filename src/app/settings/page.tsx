@@ -40,6 +40,9 @@ function SettingsContent() {
   const [passwordMsg, setPasswordMsg] = useState('');
   const [passwordError, setPasswordError] = useState('');
 
+  // Nusach
+  const [nusachNote, setNusachNote] = useState('');
+
   // Delete
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteInput, setDeleteInput] = useState('');
@@ -231,7 +234,15 @@ function SettingsContent() {
                 {(['ashkenaz', 'sefard', 'edot'] as Nusach[]).map((n) => (
                   <button
                     key={n}
-                    onClick={() => updateProfile({ nusach: n })}
+                    onClick={() => {
+                      if (n !== 'ashkenaz') {
+                        setNusachNote('Currently the app only supports Ashkenaz nusach. Sefard and Edot HaMizrach are coming soon!');
+                        setTimeout(() => setNusachNote(''), 4000);
+                      } else {
+                        setNusachNote('');
+                        updateProfile({ nusach: n });
+                      }
+                    }}
                     className={`px-3 py-2 rounded-xl text-sm font-medium border-2 transition-colors ${
                       profile.nusach === n
                         ? 'border-primary bg-primary/5 text-primary'
@@ -242,6 +253,9 @@ function SettingsContent() {
                   </button>
                 ))}
               </div>
+              {nusachNote && (
+                <p className="text-sm text-warning mt-2">{nusachNote}</p>
+              )}
             </div>
 
             {/* Voice Gender */}

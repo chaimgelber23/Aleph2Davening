@@ -35,8 +35,7 @@ export default function DavenPage() {
   const [chazanGuideFromList, setChazanGuideFromList] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showWalkthrough, setShowWalkthrough] = useState(false);
-  const [dismissedLayers, setDismissedLayers] = useState<Set<string>>(new Set());
-  const [settingsHint, setSettingsHint] = useState<string | null>(null);
+  const [sectionPositions, setSectionPositions] = useState<Record<string, number>>({});
 
   // Audio source selection
   const [selectedAudioSource, setSelectedAudioSource] = useState<AudioSourceId>('google-tts');
@@ -117,7 +116,9 @@ export default function DavenPage() {
   // Handlers
   const handleSelectPrayer = useCallback((prayer: Prayer) => {
     setSelectedPrayer(prayer);
-    setCurrentSectionIndex(0);
+    // Resume from saved position if available
+    const savedPos = sectionPositions[prayer.id];
+    setCurrentSectionIndex(savedPos && savedPos > 0 ? savedPos : 0);
     setView('prayer_reader');
 
     // Track prayer view
@@ -126,7 +127,7 @@ export default function DavenPage() {
       eventCategory: 'prayer',
       prayerId: prayer.id,
     });
-  }, []);
+  }, [sectionPositions]);
 
   const handleSelectService = useCallback((service: DaveningService) => {
     setSelectedService(service);
@@ -167,13 +168,16 @@ export default function DavenPage() {
   const handleBack = useCallback(() => {
     stop();
     if (view === 'prayer_reader') {
+      // Save section position before leaving
+      if (selectedPrayer) {
+        setSectionPositions(prev => ({ ...prev, [selectedPrayer.id]: currentSectionIndex }));
+      }
       if (selectedService) {
         setView('service_roadmap');
       } else {
         setView('list');
       }
       setSelectedPrayer(null);
-      setCurrentSectionIndex(0);
     } else if (view === 'service_roadmap') {
       setView('list');
       setSelectedService(null);
@@ -209,11 +213,16 @@ export default function DavenPage() {
     updateProfile({ audioSpeed: newSpeed });
   }, [updateProfile]);
 
-  const handleDismissLayer = useCallback((key: string) => {
-    setDismissedLayers(prev => new Set([...prev, key]));
-    setSettingsHint('Turned off for now');
-    setTimeout(() => setSettingsHint(null), 4000);
-  }, []);
+  // Auto-show walkthrough for first-time users
+  useEffect(() => {
+    if (view === 'prayer_reader' && selectedPrayer) {
+      const seen = localStorage.getItem('daven-walkthrough-seen');
+      if (!seen) {
+        setShowWalkthrough(true);
+        localStorage.setItem('daven-walkthrough-seen', '1');
+      }
+    }
+  }, [view, selectedPrayer]);
 
   // === VIEWS ===
 
@@ -280,6 +289,11 @@ export default function DavenPage() {
               </svg>
             </button>
             <div className="flex flex-col items-center justify-center">
+              {selectedService && (
+                <span className="text-[10px] font-medium text-gray-400">
+                  {selectedService.name}
+                </span>
+              )}
               <span className="text-sm font-bold text-gray-800">
                 {selectedPrayer.nameEnglish}
               </span>
@@ -298,67 +312,6 @@ export default function DavenPage() {
               </svg>
             </button>
           </div>
-          {/* Audio source quick-access */}
-          <div className="max-w-md mx-auto flex items-center justify-center mt-2">
-            <AudioSourcePicker
-              prayerId={selectedPrayer.id}
-              selectedSource={selectedAudioSource}
-              onSelectSource={(sourceId, entry) => {
-                setSelectedAudioSource(sourceId);
-                setSelectedAudioEntry(entry);
-              }}
-            />
-          </div>
-
-          {/* Quick Controls: View mode + Auto-advance + Guide */}
-          <div className="max-w-md mx-auto flex items-center justify-center gap-3 mt-2 px-4 pb-1">
-            {/* View mode toggle */}
-            <div className="flex gap-0.5 bg-gray-100 rounded-lg p-0.5">
-              <button
-                onClick={() => setViewMode('section')}
-                className={`px-3 py-1.5 text-[11px] font-semibold rounded-md transition-colors ${
-                  viewMode === 'section' ? 'bg-white text-primary shadow-sm' : 'text-gray-400'
-                }`}
-              >
-                Section
-              </button>
-              <button
-                onClick={() => setViewMode('full')}
-                className={`px-3 py-1.5 text-[11px] font-semibold rounded-md transition-colors ${
-                  viewMode === 'full' ? 'bg-white text-primary shadow-sm' : 'text-gray-400'
-                }`}
-              >
-                Full
-              </button>
-            </div>
-
-            {/* Auto-advance toggle */}
-            <button
-              onClick={() => setAutoAdvanceEnabled(!autoAdvanceEnabled)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-colors ${
-                autoAdvanceEnabled ? 'bg-success/10 text-success' : 'bg-gray-100 text-gray-400'
-              }`}
-            >
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <polygon points="5,3 19,12 5,21" />
-              </svg>
-              Auto-play {autoAdvanceEnabled ? 'ON' : 'OFF'}
-            </button>
-
-            {/* Guide button */}
-            <button
-              onClick={() => setShowWalkthrough(true)}
-              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-primary bg-primary/5 hover:bg-primary/10 transition-colors"
-            >
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="10" />
-                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-                <line x1="12" y1="17" x2="12.01" y2="17" />
-              </svg>
-              Guide
-            </button>
-          </div>
-
           {/* Service progress track — only when opened from a service */}
           {selectedService && currentServiceItemIndex >= 0 && totalServiceItems > 1 && (
             <div className="max-w-md mx-auto px-4 pt-2 pb-1">
@@ -386,15 +339,15 @@ export default function DavenPage() {
         </div>
 
         <div className="max-w-md mx-auto px-6 py-6 space-y-5 pb-32">
-          {/* Prayer Context */}
-          {currentSectionIndex === 0 && displaySettings.showInstructions && !dismissedLayers.has('showInstructions') && (
+          {/* Prayer Context — always accessible */}
+          {displaySettings.showInstructions && selectedPrayer.whenSaid && (
             <p className="text-xs text-gray-400 text-center">
               {selectedPrayer.whenSaid}
             </p>
           )}
 
           {/* Amud Badge */}
-          {displaySettings.showAmudCues && !dismissedLayers.has('showAmudCues') && currentSection?.amud && (
+          {displaySettings.showAmudCues && currentSection?.amud && (
             <div className="flex items-center justify-center gap-2">
               <AmudBadge role={currentSection.amud.role} />
               {currentSection.amud.physicalActions?.map((action) => (
@@ -463,8 +416,6 @@ export default function DavenPage() {
               onWordTap={handleReplay}
               isPlaying={isPlaying}
               isLoading={isLoading}
-              dismissedLayers={dismissedLayers}
-              onDismissLayer={handleDismissLayer}
             />
           )}
 
@@ -532,19 +483,20 @@ export default function DavenPage() {
                   </div>
                 </div>
 
-                {/* Speed slider */}
-                <div className="flex items-center gap-2 mt-2">
-                  <span className="text-[10px] text-gray-300">Slow</span>
-                  <input
-                    type="range"
-                    min={0.5}
-                    max={2}
-                    step={0.25}
-                    value={audioSpeed}
-                    onChange={(e) => handleSpeedChange(parseFloat(e.target.value))}
-                    className="flex-1 accent-primary h-1"
-                  />
-                  <span className="text-[10px] text-gray-300">Fast</span>
+                {/* Speed badge — tap to cycle */}
+                <div className="flex items-center justify-end mt-2">
+                  <button
+                    onClick={() => {
+                      const SPEED_STEPS = [0.75, 1, 1.25, 1.5, 2];
+                      const currentIdx = SPEED_STEPS.indexOf(audioSpeed);
+                      const nextIdx = currentIdx >= 0 ? (currentIdx + 1) % SPEED_STEPS.length : 1;
+                      handleSpeedChange(SPEED_STEPS[nextIdx]);
+                    }}
+                    className="px-3 py-1 rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 text-xs font-bold transition-colors"
+                    aria-label="Change speed"
+                  >
+                    {audioSpeed}x
+                  </button>
                 </div>
               </div>
 
@@ -611,7 +563,7 @@ export default function DavenPage() {
                     )}
 
                     {/* Transliteration with matching highlight on current */}
-                    {displaySettings.showTransliteration && !dismissedLayers.has('showTransliteration') && section.transliteration && (
+                    {displaySettings.showTransliteration && section.transliteration && (
                       isCurrent ? (
                         <div className="flex flex-wrap justify-center gap-x-1.5 gap-y-0.5 mt-2">
                           {section.transliteration.split(' ').map((word, i) => (
@@ -632,14 +584,14 @@ export default function DavenPage() {
                       )
                     )}
 
-                    {displaySettings.showTranslation && !dismissedLayers.has('showTranslation') && section.translation && (
+                    {displaySettings.showTranslation && section.translation && (
                       <p className={`text-sm mt-2 ${isCurrent ? 'text-gray-600' : 'text-gray-400'}`}>
                         {section.translation}
                       </p>
                     )}
 
                     {/* Amud cues on current section */}
-                    {isCurrent && displaySettings.showAmudCues && !dismissedLayers.has('showAmudCues') && section.amud && (
+                    {isCurrent && displaySettings.showAmudCues && section.amud && (
                       <div className="mt-3 pt-3 border-t border-gray-100 space-y-2">
                         {section.amud.instruction && (
                           <p className="text-xs text-primary font-medium text-center">
@@ -729,18 +681,7 @@ export default function DavenPage() {
           )}
         </div>
 
-        {/* Coach me floating button */}
-        <motion.button
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.5 }}
-          onClick={() => { stop(); setShowCoaching(true); }}
-          className="fixed bottom-24 right-6 bg-gold text-white px-5 py-3 rounded-full shadow-lg hover:bg-[#b8892f] active:scale-95 transition-all flex items-center gap-2 z-20"
-        >
-          <span className="text-sm font-medium">Coach</span>
-        </motion.button>
-
-        {/* Coaching overlay */}
+        {/* Coaching overlay — accessible via settings modal or walkthrough */}
         <AnimatePresence>
           {showCoaching && (
             <CoachingOverlay
@@ -782,27 +723,6 @@ export default function DavenPage() {
           )}
         </AnimatePresence>
 
-        {/* Settings hint toast */}
-        <AnimatePresence>
-          {settingsHint && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              className="fixed bottom-20 inset-x-0 flex justify-center z-50"
-            >
-              <div className="bg-gray-800 text-white text-xs px-4 py-2.5 rounded-full shadow-lg flex items-center gap-2">
-                <span>{settingsHint}</span>
-                <button
-                  onClick={() => { setSettingsHint(null); setShowSettingsModal(true); }}
-                  className="text-[#5FA8D3] font-semibold underline"
-                >
-                  Settings
-                </button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
     );
   }

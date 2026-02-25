@@ -95,6 +95,11 @@ interface UserState {
   // Daven walkthrough
   hasDismissedDavenWalkthrough: boolean;
   dismissDavenWalkthrough: () => void;
+
+  // App tour
+  hasCompletedAppTour: boolean;
+  completeAppTour: () => void;
+  resetAppTour: () => void;
 }
 
 const DEFAULT_PROFILE: UserProfile = {
@@ -549,10 +554,15 @@ export const useUserStore = create<UserState>()(
       // Daven walkthrough
       hasDismissedDavenWalkthrough: false,
       dismissDavenWalkthrough: () => set({ hasDismissedDavenWalkthrough: true }),
+
+      // App tour
+      hasCompletedAppTour: false,
+      completeAppTour: () => set({ hasCompletedAppTour: true }),
+      resetAppTour: () => set({ hasCompletedAppTour: false }),
     }),
     {
       name: 'aleph2davening-user',
-      version: 3,
+      version: 4,
       migrate: (persistedState: unknown, version: number) => {
         const state = persistedState as Record<string, unknown>;
         if (version < 2) {
@@ -562,6 +572,9 @@ export const useUserStore = create<UserState>()(
         }
         if (version < 3) {
           state.hasDismissedDavenWalkthrough = false;
+        }
+        if (version < 4) {
+          state.hasCompletedAppTour = false;
         }
         return state;
       },

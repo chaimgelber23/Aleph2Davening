@@ -102,7 +102,7 @@ export default function LivingPage() {
         {/* Section tabs */}
         <div className="flex gap-1 bg-gray-100 rounded-xl p-1 mb-6">
           {[
-            { id: 'guides' as Section, label: 'How-To' },
+            { id: 'guides' as Section, label: 'Guides' },
             { id: 'brachot' as Section, label: 'Brachot' },
           ].map((tab) => (
             <button
@@ -202,10 +202,13 @@ export default function LivingPage() {
 // Bracha Card
 // ==========================
 
+const ESSENTIAL_BRACHOT = new Set(['hamotzi', 'shehakol', 'mezonot', 'ha-eitz', 'ha-adamah']);
+
 function BrachaCard({ prayer, onSelect }: { prayer: Prayer; onSelect: (p: Prayer) => void }) {
   const isPrayerCoached = useUserStore((s) =>
     s.isPrayerFullyCoached(prayer.id, prayer.sections.map((sec) => sec.id))
   );
+  const isEssential = ESSENTIAL_BRACHOT.has(prayer.id);
 
   return (
     <button
@@ -227,7 +230,14 @@ function BrachaCard({ prayer, onSelect }: { prayer: Prayer; onSelect: (p: Prayer
             )}
           </div>
           <div>
-            <h3 className="font-semibold text-foreground text-sm">{prayer.nameEnglish}</h3>
+            <div className="flex items-center gap-2">
+              <h3 className="font-semibold text-foreground text-sm">{prayer.nameEnglish}</h3>
+              {isEssential && (
+                <span className="text-[9px] font-bold uppercase tracking-wider bg-[#C6973F]/10 text-[#C6973F] px-1.5 py-0.5 rounded-full">
+                  Essential
+                </span>
+              )}
+            </div>
             <p dir="rtl" className="font-[var(--font-hebrew-serif)] text-base text-gray-500">
               {prayer.nameHebrew}
             </p>
@@ -265,6 +275,19 @@ function BrachaReader({ prayer, onBack }: { prayer: Prayer; onBack: () => void }
   autoAdvanceRef.current = autoAdvance;
   const loopModeRef = useRef(loopMode);
   loopModeRef.current = loopMode;
+
+  // Show settings hint on first use
+  const [showSettingsHint, setShowSettingsHint] = useState(false);
+  useEffect(() => {
+    const seen = localStorage.getItem('bracha-settings-seen');
+    if (!seen) {
+      setShowSettingsHint(true);
+    }
+  }, []);
+  const dismissSettingsHint = useCallback(() => {
+    setShowSettingsHint(false);
+    localStorage.setItem('bracha-settings-seen', '1');
+  }, []);
 
   // Refs for auto-scrolling
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -515,7 +538,7 @@ function BrachaReader({ prayer, onBack }: { prayer: Prayer; onBack: () => void }
           </div>
           {/* Settings toggle */}
           <button
-            onClick={() => setShowSettings(!showSettings)}
+            onClick={() => { setShowSettings(!showSettings); if (showSettingsHint) dismissSettingsHint(); }}
             className={`flex items-center justify-center w-10 h-10 -mr-2 rounded-lg transition-colors ${
               showSettings ? 'text-[#6B4C9A] bg-[#6B4C9A]/10' : 'text-gray-400 hover:text-gray-600'
             }`}
@@ -527,6 +550,22 @@ function BrachaReader({ prayer, onBack }: { prayer: Prayer; onBack: () => void }
           </button>
         </div>
       </div>
+
+      {/* Settings hint for first-time users */}
+      {showSettingsHint && !showSettings && (
+        <div className="bg-[#6B4C9A]/5 border-b border-[#6B4C9A]/10">
+          <div className="max-w-md mx-auto px-6 py-2.5 flex items-center justify-between">
+            <p className="text-xs text-[#6B4C9A]">
+              Tap the gear icon for view options, audio settings, and transliteration
+            </p>
+            <button onClick={dismissSettingsHint} className="text-gray-400 hover:text-gray-600 ml-2 shrink-0">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Settings Panel (collapsible) */}
       {showSettings && (

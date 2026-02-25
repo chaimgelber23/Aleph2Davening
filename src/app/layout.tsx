@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Noto_Serif_Hebrew, Noto_Sans_Hebrew, Playfair_Display } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { AuthProvider } from "@/components/AuthProvider";
+import { ProfilePanel } from "@/components/ui/ProfilePanel";
 import { JsonLd } from "@/components/seo/JsonLd";
 import "./globals.css";
 
@@ -101,7 +102,10 @@ export default function RootLayout({
         `}
       >
         <JsonLd />
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          {children}
+          <ProfilePanel />
+        </AuthProvider>
         <Analytics />
       </body>
     </html>

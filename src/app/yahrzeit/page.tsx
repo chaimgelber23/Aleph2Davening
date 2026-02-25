@@ -133,8 +133,8 @@ export default function YahrzeitPage() {
       <div className="min-h-screen bg-background">
         <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-100 px-4 py-3 z-30">
           <div className="max-w-md mx-auto flex items-center justify-between">
-            <button onClick={handleBackToTabs} className="flex items-center justify-center w-10 h-10 -ml-2 text-gray-400 hover:text-gray-600 transition-colors">
-              <span className="sr-only">Back</span>
+            <button onClick={handleBackToTabs} className="flex items-center justify-center w-11 h-11 -ml-2 text-gray-400 hover:text-gray-600 transition-colors">
+              <span className="sr-only">Back to Kaddish</span>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M19 12H5M12 19l-7-7 7-7" />
               </svg>
@@ -147,7 +147,7 @@ export default function YahrzeitPage() {
             </div>
             <button
               onClick={() => setShowSettingsModal(true)}
-              className="flex items-center justify-center w-10 h-10 -mr-2 text-gray-400 hover:text-[#5C4033] transition-colors"
+              className="flex items-center justify-center w-11 h-11 -mr-2 text-gray-400 hover:text-[#5C4033] transition-colors"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="3" />
@@ -214,7 +214,7 @@ export default function YahrzeitPage() {
                   <button onClick={handleReplay} disabled={isLoading} className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${isLoading ? 'bg-gray-100 text-gray-300' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}>
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="1 4 1 10 7 10" /><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" /></svg>
                   </button>
-                  <button onClick={handleTogglePlay} disabled={isLoading} className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 shadow-md ${isPlaying ? 'bg-error text-white' : isLoading ? 'bg-gray-200 text-gray-400' : 'bg-[#5C4033] text-white hover:bg-[#4a3529]'}`}>
+                  <button onClick={handleTogglePlay} disabled={isLoading} className={`w-14 h-14 rounded-full flex items-center justify-center shrink-0 shadow-lg active:scale-95 ${isLoading ? 'bg-gray-200 text-gray-400' : 'bg-[#5C4033] text-white hover:bg-[#4a3529]'}`}>
                     {isLoading ? (
                       <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" strokeOpacity="0.3" /><path d="M12 2a10 10 0 0 1 10 10" strokeLinecap="round" /></svg>
                     ) : isPlaying ? (
@@ -233,10 +233,19 @@ export default function YahrzeitPage() {
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 mt-2">
-                  <span className="text-[10px] text-gray-300">Slow</span>
-                  <input type="range" min={0.5} max={2} step={0.25} value={audioSpeed} onChange={(e) => handleSpeedChange(parseFloat(e.target.value))} className="flex-1 accent-[#5C4033] h-1" />
-                  <span className="text-[10px] text-gray-300">Fast</span>
+                <div className="flex items-center justify-end mt-2">
+                  <button
+                    onClick={() => {
+                      const SPEED_STEPS = [0.75, 1, 1.25, 1.5, 2];
+                      const currentIdx = SPEED_STEPS.indexOf(audioSpeed);
+                      const nextIdx = currentIdx >= 0 ? (currentIdx + 1) % SPEED_STEPS.length : 1;
+                      handleSpeedChange(SPEED_STEPS[nextIdx]);
+                    }}
+                    className="px-3 py-1 rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 text-xs font-bold transition-colors"
+                    aria-label="Change speed"
+                  >
+                    {audioSpeed}x
+                  </button>
                 </div>
               </div>
 
@@ -247,7 +256,7 @@ export default function YahrzeitPage() {
                   <button key={section.id} onClick={() => { stop(); setCurrentSectionIndex(idx); }} className={`w-full text-left rounded-2xl border p-5 transition-all ${isCurrent ? 'border-[#5C4033] shadow-md bg-white' : 'border-gray-100 bg-white/80 hover:border-gray-200'}`} id={`full-section-${idx}`}>
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Section {idx + 1}</span>
-                      {isCurrent && <span className="text-[10px] font-bold text-[#5C4033] uppercase tracking-wider">Now Playing</span>}
+                      {isCurrent && <span className="text-[10px] font-bold text-[#5C4033] uppercase tracking-wider">Current</span>}
                     </div>
                     {isCurrent ? (
                       <div dir="rtl" className="flex flex-wrap justify-center gap-x-2 gap-y-0.5 leading-[2.2]">
@@ -299,10 +308,6 @@ export default function YahrzeitPage() {
             </div>
           )}
         </div>
-
-        <motion.button initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.5 }} onClick={() => { stop(); setShowCoaching(true); }} className="fixed bottom-24 right-6 bg-gold text-white px-5 py-3 rounded-full shadow-lg hover:bg-[#b8892f] active:scale-95 transition-all z-20">
-          <span className="text-sm font-medium">Coach</span>
-        </motion.button>
 
         <AnimatePresence>
           {showCoaching && <CoachingOverlay prayer={mournersPrayer} initialSectionIndex={currentSectionIndex} onClose={() => setShowCoaching(false)} />}
@@ -388,6 +393,28 @@ export default function YahrzeitPage() {
         {/* === KADDISH TAB === */}
         {activeTab === 'kaddish' && (
           <div className="space-y-4">
+            {/* What to Do Now — urgent action card */}
+            <div className="bg-[#5C4033]/5 border-2 border-[#5C4033]/20 rounded-2xl p-5">
+              <h2 className="text-sm font-bold text-[#5C4033] mb-1.5">Need to say Kaddish today?</h2>
+              <p className="text-sm text-gray-600 leading-relaxed mb-3">
+                Here&apos;s what to do: learn the words (about 5 minutes), then find a minyan (prayer service) to say it at.
+              </p>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setView('learn_kaddish')}
+                  className="flex-1 py-2.5 rounded-xl bg-[#5C4033] text-white text-sm font-semibold hover:bg-[#4a3529] transition-colors"
+                >
+                  Learn the Words
+                </button>
+                <button
+                  onClick={() => { setActiveTab('services'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                  className="flex-1 py-2.5 rounded-xl bg-white border border-[#5C4033]/20 text-[#5C4033] text-sm font-semibold hover:bg-[#5C4033]/5 transition-colors"
+                >
+                  When Is It Said?
+                </button>
+              </div>
+            </div>
+
             {/* Intro */}
             <p className="text-sm text-gray-600 leading-relaxed">
               During davening services, you will hear several versions of Kaddish.

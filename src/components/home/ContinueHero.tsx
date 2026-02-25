@@ -34,9 +34,21 @@ export function ContinueHero() {
 
   const isNewUser = !bootcampEnrolled && Object.keys(skillProgress).length === 0;
 
-  // New user — let the section cards below serve as entry points
+  // New user — show welcome card with guidance
   if (isNewUser) {
-    return null;
+    return (
+      <div className="bg-white rounded-2xl shadow-sm border-2 border-primary/15 p-5">
+        <p className="text-[11px] text-primary font-semibold uppercase tracking-widest">
+          Welcome
+        </p>
+        <h2 className="text-lg font-serif font-bold text-foreground mt-1.5">
+          Ready to start?
+        </h2>
+        <p className="text-[13px] text-gray-400 mt-1 leading-relaxed">
+          Pick a section below to begin. Most people start with <strong>Hebrew</strong> to learn the letters, or <strong>Daven</strong> to follow along with prayers.
+        </p>
+      </div>
+    );
   }
 
   // Mid-bootcamp
