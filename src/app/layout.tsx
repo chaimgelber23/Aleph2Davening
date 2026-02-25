@@ -36,14 +36,25 @@ export const metadata: Metadata = {
     template: "%s | Aleph2Davening",
   },
   description:
-    "Free app to learn the Hebrew alphabet, read with vowels (nikud), master Jewish prayers with audio, transliteration & coaching. From Aleph-Bet to leading the amud.",
+    "Free app to learn the Hebrew alphabet, read with vowels (nikud), master Jewish prayers with audio, transliteration & coaching. From Aleph-Bet to leading the amud — at your own pace, even with zero Hebrew.",
   keywords: [
-    "learn Hebrew", "Hebrew alphabet", "aleph bet", "Hebrew letters", "Hebrew vowels", "nikud",
-    "learn to daven", "Jewish prayer", "siddur", "siddur with transliteration", "siddur audio",
+    // Hebrew
+    "learn Hebrew", "learn Hebrew alphabet", "learn to read Hebrew", "Hebrew for beginners",
+    "aleph bet", "Hebrew letters", "Hebrew vowels", "nikud",
+    "Hebrew reading practice", "Hebrew learning app",
+    // Davening
+    "learn to daven", "how to daven", "davening for beginners", "beginner davening",
+    "Jewish prayer", "siddur", "siddur with transliteration", "siddur audio",
+    "learn Jewish prayers", "how to follow along in shul",
+    // Specific prayers
     "modeh ani", "shema", "amidah", "shemoneh esrei",
-    "yahrzeit", "kaddish", "mourner's kaddish", "kaddish transliteration", "kaddish audio",
+    // Yahrzeit / Kaddish
+    "yahrzeit", "kaddish", "mourner's kaddish", "how to say kaddish",
+    "kaddish transliteration", "kaddish audio",
+    // Living
     "brachot", "Jewish blessings", "bracha", "Jewish daily living",
-    "Hebrew reading practice", "learn Jewish prayers", "beginner davening",
+    // People
+    "baal teshuva", "new to Judaism", "Jewish convert",
   ],
   authors: [{ name: "Aleph2Davening" }],
   creator: "Aleph2Davening",

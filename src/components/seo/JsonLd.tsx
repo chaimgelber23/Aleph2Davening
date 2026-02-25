@@ -73,7 +73,7 @@ export function JsonLd() {
           name: 'How can I learn to read Hebrew as a beginner?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Aleph2Davening teaches Hebrew reading from scratch. Start with the 5-day bootcamp to learn all Hebrew letters with audio, then master vowels (nikud) with color-coded drills, and build fluency through spaced repetition practice.',
+            text: 'Aleph2Davening teaches Hebrew reading from scratch. Start with the free 5-day bootcamp to learn all 22 Hebrew letters with audio, then master vowels (nikud) with color-coded drills, and build fluency through spaced repetition practice. No prior Hebrew knowledge needed.',
           },
         },
         {
@@ -81,7 +81,15 @@ export function JsonLd() {
           name: 'How do I learn to daven (pray in Hebrew)?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Use our interactive siddur with audio for every prayer. Each prayer has transliteration (romanized pronunciation), English translation, and a step-by-step coaching mode. Start with Modeh Ani and work through the daily service.',
+            text: 'Use our interactive siddur with audio for every prayer. Each prayer has transliteration (romanized pronunciation so you can read along even without Hebrew), English translation, and a step-by-step coaching mode that breaks prayers into small pieces. Start with Modeh Ani and work through the daily service at your own pace.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: "Can I learn to daven if I don't know Hebrew?",
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "Absolutely. Every prayer in Aleph2Davening has transliteration — that's the Hebrew words written out phonetically in English letters so you can read along. You also get audio you can listen to and follow, plus a coaching mode that teaches you one small section at a time. Many users start davening before they've finished learning the Hebrew alphabet.",
           },
         },
         {
@@ -89,7 +97,15 @@ export function JsonLd() {
           name: 'How do I say Kaddish?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: "Our Yahrzeit section includes the Mourner's Kaddish with audio recordings, transliteration, English translation, and a guide to when Kaddish is said during synagogue services.",
+            text: "Our Yahrzeit section includes the Mourner's Kaddish (Kaddish Yatom) with multiple audio recordings, transliteration, and English translation. It also explains when Kaddish is said during each synagogue service (Shacharit, Mincha, Maariv), so you know exactly when to stand and recite it.",
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'How do I follow along in synagogue services?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "Aleph2Davening includes service roadmaps for weekday and Shabbat davening that show the order of prayers. Each prayer has a 'where we are' indicator so you can follow along. The auto-advance feature plays through each section in order, and transliteration helps you read along even if you're still learning Hebrew.",
           },
         },
         {
@@ -97,7 +113,23 @@ export function JsonLd() {
           name: 'What blessings (brachot) do I say before food?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Our Jewish Living section covers all food blessings: Hamotzi for bread, Mezonot for grains, Ha\'etz for tree fruits, Ha\'adama for vegetables, and Shehakol for everything else. Each includes the Hebrew text, transliteration, and audio.',
+            text: "Our Jewish Living section covers all food blessings: Hamotzi for bread, Mezonot for grain products (cake, cookies, pasta), Ha'etz for tree fruits, Ha'adama for vegetables and ground-growing foods, and Shehakol for everything else (water, meat, eggs, candy). Each includes the Hebrew text with vowels, transliteration, and audio.",
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'How can I improve my davening?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "Aleph2Davening helps you daven better in several ways: the coaching mode teaches the meaning of each section so you understand what you're saying, audio at adjustable speeds helps you practice pronunciation, and the full-view mode lets you see the entire prayer at once to build flow. You can also switch between section-by-section learning and full prayer reading as you improve.",
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'What is the best app to learn Hebrew and Jewish prayer?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "Aleph2Davening is a free all-in-one app that covers Hebrew reading (alphabet, vowels, practice drills), Jewish prayer (full siddur with audio, transliteration, coaching), yahrzeit/Kaddish guidance, and Jewish daily living guides (brachot, Shabbat, and more). It's designed specifically for beginners and works on any device.",
           },
         },
         {
@@ -105,7 +137,7 @@ export function JsonLd() {
           name: 'Is this app free?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Yes, Aleph2Davening is completely free. All Hebrew lessons, prayer audio, transliteration, coaching, and guides are available at no cost.',
+            text: 'Yes, Aleph2Davening is completely free. All Hebrew lessons, prayer audio, transliteration, coaching, and Jewish living guides are available at no cost with no subscriptions or paywalls.',
           },
         },
       ],

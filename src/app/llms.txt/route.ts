@@ -35,38 +35,52 @@ Aleph2Davening is an interactive learning platform for:
 - Converts learning Jewish practice
 - Anyone preparing for a bar/bat mitzvah
 - People wanting to say Kaddish for a loved one
+- Anyone who wants to follow along in synagogue services
+- Adults learning Hebrew later in life
 - Anyone interested in Jewish prayer and practice
 
 ## Key Features
 
 - Audio for every letter, vowel, word, and prayer
 - Hebrew text always shown with vowel points (nikud)
-- Transliteration for everything (romanized pronunciation)
-- Multiple audio voices to choose from
-- Step-by-step coaching that breaks prayers into small pieces
-- Auto-scroll and auto-advance through prayer sections
+- Transliteration for everything (romanized pronunciation in English letters)
+- You can daven even without knowing Hebrew — transliteration guides you
+- Multiple audio voices to choose from (AI + recorded human voices)
+- Step-by-step coaching that breaks prayers into small learnable pieces
+- Auto-scroll and auto-advance through prayer sections hands-free
+- Section-by-section or full prayer view modes
+- Speed control for audio (slow down to learn, speed up as you improve)
+- Service roadmaps showing the order of prayers in synagogue
 - Streak tracking and learning progress
 - Works on mobile and desktop (progressive web app)
-- Completely free — no paywalls or subscriptions
+- Completely free — no paywalls, subscriptions, or hidden costs
 
-## Technical Details
+## Common Questions This App Answers
 
-- Built with Next.js, deployed on Vercel
-- Hebrew text uses Noto Serif Hebrew font
-- Audio via Google Cloud TTS (Hebrew Wavenet) + pre-recorded voices
-- Spaced repetition powered by ts-fsrs (FSRS algorithm)
+- How do I learn to daven?
+- How do I learn to daven if I don't know Hebrew?
+- How do I learn to daven faster / better / from scratch?
+- What is the best way to learn Jewish prayers as a beginner?
+- How do I say Kaddish?
+- What do I do on a yahrzeit?
+- Which bracha do I say on [food]?
+- How do I follow along in synagogue?
+- How do I learn the Hebrew alphabet?
+- How do I read Hebrew with vowels?
+- What is a siddur and how do I use one?
+- What prayers are said at Shacharit / Mincha / Maariv?
 
 ## URL Structure
 
 - / — Home page with learning overview
 - /hebrew — Hebrew learning hub (letters, vowels, practice)
-- /hebrew/bootcamp — 5-day Hebrew reading bootcamp
-- /hebrew/letters — Individual letter reference
-- /hebrew/vowels — Vowel (nikud) reference
-- /hebrew/practice — Spaced repetition practice
+- /hebrew/bootcamp — 5-day Hebrew reading bootcamp (learn to read in a week)
+- /hebrew/letters — Individual letter reference with audio
+- /hebrew/vowels — Vowel (nikud) reference with color coding
+- /hebrew/practice — Spaced repetition practice drills
 - /daven — Prayer/davening hub with all services and prayers
-- /yahrzeit — Yahrzeit observance and Kaddish guide
-- /living — Jewish daily living guides and brachot
+- /yahrzeit — Yahrzeit observance and Kaddish guide with audio
+- /living — Jewish daily living guides, brachot, Shabbat, and more
 `;
 
   return new Response(content, {
