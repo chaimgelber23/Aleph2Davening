@@ -25,10 +25,8 @@ export function VowelCard({ vowel, exampleLetter = 'ב', isActive = false, pronu
   const voiceGender = useUserStore((s) => s.profile.voiceGender) || 'male';
   const suffix = PRONUNCIATION_SUFFIX[pronunciation] ?? '';
   const gSuffix = GENDER_SUFFIX[voiceGender] ?? '';
-  // "Sound" plays Hebrew vowel (modern style): בַּ, בֶּ, etc.
-  const soundAudioUrl = `/audio/vowels/${vowel.id}${gSuffix}.mp3`;
-  // "Pronounce" plays English name + sound: "Patach. AH."
-  const nameAudioUrl = `/audio/vowels/${vowel.id}-american${gSuffix}.mp3`;
+  // Single audio: plays name + sound together
+  const audioUrl = `/audio/vowels/${vowel.id}${gSuffix}.mp3`;
 
   return (
     <motion.div
@@ -68,61 +66,27 @@ export function VowelCard({ vowel, exampleLetter = 'ב', isActive = false, pronu
         </p>
       </div>
 
-      {/* Audio buttons — Pronounce + Sound (mirrors LetterCard) */}
-      <div className="flex items-center gap-3">
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            const audio = new Audio(nameAudioUrl);
-            audio.onerror = () => {
-              // Fallback: try without gender suffix, then without pronunciation suffix
-              if (gSuffix) {
-                const fb = new Audio(`/audio/vowels/${vowel.id}${suffix}.mp3`);
-                fb.onerror = () => {
-                  if (suffix) new Audio(`/audio/vowels/${vowel.id}.mp3`).play().catch(() => {});
-                };
-                fb.play().catch(() => {});
-              } else if (suffix) {
-                new Audio(`/audio/vowels/${vowel.id}.mp3`).play().catch(() => {});
-              }
-            };
-            audio.play().catch(() => {});
-          }}
-          className="flex items-center gap-1.5 text-white text-sm font-medium px-4 py-2.5 rounded-xl hover:opacity-90 active:scale-95 transition-all"
-          style={{ backgroundColor: vowel.color }}
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M8 5.14v14l11-7-11-7z" />
-          </svg>
-          Pronounce
-        </button>
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            const audio = new Audio(soundAudioUrl);
-            audio.onerror = () => {
-              if (gSuffix) {
-                const fb = new Audio(`/audio/vowels/${vowel.id}${suffix}.mp3`);
-                fb.onerror = () => {
-                  if (suffix) new Audio(`/audio/vowels/${vowel.id}.mp3`).play().catch(() => {});
-                };
-                fb.play().catch(() => {});
-              } else if (suffix) {
-                new Audio(`/audio/vowels/${vowel.id}.mp3`).play().catch(() => {});
-              }
-            };
-            audio.play().catch(() => {});
-          }}
-          className="flex items-center gap-1.5 border-2 text-sm font-medium px-4 py-2.5 rounded-xl hover:opacity-80 active:scale-95 transition-all"
-          style={{ borderColor: vowel.color, color: vowel.color }}
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M11 5L6 9H2v6h4l5 4V5z" />
-            <path d="M15.54 8.46a5 5 0 010 7.07" />
-          </svg>
-          Sound
-        </button>
-      </div>
+      {/* Audio button — plays name + sound together */}
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          const audio = new Audio(audioUrl);
+          audio.onerror = () => {
+            if (gSuffix) {
+              const fb = new Audio(`/audio/vowels/${vowel.id}.mp3`);
+              fb.play().catch(() => {});
+            }
+          };
+          audio.play().catch(() => {});
+        }}
+        className="flex items-center gap-2 text-white text-sm font-medium px-6 py-3 rounded-xl hover:opacity-90 active:scale-95 transition-all"
+        style={{ backgroundColor: vowel.color }}
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M8 5.14v14l11-7-11-7z" />
+        </svg>
+        Listen
+      </button>
 
       {/* Short description — only show when card is active/focused */}
       {isActive && (

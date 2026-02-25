@@ -6,6 +6,7 @@ import { VOWELS } from '@/lib/content/vowels';
 import { BOOTCAMP_VOCAB } from '@/lib/content/bootcampVocab';
 import { BOOTCAMP_DAYS } from '@/lib/content/bootcampDays';
 import { getTefillahPrayers, getBrachotPrayers, getBrachotAchronotPrayers } from '@/lib/content/prayers';
+import { getServicePrayer } from '@/lib/content/service-prayers';
 
 type Tab = 'letters' | 'bootcamp' | 'davening' | 'brachot';
 type SlotStatus = 'idle' | 'recording' | 'processing' | 'preview' | 'uploading' | 'done';
@@ -83,11 +84,12 @@ function extractPath(audioUrl: string): { folder: string; filename: string } {
 /* ─── Recording Slot Component ─── */
 
 function Slot({
-  hebrew, translit, label, folder, filename, existingAudio, isUploaded, onUpload,
+  hebrew, translit, label, folder, filename, existingAudio, isUploaded, onUpload, badge,
 }: {
   hebrew: string; translit: string; label?: string;
   folder: string; filename: string; existingAudio?: string;
   isUploaded: boolean; onUpload: (path: string) => void;
+  badge?: 'chazzan' | 'congregation' | 'response';
 }) {
   const [st, setSt] = useState<SlotStatus>(isUploaded ? 'done' : 'idle');
   const [preview, setPreview] = useState<string | null>(null);
@@ -174,6 +176,15 @@ function Slot({
         )}
         <div className="flex-1 min-w-0">
           {label && <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider mb-0.5">{label}</p>}
+          {badge && (
+            <span className={`inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full mb-1 ${
+              badge === 'chazzan' ? 'bg-blue-100 text-blue-700' :
+              badge === 'congregation' ? 'bg-amber-100 text-amber-700' :
+              'bg-purple-100 text-purple-700'
+            }`}>
+              {badge === 'chazzan' ? 'Chazzan says' : badge === 'congregation' ? 'Everyone answers' : 'Congregation responds'}
+            </span>
+          )}
           <p className="font-['Noto_Serif_Hebrew'] text-lg text-[#1A1A2E] leading-relaxed" dir="rtl">{hebrew}</p>
           <p className="text-sm text-gray-500 truncate">{translit}</p>
         </div>
@@ -284,6 +295,11 @@ export default function RecordingStudioPage() {
   const tefillah = getTefillahPrayers();
   const brachotBefore = getBrachotPrayers();
   const brachotAfter = getBrachotAchronotPrayers();
+  const kaddishPrayers = [
+    getServicePrayer('kaddish-half'),
+    getServicePrayer('kaddish-full'),
+    getServicePrayer('kaddish-mourners'),
+  ].filter(Boolean) as NonNullable<ReturnType<typeof getServicePrayer>>[];
 
   // Count helpers
   const countDone = (items: { folder: string; filename: string }[]) =>
@@ -305,10 +321,14 @@ export default function RecordingStudioPage() {
   const bootcampTotal = bootcampDayItems.length + vocabItems.length;
   const bootcampDone = countDone(bootcampDayItems) + countDone(vocabItems);
 
-  // Davening tab items
-  const daveningItems = tefillah.flatMap(p =>
+  // Davening tab items (includes Kaddish)
+  const kaddishItems = kaddishPrayers.flatMap(p =>
     p.sections.map(s => ({ folder: `prayers/${p.id}`, filename: s.id }))
   );
+  const daveningItems = [
+    ...tefillah.flatMap(p => p.sections.map(s => ({ folder: `prayers/${p.id}`, filename: s.id }))),
+    ...kaddishItems,
+  ];
   const daveningTotal = daveningItems.length;
   const daveningDone = countDone(daveningItems);
 
@@ -336,12 +356,14 @@ export default function RecordingStudioPage() {
         <div className="max-w-2xl mx-auto">
           <h1 className="text-2xl font-bold text-center">Recording Studio</h1>
           <p className="text-center text-blue-200 text-sm mt-1">Record audio for Aleph2Davening</p>
-          <div className="mt-4">
-            <div className="flex justify-between text-xs text-blue-200 mb-1">
-              <span>Overall Progress</span>
-              <span>{totalDone} / {totalAll} recorded</span>
+          <div className="mt-4 bg-white/10 rounded-2xl p-4">
+            <div className="text-center mb-2">
+              <span className="text-4xl font-bold text-white">{totalDone}</span>
+              <span className="text-xl text-blue-200 mx-1">/</span>
+              <span className="text-xl text-blue-200">{totalAll}</span>
+              <p className="text-xs text-blue-300 mt-1">recordings done</p>
             </div>
-            <div className="w-full h-2 bg-white/20 rounded-full overflow-hidden">
+            <div className="w-full h-3 bg-white/20 rounded-full overflow-hidden">
               <div className="h-full bg-green-400 rounded-full transition-all" style={{ width: totalAll > 0 ? `${(totalDone / totalAll) * 100}%` : '0%' }} />
             </div>
           </div>
@@ -381,18 +403,24 @@ export default function RecordingStudioPage() {
             {/* ─── Letters & Vowels Tab ─── */}
             {tab === 'letters' && (
               <>
+                <div className="bg-blue-50 border border-blue-100 rounded-xl p-3 mb-4 text-sm text-blue-800">
+                  <strong>For each letter:</strong> Say the letter name, then the sound it makes. Example: &ldquo;Shin... SH&rdquo;
+                </div>
                 <Section title="Hebrew Letters" count={LETTERS.length} done={countDone(lettersItems)} defaultOpen>
                   {LETTERS.map(l => {
                     const p = extractPath(l.audioUrl);
-                    return <Slot key={l.id} hebrew={l.hebrew} translit={`${l.name} — ${l.sound}`}
+                    return <Slot key={l.id} hebrew={l.hebrew} translit={`Say "${l.name}" then "${l.sound}"`}
                       folder={p.folder} filename={p.filename} existingAudio={l.audioUrl}
                       isUploaded={check(p.folder, p.filename)} onUpload={mark} />;
                   })}
                 </Section>
+                <div className="bg-blue-50 border border-blue-100 rounded-xl p-3 mb-4 mt-4 text-sm text-blue-800">
+                  <strong>For each vowel:</strong> Say the vowel name, then the sound. Example: &ldquo;Patach... AH&rdquo;
+                </div>
                 <Section title="Vowels (Nekudot)" count={VOWELS.length} done={countDone(vowelsItems)}>
                   {VOWELS.map(v => {
                     const p = extractPath(v.audioUrl);
-                    return <Slot key={v.id} hebrew={`בּ${v.hebrew}`} translit={`${v.name} — ${v.sound}`}
+                    return <Slot key={v.id} hebrew={`בּ${v.hebrew}`} translit={`Say "${v.name}" then "${v.sound}"`}
                       folder={p.folder} filename={p.filename} existingAudio={v.audioUrl}
                       isUploaded={check(p.folder, p.filename)} onUpload={mark} />;
                   })}
@@ -470,6 +498,48 @@ export default function RecordingStudioPage() {
                           existingAudio={`/audio/prayers/${prayer.id}/${s.id}.mp3`}
                           isUploaded={check(`prayers/${prayer.id}`, s.id)} onUpload={mark} />
                       ))}
+                    </Section>
+                  );
+                })}
+
+                {/* Kaddish Section */}
+                <h3 className="text-xs font-bold text-[#1B4965] uppercase tracking-wider mb-3 mt-6">Kaddish</h3>
+                <div className="bg-amber-50 border border-amber-100 rounded-xl p-3 mb-4 text-sm text-amber-800">
+                  <strong>Important:</strong> Kaddish is only said with a minyan (10 men). The <span className="inline-block bg-blue-100 text-blue-700 text-[10px] font-bold px-1.5 py-0.5 rounded-full">Chazzan says</span> parts
+                  are read by the prayer leader. The <span className="inline-block bg-amber-100 text-amber-700 text-[10px] font-bold px-1.5 py-0.5 rounded-full">Everyone answers</span> parts
+                  are the congregation&apos;s response.
+                </div>
+                {kaddishPrayers.map(prayer => {
+                  const pItems = prayer.sections.map(s => ({ folder: `prayers/${prayer.id}`, filename: s.id }));
+                  return (
+                    <Section key={prayer.id} title={`${prayer.nameEnglish} — ${prayer.nameHebrew}`}
+                      count={pItems.length} done={countDone(pItems)} defaultOpen>
+                      <p className="text-xs text-gray-400 italic mb-2 ml-1">{prayer.whySaid}</p>
+                      {prayer.sections.map(s => {
+                        const role = s.amud?.role;
+                        const congResponse = s.amud?.congregationResponse;
+                        const badge: 'chazzan' | 'congregation' | 'response' | undefined =
+                          role === 'congregation' ? 'congregation' :
+                          role === 'shaliach_tzibbur' ? 'chazzan' : undefined;
+                        return (
+                          <div key={s.id}>
+                            <Slot hebrew={s.hebrewText} translit={s.transliteration}
+                              label={prayer.nameHebrew} badge={badge}
+                              folder={`prayers/${prayer.id}`} filename={s.id}
+                              existingAudio={`/audio/prayers/${prayer.id}/${s.id}.mp3`}
+                              isUploaded={check(`prayers/${prayer.id}`, s.id)} onUpload={mark} />
+                            {congResponse && (
+                              <div className="ml-6 mt-1 mb-2 flex items-center gap-2 text-sm">
+                                <span className="inline-block bg-purple-100 text-purple-700 text-[10px] font-bold px-2 py-0.5 rounded-full">Congregation responds</span>
+                                <span className="font-['Noto_Serif_Hebrew'] text-[#1A1A2E]" dir="rtl">{congResponse}</span>
+                                {s.amud?.congregationResponseTransliteration && (
+                                  <span className="text-gray-400 text-xs">({s.amud.congregationResponseTransliteration})</span>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
                     </Section>
                   );
                 })}

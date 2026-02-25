@@ -36,8 +36,7 @@ export function LetterCard({
   const voiceGender = useUserStore((s) => s.profile.voiceGender) || 'male';
   const suffix = PRONUNCIATION_SUFFIX[pronunciation] ?? '';
   const gSuffix = GENDER_SUFFIX[voiceGender] ?? '';
-  const nameAudioUrl = `/audio/letters/${letter.id}${suffix}${gSuffix}.mp3`;
-  const soundAudioUrl = `/audio/letters/${letter.id}-sound${suffix}${gSuffix}.mp3`;
+  const audioUrl = `/audio/letters/${letter.id}${suffix}${gSuffix}.mp3`;
 
   return (
     <motion.div
@@ -67,42 +66,23 @@ export function LetterCard({
             </p>
           </div>
 
-          {/* Audio buttons — Pronounce + Sound */}
-          <div className="flex items-center gap-3">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                const audio = new Audio(nameAudioUrl);
-                audio.onerror = () => {
-                  if (gSuffix) new Audio(`/audio/letters/${letter.id}${suffix}.mp3`).play().catch(() => {});
-                };
-                audio.play().catch(() => {});
-              }}
-              className="flex items-center gap-1.5 bg-primary text-white text-sm font-medium px-4 py-2.5 rounded-xl hover:bg-[#163d55] active:scale-95 transition-all"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M8 5.14v14l11-7-11-7z" />
-              </svg>
-              Pronounce
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                const audio = new Audio(soundAudioUrl);
-                audio.onerror = () => {
-                  if (gSuffix) new Audio(`/audio/letters/${letter.id}-sound${suffix}.mp3`).play().catch(() => {});
-                };
-                audio.play().catch(() => {});
-              }}
-              className="flex items-center gap-1.5 border-2 border-primary text-primary text-sm font-medium px-4 py-2.5 rounded-xl hover:bg-primary/5 active:scale-95 transition-all"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M11 5L6 9H2v6h4l5 4V5z" />
-                <path d="M15.54 8.46a5 5 0 010 7.07" />
-              </svg>
-              Sound
-            </button>
-          </div>
+          {/* Audio button — plays name + sound together */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              const audio = new Audio(audioUrl);
+              audio.onerror = () => {
+                if (gSuffix) new Audio(`/audio/letters/${letter.id}${suffix}.mp3`).play().catch(() => {});
+              };
+              audio.play().catch(() => {});
+            }}
+            className="flex items-center gap-2 bg-primary text-white text-sm font-medium px-6 py-3 rounded-xl hover:bg-[#163d55] active:scale-95 transition-all"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5.14v14l11-7-11-7z" />
+            </svg>
+            Listen
+          </button>
 
           {/* Mnemonic — only when actively teaching */}
           {showMnemonic && isActive && letter.mnemonic && (
