@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Noto_Serif_Hebrew, Noto_Sans_Hebrew, Playfair_Display } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { AuthProvider } from "@/components/AuthProvider";
+import { JsonLd } from "@/components/seo/JsonLd";
 import "./globals.css";
 
 const inter = Inter({
@@ -26,11 +27,43 @@ const notoSansHebrew = Noto_Sans_Hebrew({
   weight: ["400", "500", "600", "700"],
 });
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://aleph2davening.vercel.app';
+
 export const metadata: Metadata = {
-  title: "Aleph2Davening — Hebrew, Davening & Jewish Living",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Aleph2Davening — Learn Hebrew, Daven & Jewish Living",
+    template: "%s | Aleph2Davening",
+  },
   description:
-    "Learn Hebrew, master davening, and navigate Jewish daily life. From the Aleph-Bet to leading the amud — at your own pace.",
-  keywords: ["Hebrew", "learn Hebrew", "daven", "siddur", "Jewish", "prayer", "aleph-bet", "yahrzeit", "kaddish", "brachot"],
+    "Free app to learn the Hebrew alphabet, read with vowels (nikud), master Jewish prayers with audio, transliteration & coaching. From Aleph-Bet to leading the amud.",
+  keywords: [
+    "learn Hebrew", "Hebrew alphabet", "aleph bet", "Hebrew letters", "Hebrew vowels", "nikud",
+    "learn to daven", "Jewish prayer", "siddur", "siddur with transliteration", "siddur audio",
+    "modeh ani", "shema", "amidah", "shemoneh esrei",
+    "yahrzeit", "kaddish", "mourner's kaddish", "kaddish transliteration", "kaddish audio",
+    "brachot", "Jewish blessings", "bracha", "Jewish daily living",
+    "Hebrew reading practice", "learn Jewish prayers", "beginner davening",
+  ],
+  authors: [{ name: "Aleph2Davening" }],
+  creator: "Aleph2Davening",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: SITE_URL,
+    siteName: "Aleph2Davening",
+    title: "Aleph2Davening — Learn Hebrew, Daven & Jewish Living",
+    description: "Free app to learn the Hebrew alphabet, read with vowels, and master Jewish prayers with audio, transliteration & step-by-step coaching.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Aleph2Davening — Learn Hebrew, Daven & Jewish Living",
+    description: "Free app to learn the Hebrew alphabet, read with vowels, and master Jewish prayers with audio, transliteration & step-by-step coaching.",
+  },
+  alternates: {
+    canonical: SITE_URL,
+  },
+  category: "education",
 };
 
 export const viewport: Viewport = {
@@ -56,6 +89,7 @@ export default function RootLayout({
           font-sans antialiased bg-[#FAF9F6] text-foreground min-h-screen
         `}
       >
+        <JsonLd />
         <AuthProvider>{children}</AuthProvider>
         <Analytics />
       </body>
