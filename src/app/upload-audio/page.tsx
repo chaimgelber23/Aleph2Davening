@@ -299,6 +299,7 @@ export default function RecordingStudioPage() {
     getServicePrayer('kaddish-half'),
     getServicePrayer('kaddish-full'),
     getServicePrayer('kaddish-mourners'),
+    getServicePrayer('kaddish-drabbanan'),
   ].filter(Boolean) as NonNullable<ReturnType<typeof getServicePrayer>>[];
 
   // Count helpers

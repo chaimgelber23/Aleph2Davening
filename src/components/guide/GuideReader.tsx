@@ -7,7 +7,6 @@ import { QuickAnswerCard } from './QuickAnswerCard';
 import { GuideStepCard } from './GuideStepCard';
 import { GuideQuiz } from './GuideQuiz';
 import { GuideCard } from './GuideCard';
-import { LevelSelector } from './LevelSelector';
 import type { Guide, GuideLevel } from '@/types';
 import { getGuideCategoryInfo, GUIDES } from '@/lib/content/guides';
 
@@ -20,13 +19,7 @@ interface GuideReaderProps {
 export function GuideReader({ guide, onBack, onNavigate }: GuideReaderProps) {
   const [showQuiz, setShowQuiz] = useState(false);
   const [sourcesExpanded, setSourcesExpanded] = useState(false);
-  const savedLevel = useUserStore((s) => s.profile.guideContentLevel || 'beginner');
-  const updateProfile = useUserStore((s) => s.updateProfile);
-  const [selectedLevel, setSelectedLevelLocal] = useState<GuideLevel>(savedLevel);
-  const handleLevelChange = (level: GuideLevel) => {
-    setSelectedLevelLocal(level);
-    updateProfile({ guideContentLevel: level });
-  };
+  const selectedLevel = useUserStore((s) => s.profile.guideContentLevel || 'beginner') as GuideLevel;
   const guideProgress = useUserStore((s) => s.guideProgress);
   const markGuideRead = useUserStore((s) => s.markGuideRead);
   const toggleGuideBookmark = useUserStore((s) => s.toggleGuideBookmark);
@@ -137,11 +130,6 @@ export function GuideReader({ guide, onBack, onNavigate }: GuideReaderProps) {
             </svg>
             {guide.whenRelevant}
           </div>
-        </motion.div>
-
-        {/* Level Selector */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mt-4">
-          <LevelSelector selected={selectedLevel} onSelect={handleLevelChange} />
         </motion.div>
 
         {/* Quick Answer - shows based on level */}
@@ -297,23 +285,19 @@ export function GuideReader({ guide, onBack, onNavigate }: GuideReaderProps) {
 
         {/* Action buttons */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }} className="mt-8 space-y-3">
-          {/* Encouraging message for beginners */}
-          {selectedLevel === 'beginner' && (
-            <div className="bg-[#4A7C59]/10 border border-[#4A7C59]/20 rounded-2xl p-4">
-              <div className="flex items-start gap-2.5">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4A7C59" strokeWidth="2" className="shrink-0 mt-0.5">
-                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                  <polyline points="22 4 12 14.01 9 11.01" />
-                </svg>
-                <div>
-                  <p className="text-[13px] text-[#2D3142] font-medium">You're doing great!</p>
-                  <p className="text-[12px] text-[#2D3142]/70 mt-1 leading-relaxed">
-                    Start practicing at this level. When you feel comfortable, switch to "Ready to Practice" to learn more details.
-                  </p>
-                </div>
-              </div>
+          {/* Encouraging note with rabbi reference */}
+          <div className="bg-[#5FA8D3]/8 border border-[#5FA8D3]/20 rounded-2xl p-4">
+            <div className="flex items-start gap-2.5">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1B4965" strokeWidth="2" className="shrink-0 mt-0.5">
+                <path d="M4 19.5A2.5 2.5 0 016.5 17H20" />
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" />
+              </svg>
+              <p className="text-[12px] text-[#2D3142]/70 leading-relaxed">
+                For a more comprehensive understanding of the halacha, speak with your local rabbi or teacher.
+                {selectedLevel === 'beginner' && ' You can also switch to a more detailed view in Settings.'}
+              </p>
             </div>
-          )}
+          </div>
 
           {/* Take Quiz - Only for intermediate/advanced */}
           {selectedLevel !== 'beginner' && guide.quiz.length > 0 && (

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Link from 'next/link';
 import { BookOpen, ScrollText, Sparkles, Star } from 'lucide-react';
 import { useUserStore } from '@/stores/userStore';
 import type { LearningGoal, HebrewLevel, Nusach } from '@/types';
@@ -15,7 +16,7 @@ export function WelcomePage() {
   const [level, setLevel] = useState<HebrewLevel>('none');
   const [nusach, setNusach] = useState<Nusach>('ashkenaz');
   const [dailyMinutes, setDailyMinutes] = useState(5);
-  const completeOnboarding = useUserStore((s) => s.completeOnboarding);
+  const updateProfile = useUserStore((s) => s.updateProfile);
 
   const nextStep = () => {
     const idx = STEPS.indexOf(step);
@@ -24,8 +25,8 @@ export function WelcomePage() {
     }
   };
 
-  const handleFinish = () => {
-    completeOnboarding(goal, level, nusach, dailyMinutes);
+  const handleFinish = (minutes: number) => {
+    updateProfile({ dailyGoalMinutes: minutes, onboardingComplete: true });
   };
 
   return (
@@ -39,7 +40,7 @@ export function WelcomePage() {
                 א
               </div>
               <h1 className="text-3xl font-serif font-bold text-foreground">
-                Welcome to AlephStart
+                Welcome to Aleph2Davening
               </h1>
               <p className="text-lg text-gray-600 max-w-md">
                 Learn to read Hebrew. Learn to daven.
@@ -53,6 +54,13 @@ export function WelcomePage() {
                 Get Started
               </button>
               <p className="text-xs text-gray-400">No account needed. Start learning in 60 seconds.</p>
+              <p className="text-xs text-gray-400">
+                Already started?{' '}
+                <Link href="/login" className="text-primary font-medium hover:underline">
+                  Sign in
+                </Link>{' '}
+                to pick up where you left off.
+              </p>
             </div>
           </OnboardingCard>
         )}
@@ -77,7 +85,7 @@ export function WelcomePage() {
                 ]).map((option) => (
                   <button
                     key={option.value}
-                    onClick={() => { setGoal(option.value); nextStep(); }}
+                    onClick={() => { setGoal(option.value); updateProfile({ learningGoal: option.value }); nextStep(); }}
                     className={`
                       w-full p-4 rounded-xl border-2 text-left flex items-center gap-3
                       transition-all duration-200
@@ -116,7 +124,7 @@ export function WelcomePage() {
                 ]).map((option) => (
                   <button
                     key={option.value}
-                    onClick={() => { setLevel(option.value); nextStep(); }}
+                    onClick={() => { setLevel(option.value); updateProfile({ hebrewLevel: option.value }); nextStep(); }}
                     className={`
                       w-full p-4 rounded-xl border-2 text-left
                       transition-all duration-200
@@ -157,7 +165,7 @@ export function WelcomePage() {
                 ]).map((option, i) => (
                   <button
                     key={i}
-                    onClick={() => { setNusach(option.value); nextStep(); }}
+                    onClick={() => { setNusach(option.value); updateProfile({ nusach: option.value }); nextStep(); }}
                     className="w-full p-4 rounded-xl border-2 border-gray-200 text-left hover:border-primary-light hover:bg-primary-light/5 transition-all duration-200"
                   >
                     <span className="text-base font-medium text-foreground block">{option.label}</span>
@@ -170,7 +178,7 @@ export function WelcomePage() {
         )}
 
         {step === 'commitment' && (
-          <OnboardingCard key="commitment" onNext={handleFinish}>
+          <OnboardingCard key="commitment" onNext={() => {}}>
             <div className="space-y-6">
               <div className="text-center">
                 <p className="text-sm text-primary/80 font-medium uppercase tracking-wider mb-2">
@@ -192,7 +200,7 @@ export function WelcomePage() {
                 ]).map((option) => (
                   <button
                     key={option.value}
-                    onClick={() => { setDailyMinutes(option.value); handleFinish(); }}
+                    onClick={() => { setDailyMinutes(option.value); handleFinish(option.value); }}
                     className="w-full p-4 rounded-xl border-2 border-gray-200 text-left hover:border-primary-light hover:bg-primary-light/5 transition-all duration-200"
                   >
                     <span className="text-base font-medium text-foreground block">{option.label}</span>

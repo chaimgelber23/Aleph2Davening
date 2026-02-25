@@ -249,25 +249,48 @@ function BrachaReader({ prayer, onBack }: { prayer: Prayer; onBack: () => void }
   const displaySettings = useUserStore((s) => s.displaySettings);
   const audioSpeed = useUserStore((s) => s.profile.audioSpeed);
 
-  // Track which section is currently playing for auto-advance
+  // Playback settings
+  const [autoAdvance, setAutoAdvance] = useState(true);
+  const [loopMode, setLoopMode] = useState(false);
+  const [viewMode, setViewMode] = useState<'full' | 'page'>('full');
+  const [showSettings, setShowSettings] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+
+  // Track which section is currently playing
   const [playingSectionIndex, setPlayingSectionIndex] = useState(-1);
   const [autoPlayNext, setAutoPlayNext] = useState(false);
   const playingSectionIndexRef = useRef(playingSectionIndex);
   playingSectionIndexRef.current = playingSectionIndex;
+  const autoAdvanceRef = useRef(autoAdvance);
+  autoAdvanceRef.current = autoAdvance;
+  const loopModeRef = useRef(loopMode);
+  loopModeRef.current = loopMode;
 
-  // Refs for auto-scrolling to active section
+  // Refs for auto-scrolling
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
   const activeWordRef = useRef<HTMLSpanElement | null>(null);
 
   const handleAudioEnded = useCallback(() => {
     const currentIdx = playingSectionIndexRef.current;
-    if (currentIdx >= 0 && currentIdx < prayer.sections.length - 1) {
+    if (autoAdvanceRef.current && currentIdx >= 0 && currentIdx < prayer.sections.length - 1) {
+      // Auto-advance to next section
       setPlayingSectionIndex(currentIdx + 1);
+      if (viewMode === 'page') setCurrentPage(currentIdx + 1);
       setAutoPlayNext(true);
+    } else if (loopModeRef.current && currentIdx >= 0) {
+      // Loop: if at last section, go back to first; otherwise replay current
+      if (autoAdvanceRef.current) {
+        setPlayingSectionIndex(0);
+        if (viewMode === 'page') setCurrentPage(0);
+        setAutoPlayNext(true);
+      } else {
+        // Loop current section
+        setAutoPlayNext(true);
+      }
     } else {
       setPlayingSectionIndex(-1);
     }
-  }, [prayer.sections.length]);
+  }, [prayer.sections.length, viewMode]);
 
   const audioOptions = useMemo(
     () => ({ speed: audioSpeed, onEnded: handleAudioEnded }),
@@ -289,15 +312,15 @@ function BrachaReader({ prayer, onBack }: { prayer: Prayer; onBack: () => void }
     }
   }, [autoPlayNext, playingSectionIndex, prayer, audioSpeed, play]);
 
-  // Auto-scroll to active section when it changes
+  // Auto-scroll to active section when it changes (full view)
   useEffect(() => {
-    if (playingSectionIndex >= 0 && sectionRefs.current[playingSectionIndex]) {
+    if (viewMode === 'full' && playingSectionIndex >= 0 && sectionRefs.current[playingSectionIndex]) {
       sectionRefs.current[playingSectionIndex]?.scrollIntoView({
         behavior: 'smooth',
         block: 'center',
       });
     }
-  }, [playingSectionIndex]);
+  }, [playingSectionIndex, viewMode]);
 
   // Auto-scroll to active word during playback
   useEffect(() => {
@@ -311,64 +334,15 @@ function BrachaReader({ prayer, onBack }: { prayer: Prayer; onBack: () => void }
 
   const handlePlaySection = useCallback((sectionIndex: number) => {
     if (isPlaying && playingSectionIndex === sectionIndex) {
-      stop();
-      setPlayingSectionIndex(-1);
+      pause();
+    } else if (!isPlaying && playingSectionIndex === sectionIndex) {
+      resume();
     } else {
       const section = prayer.sections[sectionIndex];
       setPlayingSectionIndex(sectionIndex);
       play(section.hebrewText, 'hebrew', audioSpeed, prayer.id, section.id);
     }
-  }, [isPlaying, playingSectionIndex, stop, play, audioSpeed, prayer]);
-
-  // Play All — starts from first section
-  const handlePlayAll = useCallback(() => {
-    if (isPlaying) {
-      stop();
-      setPlayingSectionIndex(-1);
-    } else {
-      const section = prayer.sections[0];
-      setPlayingSectionIndex(0);
-      play(section.hebrewText, 'hebrew', audioSpeed, prayer.id, section.id);
-    }
-  }, [isPlaying, stop, play, audioSpeed, prayer]);
-
-  const handlePauseResume = useCallback(() => {
-    if (isPlaying) {
-      pause();
-    } else if (playingSectionIndex >= 0) {
-      resume();
-    } else {
-      // Nothing playing yet — start from beginning
-      handlePlayAll();
-    }
-  }, [isPlaying, playingSectionIndex, pause, resume, handlePlayAll]);
-
-  const handleSkipBack = useCallback(() => {
-    if (playingSectionIndex < 0) return;
-    // If near start of section, go to previous section
-    if (currentTime < 1 && playingSectionIndex > 0) {
-      const prevIdx = playingSectionIndex - 1;
-      const section = prayer.sections[prevIdx];
-      setPlayingSectionIndex(prevIdx);
-      play(section.hebrewText, 'hebrew', audioSpeed, prayer.id, section.id);
-    } else {
-      seek(Math.max(0, currentTime - 5));
-    }
-  }, [playingSectionIndex, currentTime, seek, prayer, play, audioSpeed]);
-
-  const handleSkipForward = useCallback(() => {
-    if (playingSectionIndex < 0) return;
-    const remaining = duration - currentTime;
-    // If near end or short section, skip to next section
-    if (remaining < 5 && playingSectionIndex < prayer.sections.length - 1) {
-      const nextIdx = playingSectionIndex + 1;
-      const section = prayer.sections[nextIdx];
-      setPlayingSectionIndex(nextIdx);
-      play(section.hebrewText, 'hebrew', audioSpeed, prayer.id, section.id);
-    } else {
-      seek(Math.min(duration, currentTime + 5));
-    }
-  }, [playingSectionIndex, currentTime, duration, seek, prayer, play, audioSpeed]);
+  }, [isPlaying, playingSectionIndex, pause, resume, play, audioSpeed, prayer]);
 
   // Calculate active word index for a section
   const getActiveWordIndex = useCallback((sectionIndex: number, words: string[]) => {
@@ -377,14 +351,144 @@ function BrachaReader({ prayer, onBack }: { prayer: Prayer; onBack: () => void }
     return Math.min(Math.floor(progress * words.length), words.length - 1);
   }, [playingSectionIndex, isPlaying, currentTime, duration]);
 
-  const isTransportVisible = playingSectionIndex >= 0;
   const progressPercent = duration > 0 ? Math.min((currentTime / duration) * 100, 100) : 0;
 
-  // Format time as m:ss
-  const formatTime = (seconds: number) => {
-    const m = Math.floor(seconds / 60);
-    const s = Math.floor(seconds % 60);
-    return `${m}:${s.toString().padStart(2, '0')}`;
+  // Which sections to show
+  const visibleSections = viewMode === 'page'
+    ? [{ section: prayer.sections[currentPage], idx: currentPage }]
+    : prayer.sections.map((section, idx) => ({ section, idx }));
+
+  // Render a single section card with big play button
+  const renderSectionCard = (section: typeof prayer.sections[0], idx: number) => {
+    const isSectionPlaying = isPlaying && playingSectionIndex === idx;
+    const isSectionPaused = !isPlaying && playingSectionIndex === idx;
+    const isSectionDone = playingSectionIndex > idx && playingSectionIndex >= 0;
+    const words = section.hebrewText.split(/\s+/);
+    const activeWordIdx = getActiveWordIndex(idx, words);
+    const isActive = isSectionPlaying || isSectionPaused;
+
+    return (
+      <div
+        key={section.id}
+        ref={(el) => { sectionRefs.current[idx] = el; }}
+        className={`bg-white rounded-2xl border relative transition-all ${
+          isSectionPlaying
+            ? 'border-[#6B4C9A]/40 shadow-md ring-1 ring-[#6B4C9A]/10'
+            : isSectionDone
+              ? 'border-[#4A7C59]/20 bg-[#4A7C59]/3'
+              : 'border-gray-100'
+        }`}
+      >
+        {/* Section indicator */}
+        {prayer.sections.length > 1 && (
+          <div className="flex items-center justify-between px-6 pt-4 pb-0">
+            <span className="text-[10px] font-medium text-gray-300 uppercase tracking-wider">
+              Part {idx + 1} of {prayer.sections.length}
+            </span>
+            {isSectionDone && (
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4A7C59" strokeWidth="3">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            )}
+          </div>
+        )}
+
+        {/* Hebrew text with word highlighting */}
+        <div className="px-6 pt-4 pb-2">
+          <p
+            className="font-['Noto_Serif_Hebrew'] text-2xl text-[#1A1A2E] leading-[2.2] text-right"
+            dir="rtl"
+          >
+            {words.map((word, wi) => {
+              const isActiveWord = isSectionPlaying && wi === activeWordIdx;
+              const isReadWord = isSectionPlaying && wi < activeWordIdx;
+              const isDoneSection = isSectionDone;
+              return (
+                <span
+                  key={wi}
+                  ref={isActiveWord ? (el) => { activeWordRef.current = el; } : undefined}
+                  className={
+                    isActiveWord
+                      ? 'bg-[#6B4C9A]/20 text-[#6B4C9A] rounded-md px-1 py-0.5 transition-colors duration-200'
+                      : isReadWord
+                        ? 'text-[#6B4C9A]/50 transition-colors duration-200'
+                        : isDoneSection
+                          ? 'text-[#4A7C59]/70'
+                          : ''
+                  }
+                >
+                  {word}{wi < words.length - 1 ? ' ' : ''}
+                </span>
+              );
+            })}
+          </p>
+        </div>
+
+        {/* Big centered play button */}
+        <div className="flex items-center justify-center py-4">
+          {isActive && (
+            <div className="w-full px-6 mb-2">
+              <div className="h-1 bg-gray-100 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-[#6B4C9A] rounded-full transition-all duration-200"
+                  style={{ width: `${progressPercent}%` }}
+                />
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="flex items-center justify-center pb-5 -mt-2">
+          <button
+            onClick={() => handlePlaySection(idx)}
+            disabled={isLoading && playingSectionIndex === idx}
+            className={`flex items-center justify-center rounded-full transition-all shadow-lg active:scale-95 ${
+              isSectionPlaying
+                ? 'w-16 h-16 bg-[#6B4C9A] text-white hover:bg-[#5a3d85]'
+                : isSectionPaused
+                  ? 'w-16 h-16 bg-[#6B4C9A] text-white hover:bg-[#5a3d85]'
+                  : 'w-16 h-16 bg-[#6B4C9A] text-white hover:bg-[#5a3d85]'
+            }`}
+          >
+            {isLoading && playingSectionIndex === idx ? (
+              <svg className="w-7 h-7 animate-spin" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" opacity="0.25" />
+                <path d="M4 12a8 8 0 018-8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+            ) : isSectionPlaying ? (
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                <rect x="6" y="4" width="4" height="16" rx="1" />
+                <rect x="14" y="4" width="4" height="16" rx="1" />
+              </svg>
+            ) : (
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            )}
+          </button>
+        </div>
+
+        {/* Transliteration */}
+        {displaySettings.showTransliteration && section.transliteration && (
+          <div className="px-6 pb-2">
+            <p className="text-sm text-gray-500 italic">{section.transliteration}</p>
+          </div>
+        )}
+
+        {/* Translation */}
+        {displaySettings.showTranslation && section.translation && (
+          <div className="px-6 pb-2">
+            <p className="text-sm text-gray-600">{section.translation}</p>
+          </div>
+        )}
+
+        {/* Notes */}
+        {displaySettings.showInstructions && section.notes && (
+          <div className="px-6 pb-4">
+            <p className="text-xs text-gray-400 bg-gray-50 rounded-lg p-3">{section.notes}</p>
+          </div>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -409,11 +513,120 @@ function BrachaReader({ prayer, onBack }: { prayer: Prayer; onBack: () => void }
               {prayer.nameHebrew}
             </span>
           </div>
-          <div className="w-10" />
+          {/* Settings toggle */}
+          <button
+            onClick={() => setShowSettings(!showSettings)}
+            className={`flex items-center justify-center w-10 h-10 -mr-2 rounded-lg transition-colors ${
+              showSettings ? 'text-[#6B4C9A] bg-[#6B4C9A]/10' : 'text-gray-400 hover:text-gray-600'
+            }`}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="3" />
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+            </svg>
+          </button>
         </div>
       </div>
 
-      <div className="max-w-md mx-auto px-6 py-6 space-y-5 pb-44">
+      {/* Settings Panel (collapsible) */}
+      {showSettings && (
+        <div className="bg-white border-b border-gray-100 shadow-sm">
+          <div className="max-w-md mx-auto px-6 py-4 space-y-3">
+            {/* Auto-advance toggle */}
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-700">Auto-advance</p>
+                <p className="text-[11px] text-gray-400">Play next section automatically</p>
+              </div>
+              <button
+                onClick={() => setAutoAdvance(!autoAdvance)}
+                className={`relative w-11 h-6 rounded-full transition-colors ${
+                  autoAdvance ? 'bg-[#6B4C9A]' : 'bg-gray-200'
+                }`}
+              >
+                <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${
+                  autoAdvance ? 'translate-x-5' : ''
+                }`} />
+              </button>
+            </div>
+
+            {/* Loop toggle */}
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-700">Loop</p>
+                <p className="text-[11px] text-gray-400">Repeat when finished</p>
+              </div>
+              <button
+                onClick={() => setLoopMode(!loopMode)}
+                className={`relative w-11 h-6 rounded-full transition-colors ${
+                  loopMode ? 'bg-[#6B4C9A]' : 'bg-gray-200'
+                }`}
+              >
+                <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${
+                  loopMode ? 'translate-x-5' : ''
+                }`} />
+              </button>
+            </div>
+
+            {/* View mode toggle */}
+            <div>
+              <p className="text-sm font-medium text-gray-700 mb-2">View</p>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setViewMode('full')}
+                  className={`flex-1 py-2 rounded-xl text-xs font-semibold transition-all ${
+                    viewMode === 'full'
+                      ? 'bg-[#6B4C9A] text-white'
+                      : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                  }`}
+                >
+                  Full View
+                </button>
+                <button
+                  onClick={() => { setViewMode('page'); setCurrentPage(0); }}
+                  className={`flex-1 py-2 rounded-xl text-xs font-semibold transition-all ${
+                    viewMode === 'page'
+                      ? 'bg-[#6B4C9A] text-white'
+                      : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                  }`}
+                >
+                  One at a Time
+                </button>
+              </div>
+            </div>
+
+            {/* Display toggles */}
+            <div className="pt-1 border-t border-gray-50 space-y-2">
+              <p className="text-[11px] font-bold text-gray-300 uppercase tracking-wider">Display</p>
+              {[
+                { key: 'showTransliteration' as const, label: 'Transliteration' },
+                { key: 'showTranslation' as const, label: 'Translation' },
+                { key: 'showInstructions' as const, label: 'Notes & Tips' },
+              ].map(({ key, label }) => (
+                <div key={key} className="flex items-center justify-between">
+                  <p className="text-sm text-gray-600">{label}</p>
+                  <button
+                    onClick={() => {
+                      const update: Partial<typeof displaySettings> = {};
+                      update[key] = !displaySettings[key];
+                      useUserStore.getState().updateDisplaySettings(update);
+                    }}
+                    className={`relative w-11 h-6 rounded-full transition-colors ${
+                      displaySettings[key] ? 'bg-[#6B4C9A]' : 'bg-gray-200'
+                    }`}
+                  >
+                    <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${
+                      displaySettings[key] ? 'translate-x-5' : ''
+                    }`} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="max-w-md mx-auto px-6 py-6 space-y-5 pb-32">
         {/* Context */}
         <div className="bg-[#6B4C9A]/5 rounded-2xl p-4">
           <p className="text-sm font-medium text-[#6B4C9A] mb-1">When to say</p>
@@ -428,132 +641,37 @@ function BrachaReader({ prayer, onBack }: { prayer: Prayer; onBack: () => void }
           </div>
         )}
 
-        {/* Listen to Full Bracha button — right-aligned */}
-        <div className="flex justify-end">
-          <button
-            onClick={handlePlayAll}
-            disabled={isLoading}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold bg-[#6B4C9A] text-white hover:bg-[#5a3d85] transition-colors"
-          >
-            {isPlaying ? (
-              <>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                  <rect x="6" y="4" width="4" height="16" rx="1" />
-                  <rect x="14" y="4" width="4" height="16" rx="1" />
-                </svg>
-                Stop
-              </>
-            ) : (
-              <>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M8 5v14l11-7z" />
-                </svg>
-                Listen All
-              </>
-            )}
-          </button>
-        </div>
+        {/* Sections */}
+        {visibleSections.map(({ section, idx }) => renderSectionCard(section, idx))}
 
-        {/* Sections with word-by-word highlighting */}
-        {prayer.sections.map((section, idx) => {
-          const isSectionPlaying = isPlaying && playingSectionIndex === idx;
-          const isSectionDone = playingSectionIndex > idx && playingSectionIndex >= 0;
-          const words = section.hebrewText.split(/\s+/);
-          const activeWordIdx = getActiveWordIndex(idx, words);
-
-          return (
-            <div
-              key={section.id}
-              ref={(el) => { sectionRefs.current[idx] = el; }}
-              className={`bg-white rounded-2xl border p-6 space-y-3 transition-all ${
-                isSectionPlaying
-                  ? 'border-[#6B4C9A]/40 shadow-md ring-1 ring-[#6B4C9A]/10'
-                  : isSectionDone
-                    ? 'border-[#4A7C59]/20 bg-[#4A7C59]/3'
-                    : 'border-gray-100'
-              }`}
+        {/* Page navigation (page mode only) */}
+        {viewMode === 'page' && prayer.sections.length > 1 && (
+          <div className="flex items-center justify-between pt-2">
+            <button
+              onClick={() => setCurrentPage(Math.max(0, currentPage - 1))}
+              disabled={currentPage === 0}
+              className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-medium transition-all disabled:opacity-30 text-[#6B4C9A] hover:bg-[#6B4C9A]/5"
             >
-              {/* Section indicator */}
-              {prayer.sections.length > 1 && (
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-[10px] font-medium text-gray-300 uppercase tracking-wider">
-                    Part {idx + 1} of {prayer.sections.length}
-                  </span>
-                  {isSectionDone && (
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4A7C59" strokeWidth="3">
-                      <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                  )}
-                </div>
-              )}
-
-              {/* Hebrew text with word highlighting */}
-              <p
-                className="font-['Noto_Serif_Hebrew'] text-2xl text-[#1A1A2E] leading-[2.2] text-right"
-                dir="rtl"
-              >
-                {words.map((word, wi) => {
-                  const isActiveWord = isSectionPlaying && wi === activeWordIdx;
-                  const isReadWord = isSectionPlaying && wi < activeWordIdx;
-                  const isDoneSection = isSectionDone;
-                  return (
-                    <span
-                      key={wi}
-                      ref={isActiveWord ? (el) => { activeWordRef.current = el; } : undefined}
-                      className={
-                        isActiveWord
-                          ? 'bg-[#6B4C9A]/20 text-[#6B4C9A] rounded-md px-1 py-0.5 transition-colors duration-200'
-                          : isReadWord
-                            ? 'text-[#6B4C9A]/50 transition-colors duration-200'
-                            : isDoneSection
-                              ? 'text-[#4A7C59]/70'
-                              : ''
-                      }
-                    >
-                      {word}{wi < words.length - 1 ? ' ' : ''}
-                    </span>
-                  );
-                })}
-              </p>
-
-              {/* Transliteration */}
-              {displaySettings.showTransliteration && section.transliteration && (
-                <p className="text-sm text-gray-500 italic">{section.transliteration}</p>
-              )}
-
-              {/* Translation */}
-              {displaySettings.showTranslation && section.translation && (
-                <p className="text-sm text-gray-600">{section.translation}</p>
-              )}
-
-              {/* Notes */}
-              {displaySettings.showInstructions && section.notes && (
-                <p className="text-xs text-gray-400 bg-gray-50 rounded-lg p-3">{section.notes}</p>
-              )}
-
-              {/* Tap to play this section */}
-              {!isSectionPlaying && (
-                <button
-                  onClick={() => handlePlaySection(idx)}
-                  disabled={isLoading}
-                  className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-[#6B4C9A] hover:bg-[#6B4C9A]/5 transition-colors"
-                >
-                  {isLoading && playingSectionIndex === idx ? (
-                    <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
-                      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" opacity="0.25" />
-                      <path d="M4 12a8 8 0 018-8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                    </svg>
-                  ) : (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
-                  )}
-                  Listen
-                </button>
-              )}
-            </div>
-          );
-        })}
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+              Previous
+            </button>
+            <span className="text-xs text-gray-400 font-medium">
+              {currentPage + 1} / {prayer.sections.length}
+            </span>
+            <button
+              onClick={() => setCurrentPage(Math.min(prayer.sections.length - 1, currentPage + 1))}
+              disabled={currentPage === prayer.sections.length - 1}
+              className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-medium transition-all disabled:opacity-30 text-[#6B4C9A] hover:bg-[#6B4C9A]/5"
+            >
+              Next
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </button>
+          </div>
+        )}
 
         {/* Inspiration */}
         {prayer.inspirationText && (
@@ -562,78 +680,6 @@ function BrachaReader({ prayer, onBack }: { prayer: Prayer; onBack: () => void }
           </div>
         )}
       </div>
-
-      {/* Sticky Audio Transport Bar */}
-      {isTransportVisible && (
-        <div className="fixed bottom-0 left-0 right-0 z-40">
-          {/* Progress bar at very top of transport */}
-          <div className="h-1 bg-gray-200">
-            <div
-              className="h-full bg-[#6B4C9A] transition-all duration-200"
-              style={{ width: `${progressPercent}%` }}
-            />
-          </div>
-
-          <div className="bg-white/95 backdrop-blur-md border-t border-gray-100 shadow-lg">
-            <div className="max-w-md mx-auto px-6 py-3">
-              {/* Section indicator + time */}
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-[11px] text-gray-400 font-medium">
-                  {prayer.sections.length > 1
-                    ? `Part ${playingSectionIndex + 1} of ${prayer.sections.length}`
-                    : prayer.nameEnglish
-                  }
-                </span>
-                <span className="text-[11px] text-gray-400 font-mono">
-                  {formatTime(currentTime)} / {formatTime(duration)}
-                </span>
-              </div>
-
-              {/* Transport controls */}
-              <div className="flex items-center justify-center gap-6">
-                {/* Skip back */}
-                <button
-                  onClick={handleSkipBack}
-                  className="flex items-center justify-center w-12 h-12 rounded-full text-gray-500 hover:text-[#6B4C9A] hover:bg-[#6B4C9A]/5 active:bg-[#6B4C9A]/10 transition-colors"
-                >
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M11 19l-7-7 7-7" />
-                    <path d="M18 19l-7-7 7-7" />
-                  </svg>
-                </button>
-
-                {/* Play / Pause */}
-                <button
-                  onClick={handlePauseResume}
-                  className="flex items-center justify-center w-14 h-14 rounded-full bg-[#6B4C9A] text-white hover:bg-[#5a3d85] active:bg-[#4e3475] transition-colors shadow-md"
-                >
-                  {isPlaying ? (
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-                      <rect x="6" y="4" width="4" height="16" rx="1" />
-                      <rect x="14" y="4" width="4" height="16" rx="1" />
-                    </svg>
-                  ) : (
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
-                  )}
-                </button>
-
-                {/* Skip forward */}
-                <button
-                  onClick={handleSkipForward}
-                  className="flex items-center justify-center w-12 h-12 rounded-full text-gray-500 hover:text-[#6B4C9A] hover:bg-[#6B4C9A]/5 active:bg-[#6B4C9A]/10 transition-colors"
-                >
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M13 5l7 7-7 7" />
-                    <path d="M6 5l7 7-7 7" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

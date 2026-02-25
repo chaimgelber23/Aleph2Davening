@@ -42,27 +42,27 @@ export function PrayerSettingsModal({
         { key: 'showAmudCues' as const, label: 'Amud/Chazan Cues', desc: 'Who says what — leader vs. congregation' },
     ];
 
-    if (!isOpen) return null;
-
     return (
-        <>
-            {/* Backdrop */}
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={onClose}
-                className="fixed inset-0 bg-black/40 z-[60]"
-            />
+        <AnimatePresence>
+            {isOpen && (
+                <>
+                    {/* Backdrop */}
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={onClose}
+                        className="fixed inset-0 bg-black/40 z-[60]"
+                    />
 
-            {/* Modal */}
-            <motion.div
-                initial={{ y: '100%' }}
-                animate={{ y: 0 }}
-                exit={{ y: '100%' }}
-                transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-                className="fixed inset-x-0 bottom-0 z-[70] bg-background rounded-t-3xl shadow-2xl max-h-[85vh] flex flex-col"
-            >
+                    {/* Modal */}
+                    <motion.div
+                        initial={{ y: '100%' }}
+                        animate={{ y: 0 }}
+                        exit={{ y: '100%' }}
+                        transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+                        className="fixed inset-x-0 bottom-0 z-[70] bg-background rounded-t-3xl shadow-2xl max-h-[85vh] flex flex-col"
+                    >
                 {/* Handle bar */}
                 <div className="flex justify-center pt-3 pb-1 shrink-0">
                     <div className="w-10 h-1 bg-gray-300 rounded-full" />
@@ -201,29 +201,10 @@ export function PrayerSettingsModal({
                         </div>
                     </section>
 
-                    {/* What's Included */}
-                    <section className="space-y-3 pb-6">
-                        <h3 className="text-xs uppercase tracking-wider text-gray-500 font-semibold">What&apos;s Included</h3>
-                        <div className="bg-white border border-gray-100 rounded-xl p-4 shadow-sm space-y-3">
-                            {[
-                                { label: 'Audio for every prayer', desc: 'AI voice + multiple recorded voices', color: 'bg-primary' },
-                                { label: 'Auto-scroll & advance', desc: 'Plays through each section hands-free', color: 'bg-success' },
-                                { label: 'Transliteration & translation', desc: 'Read along in English, toggle on/off', color: 'bg-primary-light' },
-                                { label: 'Coach mode', desc: 'Tap the Coach button to learn step by step', color: 'bg-gold' },
-                            ].map((f) => (
-                                <div key={f.label} className="flex items-start gap-2.5">
-                                    <div className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${f.color}`} />
-                                    <div>
-                                        <p className="text-sm font-medium text-gray-700">{f.label}</p>
-                                        <p className="text-[11px] text-gray-400">{f.desc}</p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </section>
-
                 </div>
             </motion.div>
-        </>
+                </>
+            )}
+        </AnimatePresence>
     );
 }

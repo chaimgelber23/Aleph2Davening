@@ -361,7 +361,151 @@ const KADDISH_MOURNERS: Prayer = {
 };
 
 // ==========================================
-// 4. BARCHU
+// 4. KADDISH D'RABBANAN (Rabbis' Kaddish)
+// ==========================================
+
+const KADDISH_DRABBANAN: Prayer = {
+  id: 'kaddish-drabbanan',
+  slug: 'kaddish-drabbanan',
+  nameHebrew: 'קַדִּישׁ דְּרַבָּנָן',
+  nameEnglish: 'Kaddish D\'Rabbanan',
+  category: 'tefillah',
+  sortOrder: 103,
+  whenSaid: 'Recited after studying Torah texts together, such as after learning Mishnah, Talmud, or Midrash in a group. Also said at certain points in the morning service after passages of Rabbinic teaching.',
+  whySaid: 'This Kaddish honors Torah scholars and teachers. It includes a unique prayer for the welfare of all who study and teach Torah, recognizing that the Jewish people\'s survival depends on Torah learning.',
+  inspirationText: 'Kaddish D\'Rabbanan is the only Kaddish that includes a prayer for real, living people — the rabbis, their students, and all who engage in Torah study. When you say or respond to this Kaddish, you are praying for every Jew who has ever sat down to learn, from the great sages of the Talmud to the person studying next to you right now.',
+  requiredLevel: 1,
+  estimatedReadSeconds: 90,
+  sections: [
+    {
+      id: 'kaddish-drabbanan-1',
+      sortOrder: 1,
+      hebrewText: 'יִתְגַּדַּל וְיִתְקַדַּשׁ שְׁמֵהּ רַבָּא',
+      transliteration: 'Yitgadal v\'yitkadash sh\'mei raba',
+      translation: 'May His great name be exalted and sanctified',
+      amud: {
+        role: 'shaliach_tzibbur',
+        instruction: 'The leader begins. The congregation answers Amen.',
+        congregationResponse: 'אָמֵן',
+        congregationResponseTransliteration: 'Amen',
+        physicalActions: ['stand'],
+        waitForCongregation: true,
+        notes: 'Said after communal Torah study. Requires a minyan.',
+      },
+    },
+    {
+      id: 'kaddish-drabbanan-2',
+      sortOrder: 2,
+      hebrewText: 'בְּעָלְמָא דִּי בְרָא כִרְעוּתֵהּ וְיַמְלִיךְ מַלְכוּתֵהּ בְּחַיֵּיכוֹן וּבְיוֹמֵיכוֹן וּבְחַיֵּי דְכָל בֵּית יִשְׂרָאֵל בַּעֲגָלָא וּבִזְמַן קָרִיב וְאִמְרוּ אָמֵן',
+      transliteration: 'B\'alma di v\'ra chirutei, v\'yamlich malchutei, b\'chayeichon uv\'yomeichon uv\'chayei d\'chol beit Yisrael, ba\'agala uvizman kariv, v\'imru amen',
+      translation: 'In the world which He created according to His will, and may He establish His kingdom during your lifetime and during your days, and during the lifetime of all the House of Israel, speedily and soon — and say Amen',
+      amud: {
+        role: 'shaliach_tzibbur',
+        congregationResponse: 'אָמֵן',
+        congregationResponseTransliteration: 'Amen',
+        waitForCongregation: true,
+      },
+    },
+    {
+      id: 'kaddish-drabbanan-3',
+      sortOrder: 3,
+      hebrewText: 'יְהֵא שְׁמֵהּ רַבָּא מְבָרַךְ לְעָלַם וּלְעָלְמֵי עָלְמַיָּא',
+      transliteration: 'Y\'hei sh\'mei raba m\'varach l\'alam ul\'almei almaya',
+      translation: 'May His great name be blessed forever and to all eternity',
+      notes: 'The congregation\'s central response. Say it loudly and with great kavanah.',
+      amud: {
+        role: 'congregation',
+        instruction: 'Respond loudly with full concentration.',
+        physicalActions: ['stand'],
+      },
+    },
+    {
+      id: 'kaddish-drabbanan-4',
+      sortOrder: 4,
+      hebrewText: 'יִתְבָּרַךְ וְיִשְׁתַּבַּח וְיִתְפָּאַר וְיִתְרוֹמַם וְיִתְנַשֵּׂא וְיִתְהַדָּר וְיִתְעַלֶּה וְיִתְהַלָּל שְׁמֵהּ דְּקֻדְשָׁא בְּרִיךְ הוּא',
+      transliteration: 'Yitbarach v\'yishtabach v\'yitpa\'ar v\'yitromam v\'yitnasei, v\'yithadar v\'yit\'aleh v\'yithalal sh\'mei d\'kudsha b\'rich hu',
+      translation: 'Blessed, praised, glorified, exalted, extolled, honored, elevated, and lauded be the name of the Holy One, blessed is He',
+      amud: {
+        role: 'shaliach_tzibbur',
+        congregationResponse: 'בְּרִיךְ הוּא',
+        congregationResponseTransliteration: 'B\'rich hu',
+      },
+    },
+    {
+      id: 'kaddish-drabbanan-5',
+      sortOrder: 5,
+      hebrewText: 'לְעֵלָּא מִן כָּל בִּרְכָתָא וְשִׁירָתָא תֻּשְׁבְּחָתָא וְנֶחֱמָתָא דַּאֲמִירָן בְּעָלְמָא וְאִמְרוּ אָמֵן',
+      transliteration: 'L\'eila min kol birchata v\'shirata, tushb\'chata v\'nechemata, da\'amiran b\'alma, v\'imru amen',
+      translation: 'Above all the blessings, songs, praises, and consolations that are uttered in the world — and say Amen',
+      amud: {
+        role: 'shaliach_tzibbur',
+        congregationResponse: 'אָמֵן',
+        congregationResponseTransliteration: 'Amen',
+        waitForCongregation: true,
+      },
+    },
+    // This section is UNIQUE to Kaddish D'Rabbanan — the prayer for Torah scholars
+    {
+      id: 'kaddish-drabbanan-6',
+      sortOrder: 6,
+      hebrewText: 'עַל יִשְׂרָאֵל וְעַל רַבָּנָן וְעַל תַּלְמִידֵיהוֹן וְעַל כָּל תַּלְמִידֵי תַלְמִידֵיהוֹן וְעַל כָּל מָאן דְּעָסְקִין בְּאוֹרַיְתָא דִּי בְאַתְרָא הָדֵין וְדִי בְכָל אֲתַר וַאֲתַר',
+      transliteration: 'Al Yisrael v\'al rabanan v\'al talmideihon v\'al kol talmidei salmideihon, v\'al kol man d\'askin b\'orayta di v\'atra hadein v\'di v\'chol atar va\'atar',
+      translation: 'For Israel and for the rabbis and for their students and for all the students of their students, and for all who engage in Torah study in this place and in every place',
+      notes: 'This is the paragraph unique to Kaddish D\'Rabbanan. It is a prayer for the welfare of all Torah scholars and students — past, present, and future. This is what distinguishes it from every other form of Kaddish.',
+      amud: {
+        role: 'shaliach_tzibbur',
+        instruction: 'This is the unique section of Kaddish D\'Rabbanan — a prayer for all who study Torah.',
+      },
+    },
+    {
+      id: 'kaddish-drabbanan-7',
+      sortOrder: 7,
+      hebrewText: 'יְהֵא לְהוֹן וּלְכוֹן שְׁלָמָא רַבָּא חִנָּא וְחִסְדָּא וְרַחֲמִין וְחַיִּין אֲרִיכִין וּמְזוֹנֵי רְוִיחֵי וּפֻרְקָנָא מִן קֳדָם אֲבוּהוֹן דִּי בִשְׁמַיָּא וְאִמְרוּ אָמֵן',
+      transliteration: 'Y\'hei l\'hon ul\'chon sh\'lama raba, china v\'chisda v\'rachamim v\'chayin arichin um\'zonei r\'vichei ufurkana min kodam avuhon di vishmaya, v\'imru amen',
+      translation: 'May there be for them and for you abundant peace, grace, kindness, compassion, long life, ample sustenance, and salvation from their Father in Heaven — and say Amen',
+      notes: 'This beautiful prayer asks for every good thing — peace, grace, compassion, long life, sustenance, and salvation — for all who learn and teach Torah.',
+      amud: {
+        role: 'shaliach_tzibbur',
+        instruction: 'Continue the prayer for Torah scholars.',
+        congregationResponse: 'אָמֵן',
+        congregationResponseTransliteration: 'Amen',
+        waitForCongregation: true,
+      },
+    },
+    {
+      id: 'kaddish-drabbanan-8',
+      sortOrder: 8,
+      hebrewText: 'יְהֵא שְׁלָמָא רַבָּא מִן שְׁמַיָּא וְחַיִּים עָלֵינוּ וְעַל כָּל יִשְׂרָאֵל וְאִמְרוּ אָמֵן',
+      transliteration: 'Y\'hei sh\'lama raba min sh\'maya v\'chayim aleinu v\'al kol Yisrael, v\'imru amen',
+      translation: 'May there be abundant peace from Heaven and life upon us and upon all Israel — and say Amen',
+      amud: {
+        role: 'shaliach_tzibbur',
+        congregationResponse: 'אָמֵן',
+        congregationResponseTransliteration: 'Amen',
+        waitForCongregation: true,
+      },
+    },
+    {
+      id: 'kaddish-drabbanan-9',
+      sortOrder: 9,
+      hebrewText: 'עוֹשֶׂה שָׁלוֹם בִּמְרוֹמָיו הוּא יַעֲשֶׂה שָׁלוֹם עָלֵינוּ וְעַל כָּל יִשְׂרָאֵל וְאִמְרוּ אָמֵן',
+      transliteration: 'Oseh shalom bimromav, hu ya\'aseh shalom aleinu v\'al kol Yisrael, v\'imru amen',
+      translation: 'He Who makes peace in His heavens, may He make peace upon us and upon all Israel — and say Amen',
+      notes: 'Take three steps back, bow left, bow right, and bow forward.',
+      amud: {
+        role: 'shaliach_tzibbur',
+        instruction: 'Take three steps back, bow left, bow right, and bow forward.',
+        congregationResponse: 'אָמֵן',
+        congregationResponseTransliteration: 'Amen',
+        physicalActions: ['three_steps_back', 'bow'],
+        waitForCongregation: true,
+      },
+    },
+  ],
+};
+
+// ==========================================
+// 5. BARCHU
 // ==========================================
 
 const BARCHU: Prayer = {
@@ -370,7 +514,7 @@ const BARCHU: Prayer = {
   nameHebrew: 'בָּרְכוּ',
   nameEnglish: 'Barchu',
   category: 'tefillah',
-  sortOrder: 103,
+  sortOrder: 104,
   whenSaid: 'The call to prayer before the blessings of Shema, both at Shacharit and Maariv',
   whySaid: 'Barchu is the formal call to communal prayer. The shaliach tzibbur invites the congregation to bless God, and they respond in kind. It marks the transition into the core of the service.',
   inspirationText: 'Barchu is a call and response — one person calls out to bless God, and the entire community answers together. It is a beautiful reminder that prayer is not meant to be done alone. When you hear "Bar\'chu," you are being personally invited to join in blessing the Creator.',
@@ -1122,6 +1266,7 @@ export const SERVICE_PRAYERS: Prayer[] = [
   KADDISH_HALF,
   KADDISH_FULL,
   KADDISH_MOURNERS,
+  KADDISH_DRABBANAN,
   BARCHU,
   KEDUSHA_SHACHARIT,
   MODIM_DERABANAN,

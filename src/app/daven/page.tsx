@@ -43,7 +43,7 @@ export default function DavenPage() {
   const [selectedAudioEntry, setSelectedAudioEntry] = useState<PrayerAudioEntry | null>(null);
 
   // Prayer view mode
-  const [showProgressSidebar, setShowProgressSidebar] = useState(false);
+  const [showProgressSidebar, setShowProgressSidebar] = useState(true);
   const [viewMode, setViewMode] = useState<'section' | 'full'>('section');
 
   // Store
@@ -259,6 +259,15 @@ export default function DavenPage() {
     const totalSections = selectedPrayer.sections.length;
     const showCompactProgress = totalSections > 12;
 
+    // Service progress: which prayer are we on within the service?
+    const serviceItems = selectedService
+      ? selectedService.segments.flatMap((seg) => seg.items)
+      : [];
+    const currentServiceItemIndex = selectedService
+      ? serviceItems.findIndex((item) => item.prayerId === selectedPrayer.id)
+      : -1;
+    const totalServiceItems = serviceItems.length;
+
     return (
       <div className="min-h-screen bg-background">
         {/* Top Bar */}
@@ -349,6 +358,31 @@ export default function DavenPage() {
               Guide
             </button>
           </div>
+
+          {/* Service progress track — only when opened from a service */}
+          {selectedService && currentServiceItemIndex >= 0 && totalServiceItems > 1 && (
+            <div className="max-w-md mx-auto px-4 pt-2 pb-1">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-semibold text-gray-400 shrink-0">
+                  Prayer {currentServiceItemIndex + 1}/{totalServiceItems}
+                </span>
+                <div className="flex-1 flex gap-0.5">
+                  {serviceItems.map((_, i) => (
+                    <div
+                      key={i}
+                      className={`h-1 flex-1 rounded-full transition-colors ${
+                        i < currentServiceItemIndex
+                          ? 'bg-success'
+                          : i === currentServiceItemIndex
+                            ? 'bg-primary'
+                            : 'bg-gray-200'
+                      }`}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="max-w-md mx-auto px-6 py-6 space-y-5 pb-32">
@@ -397,6 +431,22 @@ export default function DavenPage() {
                   </button>
                 ))}
               </div>
+              {/* Chazan Guide link — in sidebar when within a service */}
+              {selectedService && (
+                <button
+                  onClick={() => {
+                    stop();
+                    setView('chazan_guide');
+                  }}
+                  className="w-full mt-3 pt-3 border-t border-gray-100 flex items-center justify-center gap-1.5 text-xs text-gray-400 hover:text-primary transition-colors"
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                  </svg>
+                  Learn to lead as Chazan
+                </button>
+              )}
             </div>
           )}
 
@@ -442,10 +492,8 @@ export default function DavenPage() {
                   <button
                     onClick={handleTogglePlay}
                     disabled={isLoading}
-                    className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 shadow-md ${
-                      isPlaying
-                        ? 'bg-error text-white'
-                        : isLoading
+                    className={`w-14 h-14 rounded-full flex items-center justify-center shrink-0 shadow-lg active:scale-95 ${
+                      isLoading
                         ? 'bg-gray-200 text-gray-400'
                         : 'bg-primary text-white hover:bg-[#163d55]'
                     }`}
@@ -703,26 +751,22 @@ export default function DavenPage() {
           )}
         </AnimatePresence>
 
-        <AnimatePresence>
-          {showSettingsModal && (
-            <PrayerSettingsModal
-              isOpen={showSettingsModal}
-              onClose={() => setShowSettingsModal(false)}
-              prayerId={selectedPrayer.id}
-              selectedAudioSource={selectedAudioSource}
-              onSelectAudioSource={(sourceId, entry) => {
-                setSelectedAudioSource(sourceId);
-                setSelectedAudioEntry(entry);
-              }}
-              autoAdvanceEnabled={autoAdvanceEnabled}
-              onToggleAutoAdvance={() => setAutoAdvanceEnabled(!autoAdvanceEnabled)}
-              viewMode={viewMode}
-              onChangeViewMode={setViewMode}
-              showProgressSidebar={showProgressSidebar}
-              onToggleProgressSidebar={() => setShowProgressSidebar(!showProgressSidebar)}
-            />
-          )}
-        </AnimatePresence>
+        <PrayerSettingsModal
+          isOpen={showSettingsModal}
+          onClose={() => setShowSettingsModal(false)}
+          prayerId={selectedPrayer.id}
+          selectedAudioSource={selectedAudioSource}
+          onSelectAudioSource={(sourceId, entry) => {
+            setSelectedAudioSource(sourceId);
+            setSelectedAudioEntry(entry);
+          }}
+          autoAdvanceEnabled={autoAdvanceEnabled}
+          onToggleAutoAdvance={() => setAutoAdvanceEnabled(!autoAdvanceEnabled)}
+          viewMode={viewMode}
+          onChangeViewMode={setViewMode}
+          showProgressSidebar={showProgressSidebar}
+          onToggleProgressSidebar={() => setShowProgressSidebar(!showProgressSidebar)}
+        />
 
         <AnimatePresence>
           {showWalkthrough && (
@@ -872,13 +916,20 @@ function DavenList({
             <Link href="/" className="text-primary-light text-sm hover:text-white">
               Home
             </Link>
-            <Link href="/settings" className="text-primary-light text-sm hover:text-white">
-              Settings
+            <Link
+              href="/settings"
+              className="flex items-center justify-center w-9 h-9 rounded-lg text-primary-light hover:text-white hover:bg-white/10 transition-colors"
+              title="Settings"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="3" />
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+              </svg>
             </Link>
           </div>
           <h1 className="text-2xl font-bold mt-2">Daven</h1>
           <p className="text-primary-light text-sm mt-1">
-            Services, prayers, coaching, and amud mode
+            Follow along with services or learn individual prayers
           </p>
         </div>
       </div>
@@ -906,45 +957,28 @@ function DavenList({
         {/* === SERVICES TAB === */}
         {activeTab === 'services' && (
           <div className="space-y-6">
-            {/* Chazan Guide — compact collapsible */}
-            <div className="bg-white rounded-2xl border border-gray-100">
+            {/* Not sure where to start? */}
+            <div className="bg-gray-50 rounded-xl px-4 py-3 flex items-center gap-3">
+              <span className="text-xs text-gray-400">New to davening?</span>
               <button
-                onClick={() => setShowChazanPicker(!showChazanPicker)}
-                className="w-full flex items-center justify-between px-5 py-3.5"
+                onClick={() => {
+                  const shacharit = services.find((s) => s.type === 'weekday' && s.name.toLowerCase().includes('shacharit'));
+                  if (shacharit) onSelectService(shacharit);
+                }}
+                className="text-xs font-semibold text-primary hover:text-primary/80"
               >
-                <span className="text-sm font-semibold text-foreground">Chazan Guide</span>
-                <svg
-                  className={`w-4 h-4 text-gray-400 transition-transform ${showChazanPicker ? 'rotate-180' : ''}`}
-                  fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                </svg>
+                Start with Weekday Shacharit →
               </button>
-              {showChazanPicker && (
-                <div className="px-5 pb-4">
-                  <div className="rounded-xl border border-gray-100 overflow-hidden divide-y divide-gray-100">
-                    {services.map((service) => (
-                      <button
-                        key={service.id}
-                        onClick={() => onOpenChazanGuide(service)}
-                        className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-primary hover:bg-primary/5 transition-colors"
-                      >
-                        {service.name}
-                        <svg className="w-3.5 h-3.5 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                        </svg>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
 
             {/* Weekday Services */}
             <div>
-              <h2 className="text-xs uppercase tracking-wider text-gray-400 font-semibold mb-3">
+              <h2 className="text-xs uppercase tracking-wider text-gray-400 font-semibold mb-1">
                 Weekday
               </h2>
+              <p className="text-xs text-gray-400 mb-3">
+                Daily prayer services — morning, afternoon, and evening
+              </p>
               <div className="space-y-3">
                 {services
                   .filter((s) => s.type === 'weekday')
@@ -962,9 +996,12 @@ function DavenList({
             {/* Shabbat Services */}
             {services.some((s) => s.type === 'shabbat') && (
               <div>
-                <h2 className="text-xs uppercase tracking-wider text-gray-400 font-semibold mb-3">
+                <h2 className="text-xs uppercase tracking-wider text-gray-400 font-semibold mb-1">
                   Shabbat
                 </h2>
+                <p className="text-xs text-gray-400 mb-3">
+                  Shabbat services — Friday evening and Saturday
+                </p>
                 <div className="space-y-3">
                   {services
                     .filter((s) => s.type === 'shabbat')
@@ -979,6 +1016,54 @@ function DavenList({
                 </div>
               </div>
             )}
+
+            {/* Chazan Guide */}
+            <div className="bg-warning/5 rounded-2xl border border-warning/10">
+              <button
+                onClick={() => setShowChazanPicker(!showChazanPicker)}
+                className="w-full p-4 flex items-start gap-3 text-left transition-colors hover:bg-warning/10 rounded-2xl"
+              >
+                <div className="w-9 h-9 rounded-xl bg-warning/15 flex items-center justify-center shrink-0 mt-0.5">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C6973F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-semibold text-foreground">Chazan Guide</h3>
+                    <svg
+                      className={`w-4 h-4 text-gray-400 transition-transform ${showChazanPicker ? 'rotate-180' : ''}`}
+                      fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
+                    Learn to lead davening for the congregation or minyan — who says what, when to stand, congregation responses, Kaddish, and more
+                  </p>
+                </div>
+              </button>
+              {showChazanPicker && (
+                <div className="px-5 pb-4">
+                  <p className="text-xs text-gray-400 font-medium mb-2">Choose a service:</p>
+                  <div className="rounded-xl border border-gray-100 overflow-hidden divide-y divide-gray-100">
+                    {services.map((service) => (
+                      <button
+                        key={service.id}
+                        onClick={() => onOpenChazanGuide(service)}
+                        className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-primary hover:bg-primary/5 transition-colors bg-white"
+                      >
+                        {service.name}
+                        <svg className="w-3.5 h-3.5 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         )}
 

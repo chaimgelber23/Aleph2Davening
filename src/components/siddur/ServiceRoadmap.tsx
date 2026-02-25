@@ -99,13 +99,16 @@ export function ServiceRoadmap({
             </div>
           </div>
 
-          {/* Chazan Guide button */}
-          <div className="mt-5">
+          {/* Chazan Guide link — compact */}
+          <div className="mt-4 flex justify-end">
             <button
               onClick={onOpenChazanGuide}
-              className="w-full py-3 rounded-xl bg-white/8 hover:bg-white/15 text-white text-sm font-medium transition-colors border border-white/10"
+              className="flex items-center gap-1 text-xs text-white/50 hover:text-white/80 transition-colors"
             >
               Chazan Guide
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M9 18l6-6-6-6" />
+              </svg>
             </button>
           </div>
         </div>

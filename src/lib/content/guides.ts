@@ -61,13 +61,13 @@ const MORNING_GUIDES: Guide[] = [
   {
     id: 'negel-vasser',
     slug: 'negel-vasser',
-    title: 'Negel Vasser',
+    title: 'Morning Hand Washing',
     titleHebrew: 'נְטִילַת יָדַיִם שֶׁל שַׁחֲרִית',
     category: 'morning_routine',
     sortOrder: 1,
     icon: '', // Removed emoji // Removed emoji
-    summary: 'Washing your hands upon waking',
-    whenRelevant: 'Immediately upon waking, before getting out of bed if possible',
+    summary: 'Wash your hands when you wake up',
+    whenRelevant: 'When you wake up in the morning',
 
     // BEGINNER LEVEL - Simple, encouraging, not overwhelming
     beginnerSummary:
@@ -214,7 +214,7 @@ const MORNING_GUIDES: Guide[] = [
     sortOrder: 2,
     icon: '', // Removed emoji // Removed emoji
     summary: 'The first words you say each morning',
-    whenRelevant: 'The very first moment you wake up, even before washing hands',
+    whenRelevant: 'First thing in the morning',
 
     // BEGINNER LEVEL
     beginnerSummary:
@@ -386,7 +386,7 @@ const MORNING_GUIDES: Guide[] = [
         sortOrder: 3,
         instruction:
           'Continue with Birchos HaShachar — the series of blessings thanking God for daily gifts.',
-        tip: 'These include blessings for sight, clothing, walking, and more. See the full list in the Siddur section of AlephStart.',
+        tip: 'These include blessings for sight, clothing, walking, and more. See the full list in the Siddur section of Aleph2Davening.',
       },
       {
         id: 'mb-4',
@@ -403,7 +403,7 @@ const MORNING_GUIDES: Guide[] = [
       'These brachot can be said at home before going to shul',
       'If you daven at a minyan, many siddurim include them at the start of Shacharit',
       'Try to learn one new bracha at a time until you know them all',
-      'Practice them in the Siddur section of AlephStart with audio and transliteration',
+      'Practice them in the Siddur section of Aleph2Davening with audio and transliteration',
     ],
     sources: [
       'Shulchan Aruch, Orach Chaim 46:1',
@@ -712,7 +712,7 @@ const BRACHOT_FOOD_GUIDES: Guide[] = [
         sortOrder: 1,
         instruction:
           'BIRKAT HAMAZON — After a bread meal. This is the longest after-bracha (a multi-paragraph grace). It is a Torah-level obligation.',
-        tip: 'Birkat Hamazon is found in the siddur. Many people read it from a bentcher (small booklet). It\'s also available in the Siddur section of AlephStart.',
+        tip: 'Birkat Hamazon is found in the siddur. Many people read it from a bentcher (small booklet). It\'s also available in the Siddur section of Aleph2Davening.',
       },
       {
         id: 'ba-2',
@@ -1077,7 +1077,7 @@ const SHABBAT_GUIDES: Guide[] = [
         hebrewText: 'בָּרוּךְ אַתָּה ה\' אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם בּוֹרֵא פְּרִי הַגָּפֶן',
         transliteration: "Baruch Atah Adonai Eloheinu Melech ha'olam borei p'ri hagafen",
         translation: 'Blessed are You... who creates the fruit of the vine.',
-        tip: 'The full Kiddush text is in the siddur and available in AlephStart\'s Siddur section.',
+        tip: 'The full Kiddush text is in the siddur and available in Aleph2Davening\'s Siddur section.',
       },
       {
         id: 'ki-4',
@@ -1095,7 +1095,7 @@ const SHABBAT_GUIDES: Guide[] = [
       'Grape juice works just as well as wine for Kiddush',
       'Everyone at the table fulfills their obligation by listening — they just need to answer "Amen"',
       'Shabbat day Kiddush is shorter — just the bracha over wine plus a short paragraph',
-      'Practice the Kiddush text in AlephStart\'s Siddur section',
+      'Practice the Kiddush text in Aleph2Davening\'s Siddur section',
     ],
     sources: [
       'Exodus 20:8 — "Remember the Sabbath day to sanctify it"',
