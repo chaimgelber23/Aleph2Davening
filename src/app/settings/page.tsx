@@ -505,7 +505,7 @@ function SettingsContent() {
                   href="https://wa.me/13476620889"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#25D366] text-white text-sm font-semibold hover:bg-[#1fba59] active:scale-[0.98] transition-all"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#1B4965] text-white text-sm font-semibold hover:bg-[#163d55] active:scale-[0.98] transition-all"
                 >
                   {/* WhatsApp icon */}
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">

@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useUserStore } from '@/stores/userStore';
 import { LETTERS } from '@/lib/content/letters';
 import { LetterCard } from '@/components/learn/LetterCard';
@@ -27,13 +27,15 @@ function getLessonLetters(lessonIndex: number): Letter[] {
 
 const totalLessons = Math.ceil(LETTERS.length / LESSON_SIZE);
 
-type Phase = 'teach' | 'drill' | 'review' | 'complete';
+type Phase = 'teach' | 'drill' | 'complete';
 
 export default function LearnPage() {
+  const router = useRouter();
   const pronunciation = useUserStore((s) => s.profile.pronunciation);
   const learnSession = useUserStore((s) => s.learnSession);
   const saveLearnSession = useUserStore((s) => s.saveLearnSession);
   const clearLearnSession = useUserStore((s) => s.clearLearnSession);
+  const skillProgress = useUserStore((s) => s.skillProgress);
 
   const [currentLesson, setCurrentLesson] = useState(0);
   const [phase, setPhase] = useState<Phase>('teach');
@@ -90,22 +92,39 @@ export default function LearnPage() {
   const earnMilestone = useUserStore((s) => s.earnMilestone);
   const hasMilestone = useUserStore((s) => s.hasMilestone);
 
-  const lessonLetters = getLessonLetters(currentLesson);
+  const lessonLetters = useMemo(() => getLessonLetters(currentLesson), [currentLesson]);
   const currentTeachLetter = lessonLetters[teachIndex];
 
-  // Generate drill question — stored in state so options don't reshuffle on re-render
+  // Generate drill question — depends only on stable values so options don't reshuffle on re-render
   const [drillCorrectLetter, setDrillCorrectLetter] = useState(lessonLetters[0] || LETTERS[0]);
   const [drillOptions, setDrillOptions] = useState<Letter[]>([]);
 
   useEffect(() => {
-    const correct = lessonLetters[drillIndex % lessonLetters.length];
+    const letters = getLessonLetters(currentLesson);
+    const correct = letters[drillIndex % letters.length];
     if (!correct) return;
     const others = LETTERS.filter((l) => l.id !== correct.id);
-    const shuffled = others.sort(() => Math.random() - 0.5).slice(0, 3);
+    const shuffled = [...others].sort(() => Math.random() - 0.5).slice(0, 3);
     const options = [...shuffled, correct].sort(() => Math.random() - 0.5);
     setDrillCorrectLetter(correct);
     setDrillOptions(options);
-  }, [lessonLetters, drillIndex]);
+  }, [currentLesson, drillIndex]); // stable deps — no array reference, no reshuffling
+
+  // Back navigation
+  const handleBack = () => {
+    if (phase === 'teach') {
+      if (teachIndex > 0) {
+        setTeachIndex(teachIndex - 1);
+      } else {
+        router.push('/hebrew');
+      }
+    } else if (phase === 'drill') {
+      setPhase('teach');
+      setTeachIndex(lessonLetters.length - 1);
+    } else {
+      router.push('/hebrew');
+    }
+  };
 
   // Handle teaching phase
   const handleTeachNext = () => {
@@ -119,7 +138,7 @@ export default function LearnPage() {
     }
   };
 
-  // Handle drill answer
+  // Handle drill answer — no auto-advance, user taps Continue
   const handleDrillAnswer = (letterId: string) => {
     if (showResult) return;
     setSelectedAnswer(letterId);
@@ -131,36 +150,34 @@ export default function LearnPage() {
 
     updateSkillProgress(drillCorrectLetter.id, isCorrect);
     recordPractice(isCorrect, drillTotal === 0);
+  };
 
-    // Auto-advance after showing result
-    setTimeout(() => {
-      setShowResult(false);
-      setSelectedAnswer(null);
+  // Continue to next question after seeing result
+  const handleDrillContinue = () => {
+    setShowResult(false);
+    setSelectedAnswer(null);
 
-      if (drillIndex < 8) {
-        // 9 drill questions per lesson
-        setDrillIndex(drillIndex + 1);
-      } else {
-        // Check milestones
-        checkAndUpdateStreak();
-        if (!hasMilestone('first_letter') && currentLesson === 0) {
-          earnMilestone('first_letter');
-          setMilestone('first_letter');
-        }
-        const totalMastered = (currentLesson + 1) * LESSON_SIZE;
-        if (!hasMilestone('half_alephbet') && totalMastered >= 11) {
-          earnMilestone('half_alephbet');
-          setMilestone('half_alephbet');
-        }
-        if (!hasMilestone('full_alephbet') && totalMastered >= LETTERS.length) {
-          earnMilestone('full_alephbet');
-          setMilestone('full_alephbet');
-        }
-        track({ eventType: 'lesson_complete', eventCategory: 'learning', lessonId: String(currentLesson), completionPercentage: drillScore / (drillTotal + 1) });
-        clearLearnSession();
-        setPhase('complete');
+    if (drillIndex < 8) {
+      setDrillIndex(drillIndex + 1);
+    } else {
+      checkAndUpdateStreak();
+      if (!hasMilestone('first_letter') && currentLesson === 0) {
+        earnMilestone('first_letter');
+        setMilestone('first_letter');
       }
-    }, 1200);
+      const totalMastered = (currentLesson + 1) * LESSON_SIZE;
+      if (!hasMilestone('half_alephbet') && totalMastered >= 11) {
+        earnMilestone('half_alephbet');
+        setMilestone('half_alephbet');
+      }
+      if (!hasMilestone('full_alephbet') && totalMastered >= LETTERS.length) {
+        earnMilestone('full_alephbet');
+        setMilestone('full_alephbet');
+      }
+      track({ eventType: 'lesson_complete', eventCategory: 'learning', lessonId: String(currentLesson), completionPercentage: drillScore / (drillTotal + 1) });
+      clearLearnSession();
+      setPhase('complete');
+    }
   };
 
   // Handle lesson complete
@@ -172,6 +189,13 @@ export default function LearnPage() {
       setDrillIndex(0);
     }
   };
+
+  // Letters the user struggled with this lesson (< 60% accuracy)
+  const strugglingLetters = lessonLetters.filter((l) => {
+    const p = skillProgress[l.id];
+    if (!p || p.timesPracticed < 2) return false;
+    return p.timesCorrect / p.timesPracticed < 0.6;
+  });
 
   // Resume prompt overlay
   if (showResumePrompt && learnSession) {
@@ -213,13 +237,16 @@ export default function LearnPage() {
       {/* Top Bar */}
       <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-100 px-6 py-4 z-10">
         <div className="max-w-md mx-auto flex items-center justify-between">
-          <Link href="/" className="text-gray-400 hover:text-gray-600">
+          <button
+            onClick={handleBack}
+            className="text-gray-400 hover:text-gray-600 transition-colors flex items-center gap-1"
+          >
             ← Back
-          </Link>
+          </button>
           <span className="text-sm font-medium text-gray-600">
             Lesson {currentLesson + 1} of {totalLessons}
           </span>
-          <SpeedPill color="primary" />
+          <div className="w-16" /> {/* spacer to balance layout */}
         </div>
         <ProgressBar
           value={
@@ -278,6 +305,9 @@ export default function LearnPage() {
                 <p className="text-sm text-primary font-medium uppercase tracking-wider">
                   Which letter is this?
                 </p>
+                <p className="text-xs text-gray-400 mt-1">
+                  {drillIndex + 1} of 9
+                </p>
               </div>
 
               {/* Big letter display */}
@@ -292,17 +322,18 @@ export default function LearnPage() {
                 </div>
               </div>
 
-              {/* Audio hint */}
-              <div className="flex justify-center">
+              {/* Audio + Speed — together for easy access */}
+              <div className="flex items-center justify-center gap-3">
                 <AudioButton
                   audioUrl={`/audio/letters/${drillCorrectLetter.id}${PRONUNCIATION_SUFFIX[pronunciation]}.mp3`}
-                  label="Hear the sound"
+                  label="Listen"
                   size="sm"
                   variant="outline"
                 />
+                <SpeedPill color="primary" />
               </div>
 
-              {/* Answer options */}
+              {/* Answer options — static, no reshuffling */}
               <div className="grid grid-cols-2 gap-3">
                 {drillOptions.map((letter) => {
                   const isSelected = selectedAnswer === letter.id;
@@ -314,7 +345,7 @@ export default function LearnPage() {
                   } else if (showResult && isSelected && !isCorrect) {
                     bgClass = 'bg-error/10 border-error';
                   } else if (showResult && isCorrect) {
-                    bgClass = 'bg-success/5 border-success/50';
+                    bgClass = 'bg-success/5 border-success/50'; // show correct when wrong picked
                   }
 
                   return (
@@ -330,26 +361,47 @@ export default function LearnPage() {
                     >
                       <p className="text-lg font-semibold text-foreground">{letter.name}</p>
                       <p className="text-sm text-gray-500">{letter.sound}</p>
+                      {showResult && isCorrect && (
+                        <p className="text-[10px] font-bold text-success mt-1 uppercase tracking-wide">
+                          {isSelected ? '✓ Correct' : 'Correct answer'}
+                        </p>
+                      )}
                     </button>
                   );
                 })}
               </div>
 
-              {/* Feedback */}
-              {showResult && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className={`text-center py-3 rounded-xl ${selectedAnswer === drillCorrectLetter.id
-                      ? 'bg-success/10 text-success'
-                      : 'bg-error/10 text-error'
-                    }`}
-                >
-                  {selectedAnswer === drillCorrectLetter.id
-                    ? '✓ Correct!'
-                    : `✗ That was ${drillCorrectLetter.name} (${drillCorrectLetter.sound})`}
-                </motion.div>
-              )}
+              {/* Feedback + Continue */}
+              <AnimatePresence>
+                {showResult && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="space-y-3"
+                  >
+                    <div className={`text-center py-3 rounded-xl text-sm font-medium ${
+                      selectedAnswer === drillCorrectLetter.id
+                        ? 'bg-success/10 text-success'
+                        : 'bg-error/10 text-error'
+                    }`}>
+                      {selectedAnswer === drillCorrectLetter.id
+                        ? '✓ Correct!'
+                        : `✗ That was ${drillCorrectLetter.name} (${drillCorrectLetter.sound})`}
+                    </div>
+                    <button
+                      onClick={handleDrillContinue}
+                      className={`w-full py-3.5 rounded-xl font-semibold text-white transition-colors ${
+                        selectedAnswer === drillCorrectLetter.id
+                          ? 'bg-success hover:bg-[#3d6a4a]'
+                          : 'bg-primary hover:bg-[#163d55]'
+                      }`}
+                    >
+                      {drillIndex < 8 ? 'Continue →' : 'Finish Lesson →'}
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.div>
           )}
 
@@ -382,6 +434,22 @@ export default function LearnPage() {
                 </div>
               </div>
 
+              {/* Struggling letters — shown if user got some wrong repeatedly */}
+              {strugglingLetters.length > 0 && (
+                <div className="bg-warning/10 border border-warning/20 rounded-2xl p-4 text-left">
+                  <p className="text-sm font-semibold text-[#8B6914] mb-2">Keep practicing:</p>
+                  <div className="flex flex-wrap gap-2">
+                    {strugglingLetters.map((l) => (
+                      <span key={l.id} className="inline-flex items-center gap-1.5 bg-white rounded-lg px-3 py-1.5 text-sm border border-warning/20">
+                        <span dir="rtl" className="font-[var(--font-hebrew-serif)] text-lg">{l.hebrew}</span>
+                        <span className="text-gray-600">{l.name}</span>
+                      </span>
+                    ))}
+                  </div>
+                  <p className="text-[11px] text-[#8B6914]/70 mt-2">These will come up more in Practice drills.</p>
+                </div>
+              )}
+
               <div className="space-y-3">
                 {currentLesson < totalLessons - 1 && (
                   <button
@@ -391,11 +459,12 @@ export default function LearnPage() {
                     Next Lesson →
                   </button>
                 )}
-                <Link href="/">
-                  <button className="w-full border-2 border-gray-200 text-gray-600 py-4 rounded-xl text-lg font-medium hover:border-primary hover:text-primary transition-colors">
-                    Back to Home
-                  </button>
-                </Link>
+                <button
+                  onClick={() => router.push('/hebrew')}
+                  className="w-full border-2 border-gray-200 text-gray-600 py-4 rounded-xl text-lg font-medium hover:border-primary hover:text-primary transition-colors"
+                >
+                  Back to Hebrew
+                </button>
               </div>
             </motion.div>
           )}
