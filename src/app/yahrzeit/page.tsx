@@ -21,15 +21,45 @@ import {
 import { useAudio } from '@/hooks/useAudio';
 import { useKaraokeSync } from '@/hooks/useKaraokeSync';
 import { useUserStore } from '@/stores/userStore';
+import { SpotlightTour } from '@/components/ui/SpotlightTour';
+import { TourReplayButton } from '@/components/ui/TourReplayButton';
+import type { TourStep } from '@/components/ui/SpotlightTour';
 import type { KaddishType } from '@/types';
 import type { AudioSourceId, PrayerAudioEntry } from '@/lib/content/audio-sources';
 
 type Tab = 'kaddish' | 'services' | 'guide' | 'observance';
 type YahrzeitView = 'tabs' | 'learn_kaddish' | 'service_detail';
 
+const YAHRZEIT_TOUR_STEPS: TourStep[] = [
+  {
+    target: 'yahrzeit-tour-tabs',
+    title: 'Four Sections',
+    description: 'Everything you need — from learning Kaddish to observing a yahrzeit.',
+  },
+  {
+    target: 'yahrzeit-tour-urgent',
+    title: 'Need Kaddish Today?',
+    description: 'Quick start: learn the words in about 5 minutes, then find a minyan.',
+  },
+  {
+    target: 'yahrzeit-tour-mourners',
+    title: 'Learn Kaddish',
+    description: "Tap here to learn Mourner's Kaddish with audio, transliteration, and section-by-section guidance.",
+  },
+  {
+    target: 'yahrzeit-tour-other',
+    title: 'Other Kaddish Types',
+    description: "You'll hear these in services — tap to learn what they are and when they're said.",
+  },
+];
+
 export default function YahrzeitPage() {
   const [view, setView] = useState<YahrzeitView>('tabs');
   const [activeTab, setActiveTab] = useState<Tab>('kaddish');
+  const completedTours = useUserStore((s) => s.completedTours);
+  const completeTour = useUserStore((s) => s.completeTour);
+  const resetTour = useUserStore((s) => s.resetTour);
+  const yahrzeitTourDone = completedTours.yahrzeit === true;
   const [expandedKaddish, setExpandedKaddish] = useState<KaddishType | null>('mourners');
   const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
 
@@ -374,7 +404,7 @@ export default function YahrzeitPage() {
 
       <div className="max-w-md mx-auto px-6 py-4 pb-28">
         {/* Tabs */}
-        <div className="flex gap-1 bg-gray-100 rounded-xl p-1 mb-6">
+        <div className="flex gap-1 bg-gray-100 rounded-xl p-1 mb-6" data-tour="yahrzeit-tour-tabs">
           {tabs.map((tab) => (
             <button
               key={tab.id}
@@ -394,7 +424,7 @@ export default function YahrzeitPage() {
         {activeTab === 'kaddish' && (
           <div className="space-y-4">
             {/* What to Do Now — urgent action card */}
-            <div className="bg-[#5C4033]/5 border-2 border-[#5C4033]/20 rounded-2xl p-5">
+            <div className="bg-[#5C4033]/5 border-2 border-[#5C4033]/20 rounded-2xl p-5" data-tour="yahrzeit-tour-urgent">
               <h2 className="text-sm font-bold text-[#5C4033] mb-1.5">Need to say Kaddish today?</h2>
               <p className="text-sm text-gray-600 leading-relaxed mb-3">
                 Here&apos;s what to do: learn the words (about 5 minutes), then find a minyan (prayer service) to say it at.
@@ -424,7 +454,7 @@ export default function YahrzeitPage() {
 
             {/* Learn to Say Kaddish — primary CTA */}
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-              <div className="bg-white rounded-2xl border-2 border-[#5C4033]/15 p-5 shadow-sm">
+              <div className="bg-white rounded-2xl border-2 border-[#5C4033]/15 p-5 shadow-sm" data-tour="yahrzeit-tour-mourners">
                 <p className="text-[10px] uppercase tracking-widest font-bold text-[#5C4033] mb-1">Your Kaddish</p>
                 <h2 className="text-base font-bold text-foreground">Mourner&apos;s Kaddish</h2>
                 <p dir="rtl" className="font-[var(--font-hebrew-serif)] text-lg text-[#5C4033]/60 mt-0.5">קַדִּישׁ יָתוֹם</p>
@@ -442,7 +472,7 @@ export default function YahrzeitPage() {
             </motion.div>
 
             {/* Other types */}
-            <div className="pt-1">
+            <div className="pt-1" data-tour="yahrzeit-tour-other">
               <h3 className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-3 px-1">
                 Other Types You&apos;ll Hear
               </h3>
@@ -609,7 +639,23 @@ export default function YahrzeitPage() {
             </div>
           </div>
         )}
+
+        {/* Replay tour */}
+        {yahrzeitTourDone && (
+          <div className="mt-4">
+            <TourReplayButton onClick={() => resetTour('yahrzeit')} accentColor="#5C4033" />
+          </div>
+        )}
       </div>
+
+      {view === 'tabs' && !yahrzeitTourDone && (
+        <SpotlightTour
+          steps={YAHRZEIT_TOUR_STEPS}
+          onComplete={() => completeTour('yahrzeit')}
+          finishLabel="Got It"
+          accentColor="#5C4033"
+        />
+      )}
 
       <BottomNav />
     </div>

@@ -18,7 +18,10 @@ import { AmudBadge } from '@/components/siddur/AmudBadge';
 import { TefillahPrepSheet } from '@/components/siddur/TefillahPrepSheet';
 import { AudioSourcePicker } from '@/components/siddur/AudioSourcePicker';
 import { DavenWelcomeWalkthrough } from '@/components/siddur/DavenWelcomeWalkthrough';
+import { SpotlightTour } from '@/components/ui/SpotlightTour';
+import { TourReplayButton } from '@/components/ui/TourReplayButton';
 import { track } from '@/lib/analytics';
+import type { TourStep } from '@/components/ui/SpotlightTour';
 import type { Prayer, DaveningService, ServiceItem } from '@/types';
 import type { AudioSourceId, PrayerAudioEntry } from '@/lib/content/audio-sources';
 
@@ -799,6 +802,24 @@ function PrayerCard({ prayer, onSelect }: { prayer: Prayer; onSelect: (p: Prayer
 // Daven List (2-tab: Services + All Prayers)
 // ==========================
 
+const DAVEN_TOUR_STEPS: TourStep[] = [
+  {
+    target: 'daven-tour-tabs',
+    title: 'Two Views',
+    description: 'Services shows full davening flows; All Prayers lets you learn any prayer individually.',
+  },
+  {
+    target: 'daven-tour-services',
+    title: 'Pick a Service',
+    description: 'Each service guides you through every prayer in order, with audio and coaching.',
+  },
+  {
+    target: 'daven-tour-chazan',
+    title: 'Chazan Guide',
+    description: 'Preparing to lead? A step-by-step prep sheet for leading the service.',
+  },
+];
+
 function DavenList({
   onSelectPrayer,
   onSelectService,
@@ -811,6 +832,10 @@ function DavenList({
   const [activeTab, setActiveTab] = useState<Tab>('services');
   const [searchQuery, setSearchQuery] = useState('');
   const [showChazanPicker, setShowChazanPicker] = useState(false);
+  const completedTours = useUserStore((s) => s.completedTours);
+  const completeTour = useUserStore((s) => s.completeTour);
+  const resetTour = useUserStore((s) => s.resetTour);
+  const davenTourDone = completedTours.daven === true;
 
   const services = getAllServices();
   const tefillahPrayers = getTefillahPrayers();
@@ -856,7 +881,7 @@ function DavenList({
 
       <div className="max-w-md mx-auto px-6 py-4 pb-28">
         {/* 2-Tab Bar */}
-        <div className="flex gap-1 bg-gray-100 rounded-xl p-1 mb-6">
+        <div className="flex gap-1 bg-gray-100 rounded-xl p-1 mb-6" data-tour="daven-tour-tabs">
           {[
             { id: 'services' as Tab, label: 'Services' },
             { id: 'prayers' as Tab, label: 'All Prayers' },
@@ -892,7 +917,7 @@ function DavenList({
             </div>
 
             {/* Weekday Services */}
-            <div>
+            <div data-tour="daven-tour-services">
               <h2 className="text-xs uppercase tracking-wider text-gray-400 font-semibold mb-1">
                 Weekday
               </h2>
@@ -938,7 +963,7 @@ function DavenList({
             )}
 
             {/* Chazan Guide */}
-            <div className="bg-warning/5 rounded-2xl border border-warning/10">
+            <div className="bg-warning/5 rounded-2xl border border-warning/10" data-tour="daven-tour-chazan">
               <button
                 onClick={() => setShowChazanPicker(!showChazanPicker)}
                 className="w-full p-4 flex items-start gap-3 text-left transition-colors hover:bg-warning/10 rounded-2xl"
@@ -1031,7 +1056,23 @@ function DavenList({
             </div>
           </div>
         )}
+
+        {/* Replay tour */}
+        {davenTourDone && (
+          <div className="mt-4">
+            <TourReplayButton onClick={() => resetTour('daven')} accentColor="#1B4965" />
+          </div>
+        )}
       </div>
+
+      {!davenTourDone && (
+        <SpotlightTour
+          steps={DAVEN_TOUR_STEPS}
+          onComplete={() => completeTour('daven')}
+          finishLabel="Got It"
+          accentColor="#1B4965"
+        />
+      )}
 
       <BottomNav />
     </div>

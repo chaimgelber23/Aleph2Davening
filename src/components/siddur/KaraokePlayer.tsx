@@ -1,7 +1,9 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useUserStore } from '@/stores/userStore';
+import { SpeedPill } from '@/components/ui/SpeedPill';
 import type { PrayerSection } from '@/types';
 
 export function KaraokePlayer({
@@ -15,6 +17,7 @@ export function KaraokePlayer({
   onWordTap,
   isPlaying,
   isLoading,
+  accentColor = 'primary',
 }: {
   section: PrayerSection;
   prayerId: string;
@@ -26,27 +29,31 @@ export function KaraokePlayer({
   onWordTap?: () => void;
   isPlaying: boolean;
   isLoading: boolean;
+  accentColor?: 'primary' | 'brown' | 'purple';
 }) {
   const displaySettings = useUserStore((s) => s.displaySettings);
-  const audioSpeed = useUserStore((s) => s.profile.audioSpeed);
-  const updateProfile = useUserStore((s) => s.updateProfile);
 
   const words = section.hebrewText.split(' ');
   const translitWords = section.transliteration.split(' ');
 
   const audioDisabled = isLoading;
 
-  const SPEED_STEPS = [0.75, 1, 1.25, 1.5, 2];
-  const cycleSpeed = () => {
-    const currentIdx = SPEED_STEPS.indexOf(audioSpeed);
-    const nextIdx = currentIdx >= 0 ? (currentIdx + 1) % SPEED_STEPS.length : 1;
-    const newSpeed = SPEED_STEPS[nextIdx];
-    if (onSpeedChange) {
-      onSpeedChange(newSpeed);
-    } else {
-      updateProfile({ audioSpeed: newSpeed });
+  // First-time play hint
+  const [showPlayHint, setShowPlayHint] = useState(false);
+  useEffect(() => {
+    const seen = localStorage.getItem('play-button-hint-seen');
+    if (!seen && !isPlaying) {
+      setShowPlayHint(true);
     }
-  };
+  }, []);
+  useEffect(() => {
+    if (isPlaying && showPlayHint) {
+      setShowPlayHint(false);
+      localStorage.setItem('play-button-hint-seen', '1');
+    }
+  }, [isPlaying, showPlayHint]);
+
+  const speedColor = accentColor === 'brown' ? 'brown' : accentColor === 'purple' ? 'purple' : 'gray';
 
   return (
     <div className="space-y-4">
@@ -192,39 +199,48 @@ export function KaraokePlayer({
             </button>
           )}
 
-          {/* Play/Pause — big, always primary blue */}
-          <button
-            onClick={onTogglePlay}
-            disabled={audioDisabled}
-            className={`w-16 h-16 rounded-full flex items-center justify-center transition-all shrink-0 shadow-lg active:scale-95 ${
-              audioDisabled
-                ? 'bg-gray-200 text-gray-400'
-                : 'bg-primary text-white hover:bg-[#163d55]'
-            }`}
-          >
-            {isLoading ? (
-              <LoadingSpinner />
-            ) : isPlaying ? (
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
-                <rect x="6" y="4" width="4" height="16" rx="1" />
-                <rect x="14" y="4" width="4" height="16" rx="1" />
-              </svg>
-            ) : (
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
-                <polygon points="5,3 19,12 5,21" />
-              </svg>
+          {/* Play/Pause — big, with first-time hint */}
+          <div className="relative">
+            {showPlayHint && !isPlaying && !isLoading && (
+              <>
+                {/* Pulsing ring */}
+                <span className="absolute inset-0 rounded-full border-2 border-primary/40 animate-ping" />
+                {/* Label */}
+                <span className="absolute -bottom-7 left-1/2 -translate-x-1/2 whitespace-nowrap text-[11px] font-semibold text-primary bg-primary/10 px-2.5 py-0.5 rounded-full">
+                  Tap to play
+                </span>
+              </>
             )}
-          </button>
+            <button
+              onClick={onTogglePlay}
+              disabled={audioDisabled}
+              className={`w-16 h-16 rounded-full flex items-center justify-center transition-all shrink-0 shadow-lg active:scale-95 ${
+                audioDisabled
+                  ? 'bg-gray-200 text-gray-400'
+                  : 'bg-primary text-white hover:bg-[#163d55]'
+              }`}
+            >
+              {isLoading ? (
+                <LoadingSpinner />
+              ) : isPlaying ? (
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                  <rect x="6" y="4" width="4" height="16" rx="1" />
+                  <rect x="14" y="4" width="4" height="16" rx="1" />
+                </svg>
+              ) : (
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="5,3 19,12 5,21" />
+                </svg>
+              )}
+            </button>
+          </div>
 
-          {/* Speed badge — tap to cycle */}
-          <button
-            onClick={cycleSpeed}
-            className="w-10 h-10 rounded-full flex items-center justify-center bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-700 transition-all text-xs font-bold shrink-0"
-            aria-label="Change speed"
-          >
-            {audioSpeed}x
-          </button>
+          {/* Speed pill — Apple Podcasts style */}
+          <SpeedPill onSpeedChange={onSpeedChange} color={speedColor} />
         </div>
+
+        {/* Extra spacing when play hint is showing */}
+        {showPlayHint && !isPlaying && <div className="h-4" />}
       </div>
     </div>
   );

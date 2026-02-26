@@ -10,13 +10,38 @@ import { GuideCategoryTabs } from '@/components/guide/GuideCategoryTabs';
 import { GuideCard } from '@/components/guide/GuideCard';
 import { GuideReader } from '@/components/guide/GuideReader';
 import { useUserStore } from '@/stores/userStore';
+import { SpotlightTour } from '@/components/ui/SpotlightTour';
+import { TourReplayButton } from '@/components/ui/TourReplayButton';
 import { useAudio } from '@/hooks/useAudio';
+import type { TourStep } from '@/components/ui/SpotlightTour';
 import type { Prayer, Guide, GuideCategory } from '@/types';
 
 type Section = 'brachot' | 'guides';
 
+const LIVING_TOUR_STEPS: TourStep[] = [
+  {
+    target: 'living-tour-tabs',
+    title: 'Two Sections',
+    description: 'Guides cover Jewish daily life; Brachot teaches blessings for food and moments.',
+  },
+  {
+    target: 'living-tour-categories',
+    title: 'Browse Topics',
+    description: 'Filter by category — daily halacha, Shabbat, holidays, lifecycle, and more.',
+  },
+  {
+    target: 'living-tour-guides',
+    title: 'Open a Guide',
+    description: 'Each guide includes clear explanations, practical tips, and sometimes a quiz.',
+  },
+];
+
 export default function LivingPage() {
   const [activeSection, setActiveSection] = useState<Section>('guides');
+  const completedTours = useUserStore((s) => s.completedTours);
+  const completeTour = useUserStore((s) => s.completeTour);
+  const resetTour = useUserStore((s) => s.resetTour);
+  const livingTourDone = completedTours.living === true;
   const [selectedGuide, setSelectedGuide] = useState<Guide | null>(null);
   const [selectedBracha, setSelectedBracha] = useState<Prayer | null>(null);
   const [guideCategory, setGuideCategory] = useState<GuideCategory | 'all'>('all');
@@ -100,7 +125,7 @@ export default function LivingPage() {
 
       <div className="max-w-md mx-auto px-6 py-4 pb-28">
         {/* Section tabs */}
-        <div className="flex gap-1 bg-gray-100 rounded-xl p-1 mb-6">
+        <div className="flex gap-1 bg-gray-100 rounded-xl p-1 mb-6" data-tour="living-tour-tabs">
           {[
             { id: 'guides' as Section, label: 'Guides' },
             { id: 'brachot' as Section, label: 'Brachot' },
@@ -167,13 +192,15 @@ export default function LivingPage() {
         {activeSection === 'guides' && (
           <div className="space-y-4">
             {/* Category filter */}
-            <GuideCategoryTabs
-              selected={guideCategory}
-              onSelect={setGuideCategory}
-            />
+            <div data-tour="living-tour-categories">
+              <GuideCategoryTabs
+                selected={guideCategory}
+                onSelect={setGuideCategory}
+              />
+            </div>
 
             {/* Guide cards */}
-            <div className="space-y-2">
+            <div className="space-y-2" data-tour="living-tour-guides">
               {filteredGuides.map((guide, i) => (
                 <GuideCard
                   key={guide.id}
@@ -191,7 +218,23 @@ export default function LivingPage() {
             </div>
           </div>
         )}
+
+        {/* Replay tour */}
+        {livingTourDone && (
+          <div className="mt-4">
+            <TourReplayButton onClick={() => resetTour('living')} accentColor="#6B4C9A" />
+          </div>
+        )}
       </div>
+
+      {!livingTourDone && (
+        <SpotlightTour
+          steps={LIVING_TOUR_STEPS}
+          onComplete={() => completeTour('living')}
+          finishLabel="Got It"
+          accentColor="#6B4C9A"
+        />
+      )}
 
       <BottomNav />
     </div>

@@ -15,6 +15,7 @@ import { DailyWisdom } from '@/components/home/DailyWisdom';
 import { QuickActionPills } from '@/components/home/QuickActionPills';
 import { TodaysGoals } from '@/components/home/TodaysGoals';
 import { AppTour } from '@/components/home/AppTour';
+import { TourReplayButton } from '@/components/ui/TourReplayButton';
 import { LETTERS } from '@/lib/content/letters';
 import { VOWELS } from '@/lib/content/vowels';
 import {
@@ -448,12 +449,7 @@ function HomeOverview() {
 
         {/* Replay tour */}
         {hasCompletedAppTour && (
-          <button
-            onClick={resetAppTour}
-            className="w-full text-center text-xs text-gray-400 hover:text-gray-500 transition-colors py-1"
-          >
-            Replay app tour
-          </button>
+          <TourReplayButton onClick={resetAppTour} />
         )}
 
         {/* Sign In / Keep Progress Prompt */}

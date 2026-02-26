@@ -6,16 +6,51 @@ import Link from 'next/link';
 import { useUserStore } from '@/stores/userStore';
 import { useBootcampStore } from '@/stores/bootcampStore';
 import { BottomNav } from '@/components/ui/BottomNav';
+import { SpotlightTour } from '@/components/ui/SpotlightTour';
+import { TourReplayButton } from '@/components/ui/TourReplayButton';
+import type { TourStep } from '@/components/ui/SpotlightTour';
 import { StatsStrip } from '@/components/hebrew/StatsStrip';
 import { NextUpSpotlight } from '@/components/hebrew/NextUpSpotlight';
 import { LetterMasteryGrid } from '@/components/hebrew/LetterMasteryGrid';
 import { LETTERS } from '@/lib/content/letters';
 import { VOWELS, VOWEL_COLORS } from '@/lib/content/vowels';
 
+const HEBREW_TOUR_STEPS: TourStep[] = [
+  {
+    target: 'hebrew-tour-stats',
+    title: 'Your Progress',
+    description: 'Track letters mastered, vowels learned, and items due for review.',
+  },
+  {
+    target: 'hebrew-tour-next-up',
+    title: 'Next Up',
+    description: 'Your personalized recommendation for what to learn next.',
+  },
+  {
+    target: 'hebrew-tour-bootcamp',
+    title: '5-Day Bootcamp',
+    description: 'Start here! A crash course to learn the entire Hebrew alphabet in 5 short sessions.',
+  },
+  {
+    target: 'hebrew-tour-letters',
+    title: 'Letters & Vowels',
+    description: 'Learn individual letters and vowels at your own pace, with audio for every one.',
+  },
+  {
+    target: 'hebrew-tour-practice',
+    title: 'Practice',
+    description: 'Spaced repetition drills keep everything fresh. Items appear when they\'re due for review.',
+  },
+];
+
 export default function HebrewPage() {
   const skillProgress = useUserStore((s) => s.skillProgress);
   const bootcampProgress = useBootcampStore((s) => s.progress);
   const isBootcampComplete = useBootcampStore((s) => s.isBootcampComplete);
+  const completedTours = useUserStore((s) => s.completedTours);
+  const completeTour = useUserStore((s) => s.completeTour);
+  const resetTour = useUserStore((s) => s.resetTour);
+  const hebrewTourDone = completedTours.hebrew === true;
 
   // Letter progress
   const totalLetters = LETTERS.length;
@@ -125,6 +160,7 @@ export default function HebrewPage() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
+          data-tour="hebrew-tour-stats"
         >
           <StatsStrip />
         </motion.div>
@@ -134,6 +170,7 @@ export default function HebrewPage() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.05 }}
+          data-tour="hebrew-tour-next-up"
         >
           <NextUpSpotlight />
         </motion.div>
@@ -158,6 +195,15 @@ export default function HebrewPage() {
             <Link
               href={section.href}
               className="block rounded-2xl bg-white border border-gray-100 hover:shadow-md hover:border-gray-200 transition-all p-5"
+              data-tour={
+                section.title === '5-Day Bootcamp'
+                  ? 'hebrew-tour-bootcamp'
+                  : section.title === 'Letters'
+                  ? 'hebrew-tour-letters'
+                  : section.title === 'Practice'
+                  ? 'hebrew-tour-practice'
+                  : undefined
+              }
             >
               <div className="flex items-center justify-between">
                 <div>
@@ -253,7 +299,20 @@ export default function HebrewPage() {
             </Link>
           </motion.div>
         ))}
+        {/* Replay tour */}
+        {hebrewTourDone && (
+          <TourReplayButton onClick={() => resetTour('hebrew')} accentColor="#1B4965" />
+        )}
       </div>
+
+      {!hebrewTourDone && (
+        <SpotlightTour
+          steps={HEBREW_TOUR_STEPS}
+          onComplete={() => completeTour('hebrew')}
+          finishLabel="Got It"
+          accentColor="#1B4965"
+        />
+      )}
 
       <BottomNav />
     </div>

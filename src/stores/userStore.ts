@@ -96,7 +96,12 @@ interface UserState {
   hasDismissedDavenWalkthrough: boolean;
   dismissDavenWalkthrough: () => void;
 
-  // App tour
+  // App tour (per-page)
+  completedTours: Record<string, boolean>;
+  completeTour: (tourId: string) => void;
+  resetTour: (tourId: string) => void;
+
+  // Legacy alias
   hasCompletedAppTour: boolean;
   completeAppTour: () => void;
   resetAppTour: () => void;
@@ -555,18 +560,44 @@ export const useUserStore = create<UserState>()(
       hasDismissedDavenWalkthrough: false,
       dismissDavenWalkthrough: () => set({ hasDismissedDavenWalkthrough: true }),
 
-      // App tour
+      // App tour (per-page)
+      completedTours: {},
+      completeTour: (tourId) =>
+        set((state) => ({
+          completedTours: { ...state.completedTours, [tourId]: true },
+          // Keep legacy field in sync for home tour
+          ...(tourId === 'home' ? { hasCompletedAppTour: true } : {}),
+        })),
+      resetTour: (tourId) =>
+        set((state) => {
+          const updated = { ...state.completedTours };
+          delete updated[tourId];
+          return {
+            completedTours: updated,
+            ...(tourId === 'home' ? { hasCompletedAppTour: false } : {}),
+          };
+        }),
+
+      // Legacy aliases (home tour)
       hasCompletedAppTour: false,
-      completeAppTour: () => set({ hasCompletedAppTour: true }),
-      resetAppTour: () => set({ hasCompletedAppTour: false }),
+      completeAppTour: () =>
+        set((state) => ({
+          hasCompletedAppTour: true,
+          completedTours: { ...state.completedTours, home: true },
+        })),
+      resetAppTour: () =>
+        set((state) => {
+          const updated = { ...state.completedTours };
+          delete updated.home;
+          return { hasCompletedAppTour: false, completedTours: updated };
+        }),
     }),
     {
       name: 'aleph2davening-user',
-      version: 4,
+      version: 5,
       migrate: (persistedState: unknown, version: number) => {
         const state = persistedState as Record<string, unknown>;
         if (version < 2) {
-          // Migration: audioSource moved from profile to per-prayer selection
           const profile = (state.profile ?? {}) as Record<string, unknown>;
           delete profile.audioSource;
         }
@@ -575,6 +606,14 @@ export const useUserStore = create<UserState>()(
         }
         if (version < 4) {
           state.hasCompletedAppTour = false;
+        }
+        if (version < 5) {
+          // Migrate hasCompletedAppTour into completedTours map
+          const completed = (state.completedTours ?? {}) as Record<string, boolean>;
+          if (state.hasCompletedAppTour) {
+            completed.home = true;
+          }
+          state.completedTours = completed;
         }
         return state;
       },
