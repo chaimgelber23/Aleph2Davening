@@ -92,10 +92,6 @@ interface UserState {
   toggleGuideBookmark: (guideId: string) => void;
   completeGuideQuiz: (guideId: string, score: number, total: number) => void;
 
-  // Daven walkthrough
-  hasDismissedDavenWalkthrough: boolean;
-  dismissDavenWalkthrough: () => void;
-
   // App tour (per-page)
   completedTours: Record<string, boolean>;
   completeTour: (tourId: string) => void;
@@ -556,10 +552,6 @@ export const useUserStore = create<UserState>()(
           },
         })),
 
-      // Daven walkthrough
-      hasDismissedDavenWalkthrough: false,
-      dismissDavenWalkthrough: () => set({ hasDismissedDavenWalkthrough: true }),
-
       // App tour (per-page)
       completedTours: {},
       completeTour: (tourId) =>
@@ -601,9 +593,7 @@ export const useUserStore = create<UserState>()(
           const profile = (state.profile ?? {}) as Record<string, unknown>;
           delete profile.audioSource;
         }
-        if (version < 3) {
-          state.hasDismissedDavenWalkthrough = false;
-        }
+
         if (version < 4) {
           state.hasCompletedAppTour = false;
         }

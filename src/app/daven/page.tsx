@@ -16,17 +16,22 @@ import { ServiceRoadmap } from '@/components/siddur/ServiceRoadmap';
 import { KaraokePlayer } from '@/components/siddur/KaraokePlayer';
 import { AmudBadge } from '@/components/siddur/AmudBadge';
 import { TefillahPrepSheet } from '@/components/siddur/TefillahPrepSheet';
+import { AmudMode } from '@/components/siddur/AmudMode';
 import { AudioSourcePicker } from '@/components/siddur/AudioSourcePicker';
-import { DavenWelcomeWalkthrough } from '@/components/siddur/DavenWelcomeWalkthrough';
+
+import { LeadDaveningTab } from '@/components/daven/LeadDaveningTab';
+import { ChazenPrepHub } from '@/components/daven/ChazenPrepHub';
+import AmudPreparation from '@/components/daven/AmudPreparation';
 import { SpotlightTour } from '@/components/ui/SpotlightTour';
 import { TourReplayButton } from '@/components/ui/TourReplayButton';
+import { SpeedPill } from '@/components/ui/SpeedPill';
 import { track } from '@/lib/analytics';
 import type { TourStep } from '@/components/ui/SpotlightTour';
 import type { Prayer, DaveningService, ServiceItem } from '@/types';
 import type { AudioSourceId, PrayerAudioEntry } from '@/lib/content/audio-sources';
 
-type Tab = 'services' | 'prayers';
-type View = 'list' | 'prayer_reader' | 'service_roadmap' | 'chazan_guide';
+type Tab = 'services' | 'prayers' | 'lead';
+type View = 'list' | 'prayer_reader' | 'service_roadmap' | 'chazan_guide' | 'chazan_prep_hub' | 'amud_preparation' | 'amud_mode';
 
 export default function DavenPage() {
   // Navigation state
@@ -35,9 +40,7 @@ export default function DavenPage() {
   const [selectedService, setSelectedService] = useState<DaveningService | null>(null);
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [showCoaching, setShowCoaching] = useState(false);
-  const [chazanGuideFromList, setChazanGuideFromList] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
-  const [showWalkthrough, setShowWalkthrough] = useState(false);
   const [sectionPositions, setSectionPositions] = useState<Record<string, number>>({});
 
   // Audio source selection
@@ -45,7 +48,7 @@ export default function DavenPage() {
   const [selectedAudioEntry, setSelectedAudioEntry] = useState<PrayerAudioEntry | null>(null);
 
   // Prayer view mode
-  const [showProgressSidebar, setShowProgressSidebar] = useState(true);
+  const [showProgressSidebar, setShowProgressSidebar] = useState(false);
   const [viewMode, setViewMode] = useState<'section' | 'full'>('section');
 
   // Store
@@ -163,9 +166,9 @@ export default function DavenPage() {
     [selectedService, updateServicePosition, prayerMap, handleSelectPrayer]
   );
 
-  const handleOpenChazanGuide = useCallback(() => {
-    setChazanGuideFromList(false);
-    setView('chazan_guide');
+  const handleOpenPrepHub = useCallback((service: DaveningService) => {
+    setSelectedService(service);
+    setView('chazan_prep_hub');
   }, []);
 
   const handleBack = useCallback(() => {
@@ -185,17 +188,16 @@ export default function DavenPage() {
       setView('list');
       setSelectedService(null);
     } else if (view === 'chazan_guide') {
-      if (chazanGuideFromList) {
-        setView('list');
-        setSelectedService(null);
-        setChazanGuideFromList(false);
-      } else {
-        setView('service_roadmap');
-      }
+      setView('chazan_prep_hub');
+    } else if (view === 'chazan_prep_hub') {
+      setView('list');
+      setSelectedService(null);
+    } else if (view === 'amud_preparation' || view === 'amud_mode') {
+      setView('chazan_prep_hub');
     } else {
       setView('list');
     }
-  }, [view, selectedService, chazanGuideFromList, stop]);
+  }, [view, selectedService, selectedPrayer, currentSectionIndex, stop]);
 
   const handleTogglePlay = useCallback(() => {
     if (isPlaying) {
@@ -216,16 +218,6 @@ export default function DavenPage() {
     updateProfile({ audioSpeed: newSpeed });
   }, [updateProfile]);
 
-  // Auto-show walkthrough for first-time users
-  useEffect(() => {
-    if (view === 'prayer_reader' && selectedPrayer) {
-      const seen = localStorage.getItem('daven-walkthrough-seen');
-      if (!seen) {
-        setShowWalkthrough(true);
-        localStorage.setItem('daven-walkthrough-seen', '1');
-      }
-    }
-  }, [view, selectedPrayer]);
 
   // === VIEWS ===
 
@@ -235,11 +227,7 @@ export default function DavenPage() {
       <DavenList
         onSelectPrayer={handleSelectPrayer}
         onSelectService={handleSelectService}
-        onOpenChazanGuide={(service: DaveningService) => {
-          setSelectedService(service);
-          setChazanGuideFromList(true);
-          setView('chazan_guide');
-        }}
+        onOpenPrepHub={handleOpenPrepHub}
       />
     );
   }
@@ -250,17 +238,47 @@ export default function DavenPage() {
       <ServiceRoadmap
         service={selectedService}
         onSelectItem={handleServiceItemSelect}
-        onOpenChazanGuide={handleOpenChazanGuide}
         onBack={handleBack}
       />
     );
   }
 
-  // Chazan Guide (formerly Prep Sheet)
+  // Chazan Prep Hub
+  if (view === 'chazan_prep_hub' && selectedService) {
+    return (
+      <ChazenPrepHub
+        service={selectedService}
+        onOpenPrepSheet={() => setView('chazan_guide')}
+        onOpenAmudPreparation={() => setView('amud_preparation')}
+        onOpenAmudMode={() => setView('amud_mode')}
+        onBack={handleBack}
+      />
+    );
+  }
+
+  // Chazan Guide / Prep Sheet
   if (view === 'chazan_guide' && selectedService) {
     return (
       <TefillahPrepSheet
         service={selectedService}
+        onBack={handleBack}
+      />
+    );
+  }
+
+  // Amud Preparation (4-level progressive)
+  if (view === 'amud_preparation') {
+    return (
+      <AmudPreparation onBack={handleBack} />
+    );
+  }
+
+  // Amud Mode (interactive step-through)
+  if (view === 'amud_mode' && selectedService) {
+    return (
+      <AmudMode
+        service={selectedService}
+        prayers={prayerMap}
         onBack={handleBack}
       />
     );
@@ -366,17 +384,31 @@ export default function DavenPage() {
 
           {/* Controls row and display toggles have been unified into the View Modes & Settings modal */}
 
-          {/* Progress Sidebar/Outline */}
+          {/* Compact Prayer Outline — collapsed by default */}
+          <button
+            onClick={() => setShowProgressSidebar(!showProgressSidebar)}
+            className="w-full flex items-center justify-between bg-white rounded-xl border border-gray-200 px-4 py-2.5 text-left"
+          >
+            <span className="text-xs font-medium text-gray-500">
+              Section {currentSectionIndex + 1} of {totalSections}
+            </span>
+            <svg
+              className={`w-4 h-4 text-gray-400 transition-transform ${showProgressSidebar ? 'rotate-180' : ''}`}
+              fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
           {showProgressSidebar && (
-            <div className="bg-white rounded-xl border border-gray-200 p-4">
-              <h3 className="text-sm font-semibold text-gray-700 mb-3">Prayer Outline ({currentSectionIndex + 1}/{totalSections})</h3>
-              <div className="space-y-1 max-h-64 overflow-y-auto">
+            <div className="bg-white rounded-xl border border-gray-200 p-3 -mt-2">
+              <div className="space-y-1 max-h-52 overflow-y-auto">
                 {selectedPrayer.sections.map((section, idx) => (
                   <button
                     key={section.id}
                     onClick={() => {
                       stop();
                       setCurrentSectionIndex(idx);
+                      setShowProgressSidebar(false);
                     }}
                     className={`w-full text-left px-3 py-2 rounded-lg text-xs transition-colors ${idx === currentSectionIndex
                       ? 'bg-primary text-white font-medium'
@@ -387,22 +419,6 @@ export default function DavenPage() {
                   </button>
                 ))}
               </div>
-              {/* Chazan Guide link — in sidebar when within a service */}
-              {selectedService && (
-                <button
-                  onClick={() => {
-                    stop();
-                    setView('chazan_guide');
-                  }}
-                  className="w-full mt-3 pt-3 border-t border-gray-100 flex items-center justify-center gap-1.5 text-xs text-gray-400 hover:text-primary transition-colors"
-                >
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                  </svg>
-                  Learn to lead as Chazan
-                </button>
-              )}
             </div>
           )}
 
@@ -486,20 +502,9 @@ export default function DavenPage() {
                   </div>
                 </div>
 
-                {/* Speed badge — tap to cycle */}
+                {/* Speed pill — Apple Podcasts style */}
                 <div className="flex items-center justify-end mt-2">
-                  <button
-                    onClick={() => {
-                      const SPEED_STEPS = [0.75, 1, 1.25, 1.5, 2];
-                      const currentIdx = SPEED_STEPS.indexOf(audioSpeed);
-                      const nextIdx = currentIdx >= 0 ? (currentIdx + 1) % SPEED_STEPS.length : 1;
-                      handleSpeedChange(SPEED_STEPS[nextIdx]);
-                    }}
-                    className="px-3 py-1 rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 text-xs font-bold transition-colors"
-                    aria-label="Change speed"
-                  >
-                    {audioSpeed}x
-                  </button>
+                  <SpeedPill onSpeedChange={handleSpeedChange} color="primary" />
                 </div>
               </div>
 
@@ -712,19 +717,6 @@ export default function DavenPage() {
           onToggleProgressSidebar={() => setShowProgressSidebar(!showProgressSidebar)}
         />
 
-        <AnimatePresence>
-          {showWalkthrough && (
-            <DavenWelcomeWalkthrough
-              prayerId={selectedPrayer.id}
-              onClose={() => setShowWalkthrough(false)}
-              selectedAudioSource={selectedAudioSource}
-              onSelectAudioSource={(sourceId, entry) => {
-                setSelectedAudioSource(sourceId);
-                setSelectedAudioEntry(entry);
-              }}
-            />
-          )}
-        </AnimatePresence>
 
       </div>
     );
@@ -735,10 +727,7 @@ export default function DavenPage() {
     <DavenList
       onSelectPrayer={handleSelectPrayer}
       onSelectService={handleSelectService}
-      onOpenChazanGuide={(service: DaveningService) => {
-        setSelectedService(service);
-        setView('chazan_guide');
-      }}
+      onOpenPrepHub={handleOpenPrepHub}
     />
   );
 }
@@ -805,8 +794,13 @@ function PrayerCard({ prayer, onSelect }: { prayer: Prayer; onSelect: (p: Prayer
 const DAVEN_TOUR_STEPS: TourStep[] = [
   {
     target: 'daven-tour-tabs',
-    title: 'Two Views',
-    description: 'Services shows full davening flows; All Prayers lets you learn any prayer individually.',
+    title: 'Three Views',
+    description: 'Services to follow along, Lead Davening to prepare for the amud, and All Prayers to learn individually.',
+  },
+  {
+    target: 'daven-tour-start',
+    title: 'New to Davening?',
+    description: 'Tap here to jump straight into Weekday Shacharit — the best place to start.',
   },
   {
     target: 'daven-tour-services',
@@ -814,24 +808,23 @@ const DAVEN_TOUR_STEPS: TourStep[] = [
     description: 'Each service guides you through every prayer in order, with audio and coaching.',
   },
   {
-    target: 'daven-tour-chazan',
-    title: 'Chazan Guide',
-    description: 'Preparing to lead? A step-by-step prep sheet for leading the service.',
+    target: 'daven-tour-lead',
+    title: 'Lead Davening',
+    description: 'Step-by-step preparation to confidently lead a minyan — roles, rehearsal, and interactive practice.',
   },
 ];
 
 function DavenList({
   onSelectPrayer,
   onSelectService,
-  onOpenChazanGuide,
+  onOpenPrepHub,
 }: {
   onSelectPrayer: (prayer: Prayer) => void;
   onSelectService: (service: DaveningService) => void;
-  onOpenChazanGuide: (service: DaveningService) => void;
+  onOpenPrepHub: (service: DaveningService) => void;
 }) {
   const [activeTab, setActiveTab] = useState<Tab>('services');
   const [searchQuery, setSearchQuery] = useState('');
-  const [showChazanPicker, setShowChazanPicker] = useState(false);
   const completedTours = useUserStore((s) => s.completedTours);
   const completeTour = useUserStore((s) => s.completeTour);
   const resetTour = useUserStore((s) => s.resetTour);
@@ -880,19 +873,21 @@ function DavenList({
       </div>
 
       <div className="max-w-md mx-auto px-6 py-4 pb-28">
-        {/* 2-Tab Bar */}
+        {/* 3-Tab Bar */}
         <div className="flex gap-1 bg-gray-100 rounded-xl p-1 mb-6" data-tour="daven-tour-tabs">
           {[
             { id: 'services' as Tab, label: 'Services' },
+            { id: 'lead' as Tab, label: 'Lead Davening' },
             { id: 'prayers' as Tab, label: 'All Prayers' },
           ].map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 py-2.5 rounded-lg text-sm font-semibold transition-colors ${activeTab === tab.id
+              className={`flex-1 py-2.5 rounded-lg text-[13px] font-semibold transition-colors ${activeTab === tab.id
                 ? 'bg-white text-primary shadow-sm'
                 : 'text-gray-500 hover:text-gray-700'
                 }`}
+              data-tour={tab.id === 'lead' ? 'daven-tour-lead' : undefined}
             >
               {tab.label}
             </button>
@@ -903,7 +898,7 @@ function DavenList({
         {activeTab === 'services' && (
           <div className="space-y-6">
             {/* Not sure where to start? */}
-            <div className="bg-gray-50 rounded-xl px-4 py-3 flex items-center gap-3">
+            <div className="bg-gray-50 rounded-xl px-4 py-3 flex items-center gap-3" data-tour="daven-tour-start">
               <span className="text-xs text-gray-400">New to davening?</span>
               <button
                 onClick={() => {
@@ -962,54 +957,15 @@ function DavenList({
               </div>
             )}
 
-            {/* Chazan Guide */}
-            <div className="bg-warning/5 rounded-2xl border border-warning/10" data-tour="daven-tour-chazan">
-              <button
-                onClick={() => setShowChazanPicker(!showChazanPicker)}
-                className="w-full p-4 flex items-start gap-3 text-left transition-colors hover:bg-warning/10 rounded-2xl"
-              >
-                <div className="w-9 h-9 rounded-xl bg-warning/15 flex items-center justify-center shrink-0 mt-0.5">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C6973F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-semibold text-foreground">Chazan Guide</h3>
-                    <svg
-                      className={`w-4 h-4 text-gray-400 transition-transform ${showChazanPicker ? 'rotate-180' : ''}`}
-                      fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </div>
-                  <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
-                    Learn to lead davening for the congregation or minyan — who says what, when to stand, congregation responses, Kaddish, and more
-                  </p>
-                </div>
-              </button>
-              {showChazanPicker && (
-                <div className="px-5 pb-4">
-                  <p className="text-xs text-gray-400 font-medium mb-2">Choose a service:</p>
-                  <div className="rounded-xl border border-gray-100 overflow-hidden divide-y divide-gray-100">
-                    {services.map((service) => (
-                      <button
-                        key={service.id}
-                        onClick={() => onOpenChazanGuide(service)}
-                        className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-primary hover:bg-primary/5 transition-colors bg-white"
-                      >
-                        {service.name}
-                        <svg className="w-3.5 h-3.5 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                        </svg>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
           </div>
+        )}
+
+        {/* === LEAD DAVENING TAB === */}
+        {activeTab === 'lead' && (
+          <LeadDaveningTab
+            services={services}
+            onSelectService={onOpenPrepHub}
+          />
         )}
 
         {/* === ALL PRAYERS TAB === */}
