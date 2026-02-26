@@ -143,7 +143,7 @@ export function KaddishPrintGuide() {
 
           {/* Footer — page 1 */}
           <p style={{ fontSize: '7pt', color: '#aaa', marginTop: '8pt', textAlign: 'center' }}>
-            Aleph2Davening — aleph2davening.com
+            Aleph2Daven — aleph2davening.com
           </p>
 
           {/* Page 2: Full Mourner's Kaddish text */}
@@ -184,7 +184,7 @@ export function KaddishPrintGuide() {
               </div>
 
               <p style={{ fontSize: '7pt', color: '#aaa', marginTop: '10pt', textAlign: 'center' }}>
-                Aleph2Davening — aleph2davening.com
+                Aleph2Daven — aleph2davening.com
               </p>
             </div>
           )}

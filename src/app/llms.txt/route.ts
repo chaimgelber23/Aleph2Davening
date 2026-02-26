@@ -1,11 +1,11 @@
 export function GET() {
-  const content = `# Aleph2Davening
+  const content = `# Aleph2Daven
 
 > Free web app to learn Hebrew reading and Jewish prayer — from the Aleph-Bet to leading the amud.
 
 ## What This App Does
 
-Aleph2Davening is an interactive learning platform for:
+Aleph2Daven is an interactive learning platform for:
 
 1. **Learning the Hebrew Alphabet (Aleph-Bet)**: All 22 Hebrew letters taught in research-backed order with audio pronunciation for every letter. Includes a 5-day bootcamp that takes complete beginners to basic reading ability.
 

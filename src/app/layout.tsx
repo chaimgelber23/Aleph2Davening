@@ -33,8 +33,8 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://aleph2davening.ver
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Aleph2Davening — Learn Hebrew, Daven & Jewish Living",
-    template: "%s | Aleph2Davening",
+    default: "Aleph2Daven — Learn Hebrew, Daven & Jewish Living",
+    template: "%s | Aleph2Daven",
   },
   description:
     "Free app to learn the Hebrew alphabet, read with vowels (nikud), master Jewish prayers with audio, transliteration & coaching. From Aleph-Bet to leading the amud — at your own pace, even with zero Hebrew.",
@@ -57,19 +57,19 @@ export const metadata: Metadata = {
     // People
     "baal teshuva", "new to Judaism", "Jewish convert",
   ],
-  authors: [{ name: "Aleph2Davening" }],
-  creator: "Aleph2Davening",
+  authors: [{ name: "Aleph2Daven" }],
+  creator: "Aleph2Daven",
   openGraph: {
     type: "website",
     locale: "en_US",
     url: SITE_URL,
-    siteName: "Aleph2Davening",
-    title: "Aleph2Davening — Learn Hebrew, Daven & Jewish Living",
+    siteName: "Aleph2Daven",
+    title: "Aleph2Daven — Learn Hebrew, Daven & Jewish Living",
     description: "Free app to learn the Hebrew alphabet, read with vowels, and master Jewish prayers with audio, transliteration & step-by-step coaching.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Aleph2Davening — Learn Hebrew, Daven & Jewish Living",
+    title: "Aleph2Daven — Learn Hebrew, Daven & Jewish Living",
     description: "Free app to learn the Hebrew alphabet, read with vowels, and master Jewish prayers with audio, transliteration & step-by-step coaching.",
   },
   alternates: {

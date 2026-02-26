@@ -40,7 +40,7 @@ export function WelcomePage() {
                 א
               </div>
               <h1 className="text-3xl font-serif font-bold text-foreground">
-                Welcome to Aleph2Davening
+                Welcome to Aleph2Daven
               </h1>
               <p className="text-lg text-gray-600 max-w-md">
                 Learn to read Hebrew. Learn to daven.

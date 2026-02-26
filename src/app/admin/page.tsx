@@ -130,7 +130,7 @@ export default function AdminDashboard() {
       <div className="bg-[#1B4965] text-white px-6 py-8">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-          <p className="text-[#5FA8D3] mt-2">Aleph2Davening Analytics</p>
+          <p className="text-[#5FA8D3] mt-2">Aleph2Daven Analytics</p>
         </div>
       </div>
 

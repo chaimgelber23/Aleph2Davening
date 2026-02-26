@@ -356,7 +356,7 @@ export default function RecordingStudioPage() {
       <div className="bg-[#1B4965] text-white py-6 px-4">
         <div className="max-w-2xl mx-auto">
           <h1 className="text-2xl font-bold text-center">Recording Studio</h1>
-          <p className="text-center text-blue-200 text-sm mt-1">Record audio for Aleph2Davening</p>
+          <p className="text-center text-blue-200 text-sm mt-1">Record audio for Aleph2Daven</p>
           <div className="mt-4 bg-white/10 rounded-2xl p-4">
             <div className="text-center mb-2">
               <span className="text-4xl font-bold text-white">{totalDone}</span>

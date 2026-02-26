@@ -389,7 +389,7 @@ const MORNING_GUIDES: Guide[] = [
         sortOrder: 3,
         instruction:
           'Continue with Birchos HaShachar — the series of blessings thanking God for daily gifts.',
-        tip: 'These include blessings for sight, clothing, walking, and more. See the full list in the Siddur section of Aleph2Davening.',
+        tip: 'These include blessings for sight, clothing, walking, and more. See the full list in the Siddur section of Aleph2Daven.',
       },
       {
         id: 'mb-4',
@@ -406,7 +406,7 @@ const MORNING_GUIDES: Guide[] = [
       'These brachot can be said at home before going to shul',
       'If you daven at a minyan, many siddurim include them at the start of Shacharit',
       'Try to learn one new bracha at a time until you know them all',
-      'Practice them in the Siddur section of Aleph2Davening with audio and transliteration',
+      'Practice them in the Siddur section of Aleph2Daven with audio and transliteration',
     ],
     sources: [
       'Shulchan Aruch, Orach Chaim 46:1',
@@ -715,7 +715,7 @@ const BRACHOT_FOOD_GUIDES: Guide[] = [
         sortOrder: 1,
         instruction:
           'BIRKAT HAMAZON — After a bread meal. This is the longest after-bracha (a multi-paragraph grace). It is a Torah-level obligation.',
-        tip: 'Birkat Hamazon is found in the siddur. Many people read it from a bentcher (small booklet). It\'s also available in the Siddur section of Aleph2Davening.',
+        tip: 'Birkat Hamazon is found in the siddur. Many people read it from a bentcher (small booklet). It\'s also available in the Siddur section of Aleph2Daven.',
       },
       {
         id: 'ba-2',
@@ -1080,7 +1080,7 @@ const SHABBAT_GUIDES: Guide[] = [
         hebrewText: 'בָּרוּךְ אַתָּה ה\' אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם בּוֹרֵא פְּרִי הַגָּפֶן',
         transliteration: "Baruch Atah Adonai Eloheinu Melech ha'olam borei p'ri hagafen",
         translation: 'Blessed are You... who creates the fruit of the vine.',
-        tip: 'The full Kiddush text is in the siddur and available in Aleph2Davening\'s Siddur section.',
+        tip: 'The full Kiddush text is in the siddur and available in Aleph2Daven\'s Siddur section.',
       },
       {
         id: 'ki-4',
@@ -1098,7 +1098,7 @@ const SHABBAT_GUIDES: Guide[] = [
       'Grape juice works just as well as wine for Kiddush',
       'Everyone at the table fulfills their obligation by listening — they just need to answer "Amen"',
       'Shabbat day Kiddush is shorter — just the bracha over wine plus a short paragraph',
-      'Practice the Kiddush text in Aleph2Davening\'s Siddur section',
+      'Practice the Kiddush text in Aleph2Daven\'s Siddur section',
     ],
     sources: [
       'Exodus 20:8 — "Remember the Sabbath day to sanctify it"',

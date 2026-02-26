@@ -165,7 +165,7 @@ function HomeOverview() {
           {/* Top row */}
           <div className="flex items-center justify-between mb-4">
             <span className="text-xs font-semibold tracking-wider text-white/40 uppercase">
-              Aleph2Davening
+              Aleph2Daven
             </span>
             {authStatus === 'authenticated' ? (
               <button

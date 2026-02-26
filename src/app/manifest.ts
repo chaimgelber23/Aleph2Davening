@@ -2,8 +2,8 @@ import type { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Aleph2Davening — Hebrew, Davening & Jewish Living',
-    short_name: 'Aleph2Davening',
+    name: 'Aleph2Daven — Hebrew, Davening & Jewish Living',
+    short_name: 'Aleph2Daven',
     description:
       'Learn Hebrew, master davening, and navigate Jewish daily life.',
     start_url: '/',

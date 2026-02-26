@@ -482,6 +482,37 @@ function SettingsContent() {
             Sign in to sync your progress
           </Link>
         )}
+
+        {/* Feedback */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-gradient-to-br from-[#1B4965]/[0.05] to-[#5FA8D3]/[0.07] rounded-2xl border border-[#1B4965]/10 p-6"
+        >
+          <div className="flex items-start gap-4">
+            <div className="w-10 h-10 rounded-xl bg-[#1B4965]/10 flex items-center justify-center shrink-0 mt-0.5">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1B4965" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg>
+            </div>
+            <div className="flex-1 min-w-0">
+              <h2 className="text-sm font-bold text-foreground">Questions or Feedback?</h2>
+              <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                Reach out directly to Rabbi Chaim Gelber — we&apos;d love to hear from you.
+              </p>
+              <a
+                href="tel:+13476620889"
+                className="inline-flex items-center gap-2 mt-3 px-4 py-2 rounded-xl bg-[#1B4965] text-white text-sm font-semibold hover:bg-[#163d55] active:scale-[0.98] transition-all"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.1a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.28h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.06 6.06l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 17z" />
+                </svg>
+                +1 347-662-0889
+              </a>
+            </div>
+          </div>
+        </motion.div>
+
       </div>
     </div>
   );
