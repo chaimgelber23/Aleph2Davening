@@ -7,6 +7,7 @@ import { useUserStore } from '@/stores/userStore';
 import { LETTERS } from '@/lib/content/letters';
 import { LetterCard } from '@/components/learn/LetterCard';
 import { AudioButton } from '@/components/ui/AudioButton';
+import { SpeedPill } from '@/components/ui/SpeedPill';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { MilestoneToast } from '@/components/ui/MilestoneToast';
 import { track } from '@/lib/analytics';
@@ -218,11 +219,7 @@ export default function LearnPage() {
           <span className="text-sm font-medium text-gray-600">
             Lesson {currentLesson + 1} of {totalLessons}
           </span>
-          <span className="text-sm text-primary">
-            {phase === 'teach' && `Teaching ${teachIndex + 1}/${lessonLetters.length}`}
-            {phase === 'drill' && `Drill ${drillIndex + 1}/9`}
-            {phase === 'complete' && 'Complete!'}
-          </span>
+          <SpeedPill color="primary" />
         </div>
         <ProgressBar
           value={

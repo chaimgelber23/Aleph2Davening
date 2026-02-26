@@ -12,6 +12,7 @@ import { GuideReader } from '@/components/guide/GuideReader';
 import { useUserStore } from '@/stores/userStore';
 import { SpotlightTour } from '@/components/ui/SpotlightTour';
 import { TourReplayButton } from '@/components/ui/TourReplayButton';
+import { SpeedPill } from '@/components/ui/SpeedPill';
 import { useAudio } from '@/hooks/useAudio';
 import type { TourStep } from '@/components/ui/SpotlightTour';
 import type { Prayer, Guide, GuideCategory } from '@/types';
@@ -503,17 +504,12 @@ function BrachaReader({ prayer, onBack }: { prayer: Prayer; onBack: () => void }
             </div>
           )}
         </div>
-        <div className="flex items-center justify-center pb-5 -mt-2">
+        <div className="flex items-center justify-center gap-4 pb-5 -mt-2">
+          <SpeedPill color="purple" />
           <button
             onClick={() => handlePlaySection(idx)}
             disabled={isLoading && playingSectionIndex === idx}
-            className={`flex items-center justify-center rounded-full transition-all shadow-lg active:scale-95 ${
-              isSectionPlaying
-                ? 'w-16 h-16 bg-[#6B4C9A] text-white hover:bg-[#5a3d85]'
-                : isSectionPaused
-                  ? 'w-16 h-16 bg-[#6B4C9A] text-white hover:bg-[#5a3d85]'
-                  : 'w-16 h-16 bg-[#6B4C9A] text-white hover:bg-[#5a3d85]'
-            }`}
+            className="w-16 h-16 flex items-center justify-center rounded-full transition-all shadow-lg active:scale-95 bg-[#6B4C9A] text-white hover:bg-[#5a3d85]"
           >
             {isLoading && playingSectionIndex === idx ? (
               <svg className="w-7 h-7 animate-spin" viewBox="0 0 24 24" fill="none">
@@ -531,6 +527,8 @@ function BrachaReader({ prayer, onBack }: { prayer: Prayer; onBack: () => void }
               </svg>
             )}
           </button>
+          {/* Invisible spacer for symmetry */}
+          <div className="w-[52px] shrink-0" />
         </div>
 
         {/* Transliteration */}

@@ -73,9 +73,9 @@ const MORNING_GUIDES: Guide[] = [
     beginnerSummary:
       'When you wake up in the morning, Jews wash their hands with water. This is a simple way to start your day fresh and ready for prayer.',
     beginnerWhy:
-      'Jewish tradition teaches that sleep is like a mini-death - our soul goes up to Heaven and comes back refreshed. Washing hands in the morning is a way of saying "I\'m starting a new day, and I want to be spiritually clean and ready." It\'s based on a verse in Psalms: "I wash my hands in purity."',
+      'Jewish tradition teaches that sleep is like a mini-death — our soul goes up to Heaven and comes back refreshed. Washing hands in the morning is a way of saying "I\'m starting a new day, and I want to be spiritually clean and ready."',
     beginnerHow:
-      'When you wake up, fill a cup with water and pour it over each hand - right, left, right, left. Dry your hands. Done! As you get more comfortable, you can learn the traditional way with 3 times on each hand.',
+      'Fill a cup with water. Pour it over your right hand, then your left hand. Right again, left again. Dry your hands — done! That\'s it. Right, left, right, left.',
 
     // STANDARD LEVEL - More detail for those ready
     whyItMatters:
@@ -158,14 +158,17 @@ const MORNING_GUIDES: Guide[] = [
       },
     ],
     practicalTips: [
-      "Just starting? Use your bathroom sink - that's totally fine!",
-      "Any cup works — you don't need anything special",
-      'The most important thing is to wash when you wake up. The details can come later.',
-      'If you want to do it the traditional way, keep a cup and bowl by your bed',
+      "Any cup works — a mug, a plastic cup, whatever you have",
       'The water should cover your whole hand up to the wrist',
+      'The most important thing is to wash when you wake up. The details can come later.',
+      'If you forgot to wash when you woke up, just wash whenever you remember — it always counts!',
+    ],
+    beginnerMistakes: [
+      'Always pour on the right hand first, then left — right, left, right, left',
+      'If you forgot to wash when you woke up, just wash whenever you remember — it still counts!',
+      'Make sure the water covers your whole hand up to the wrist',
     ],
     commonMistakes: [
-      'Washing at the sink is great — the important thing is that you washed!',
       "You don't need to set everything up perfectly on day one — build the habit first, refine later",
       'If you forgot to wash when you woke up, just wash whenever you remember — it always counts!',
     ],

@@ -220,38 +220,53 @@ export function GuideReader({ guide, onBack, onNavigate }: GuideReaderProps) {
           </motion.div>
         )}
 
-        {/* Common Mistakes — collapsed by default */}
-        {guide.commonMistakes && guide.commonMistakes.length > 0 && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mt-6">
-            <button
-              onClick={() => setMistakesExpanded(!mistakesExpanded)}
-              className="flex items-center justify-between w-full text-left"
-            >
-              <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                Common Mistakes ({guide.commonMistakes.length})
-              </h3>
-              <svg
-                width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2"
-                className={`transition-transform ${mistakesExpanded ? 'rotate-180' : ''}`}
+        {/* Common Mistakes — show beginnerMistakes for beginners, commonMistakes otherwise */}
+        {(() => {
+          const isBeginner = selectedLevel === 'beginner';
+          const mistakes = isBeginner && guide.beginnerMistakes?.length
+            ? guide.beginnerMistakes
+            : guide.commonMistakes || [];
+          if (mistakes.length === 0) return null;
+          const label = isBeginner ? 'Good to Know' : 'Common Mistakes';
+          return (
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mt-6">
+              <button
+                onClick={() => setMistakesExpanded(!mistakesExpanded)}
+                className="flex items-center justify-between w-full text-left"
               >
-                <polyline points="6 9 12 15 18 9" />
-              </svg>
-            </button>
-            {mistakesExpanded && (
-              <div className="bg-red-50/50 border border-red-100 rounded-2xl p-4 space-y-2.5 mt-3">
-                {guide.commonMistakes.map((mistake, i) => (
-                  <div key={i} className="flex items-start gap-2.5">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EF4444" strokeWidth="2" className="shrink-0 mt-0.5">
-                      <circle cx="12" cy="12" r="10" />
-                      <path d="M15 9l-6 6M9 9l6 6" />
-                    </svg>
-                    <p className="text-[13px] text-[#2D3142]/80 leading-relaxed">{mistake}</p>
-                  </div>
-                ))}
-              </div>
-            )}
-          </motion.div>
-        )}
+                <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                  {label} ({mistakes.length})
+                </h3>
+                <svg
+                  width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2"
+                  className={`transition-transform ${mistakesExpanded ? 'rotate-180' : ''}`}
+                >
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </button>
+              {mistakesExpanded && (
+                <div className={`rounded-2xl p-4 space-y-2.5 mt-3 ${isBeginner ? 'bg-[#5FA8D3]/5 border border-[#5FA8D3]/15' : 'bg-red-50/50 border border-red-100'}`}>
+                  {mistakes.map((mistake, i) => (
+                    <div key={i} className="flex items-start gap-2.5">
+                      {isBeginner ? (
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B4965" strokeWidth="2" className="shrink-0 mt-0.5">
+                          <circle cx="12" cy="12" r="10" />
+                          <path d="M12 16v-4M12 8h.01" />
+                        </svg>
+                      ) : (
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EF4444" strokeWidth="2" className="shrink-0 mt-0.5">
+                          <circle cx="12" cy="12" r="10" />
+                          <path d="M15 9l-6 6M9 9l6 6" />
+                        </svg>
+                      )}
+                      <p className="text-[13px] text-[#2D3142]/80 leading-relaxed">{mistake}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          );
+        })()}
 
         {/* Halachic Sources - Only for Advanced */}
         {selectedLevel === 'advanced' && guide.sources.length > 0 && (

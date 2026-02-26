@@ -16,12 +16,10 @@ const TYPE_LABELS: Record<string, string> = {
 export function ServiceRoadmap({
   service,
   onSelectItem,
-  onOpenChazanGuide,
   onBack,
 }: {
   service: DaveningService;
   onSelectItem: (item: ServiceItem, segmentIndex: number, itemIndex: number) => void;
-  onOpenChazanGuide: () => void;
   onBack: () => void;
 }) {
   const [expandedSegment, setExpandedSegment] = useState<string | null>(
@@ -99,18 +97,6 @@ export function ServiceRoadmap({
             </div>
           </div>
 
-          {/* Chazan Guide link — compact */}
-          <div className="mt-4 flex justify-end">
-            <button
-              onClick={onOpenChazanGuide}
-              className="flex items-center gap-1 text-xs text-white/50 hover:text-white/80 transition-colors"
-            >
-              Chazan Guide
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M9 18l6-6-6-6" />
-              </svg>
-            </button>
-          </div>
         </div>
       </div>
 

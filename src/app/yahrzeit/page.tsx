@@ -21,6 +21,7 @@ import {
 import { useAudio } from '@/hooks/useAudio';
 import { useKaraokeSync } from '@/hooks/useKaraokeSync';
 import { useUserStore } from '@/stores/userStore';
+import { SpeedPill } from '@/components/ui/SpeedPill';
 import { SpotlightTour } from '@/components/ui/SpotlightTour';
 import { TourReplayButton } from '@/components/ui/TourReplayButton';
 import type { TourStep } from '@/components/ui/SpotlightTour';
@@ -187,6 +188,47 @@ export default function YahrzeitPage() {
           </div>
         </div>
 
+        {/* Inline quick controls — always visible */}
+        <div className="bg-white/80 border-b border-gray-100">
+          <div className="max-w-md mx-auto px-6 py-2.5 flex items-center justify-between gap-3">
+            {/* View mode toggle */}
+            <div className="flex gap-1 bg-gray-100 rounded-lg p-0.5">
+              <button
+                onClick={() => setViewMode('section')}
+                className={`px-3 py-1.5 rounded-md text-[11px] font-semibold transition-colors ${
+                  viewMode === 'section' ? 'bg-white text-[#5C4033] shadow-sm' : 'text-gray-400'
+                }`}
+              >
+                Section
+              </button>
+              <button
+                onClick={() => setViewMode('full')}
+                className={`px-3 py-1.5 rounded-md text-[11px] font-semibold transition-colors ${
+                  viewMode === 'full' ? 'bg-white text-[#5C4033] shadow-sm' : 'text-gray-400'
+                }`}
+              >
+                Full View
+              </button>
+            </div>
+
+            {/* Auto-advance pill */}
+            <button
+              onClick={() => setAutoAdvanceEnabled(!autoAdvanceEnabled)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-semibold transition-colors ${
+                autoAdvanceEnabled
+                  ? 'bg-[#5C4033]/10 text-[#5C4033]'
+                  : 'bg-gray-100 text-gray-400'
+              }`}
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5,3 19,12 5,21" />
+                <rect x="19" y="3" width="3" height="18" rx="1" />
+              </svg>
+              Auto
+            </button>
+          </div>
+        </div>
+
         <div className="max-w-md mx-auto px-6 py-6 space-y-5 pb-32">
           {currentSectionIndex === 0 && displaySettings.showInstructions && (
             <p className="text-xs text-gray-400 text-center">{mournersPrayer.whenSaid}</p>
@@ -234,6 +276,7 @@ export default function YahrzeitPage() {
               onWordTap={handleReplay}
               isPlaying={isPlaying}
               isLoading={isLoading}
+              accentColor="brown"
             />
           )}
 
@@ -264,18 +307,7 @@ export default function YahrzeitPage() {
                   </div>
                 </div>
                 <div className="flex items-center justify-end mt-2">
-                  <button
-                    onClick={() => {
-                      const SPEED_STEPS = [0.75, 1, 1.25, 1.5, 2];
-                      const currentIdx = SPEED_STEPS.indexOf(audioSpeed);
-                      const nextIdx = currentIdx >= 0 ? (currentIdx + 1) % SPEED_STEPS.length : 1;
-                      handleSpeedChange(SPEED_STEPS[nextIdx]);
-                    }}
-                    className="px-3 py-1 rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 text-xs font-bold transition-colors"
-                    aria-label="Change speed"
-                  >
-                    {audioSpeed}x
-                  </button>
+                  <SpeedPill onSpeedChange={handleSpeedChange} color="brown" />
                 </div>
               </div>
 

@@ -70,10 +70,13 @@ export function VowelCard({ vowel, exampleLetter = 'ב', isActive = false, pronu
       <button
         onClick={(e) => {
           e.stopPropagation();
+          const speed = useUserStore.getState().profile.audioSpeed;
           const audio = new Audio(audioUrl);
+          audio.playbackRate = speed;
           audio.onerror = () => {
             if (gSuffix) {
               const fb = new Audio(`/audio/vowels/${vowel.id}.mp3`);
+              fb.playbackRate = speed;
               fb.play().catch(() => {});
             }
           };

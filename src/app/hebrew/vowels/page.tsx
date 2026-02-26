@@ -7,6 +7,7 @@ import { useUserStore } from '@/stores/userStore';
 import { VOWELS } from '@/lib/content/vowels';
 import { VowelCard } from '@/components/bootcamp/VowelCard';
 import { AudioButton } from '@/components/ui/AudioButton';
+import { SpeedPill } from '@/components/ui/SpeedPill';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { MilestoneToast } from '@/components/ui/MilestoneToast';
 import { track } from '@/lib/analytics';
@@ -226,11 +227,7 @@ export default function VowelLearnPage() {
           <span className="text-sm font-medium text-gray-600">
             Lesson {currentLesson + 1} of {totalLessons} — {VOWEL_LESSONS[currentLesson]?.label}
           </span>
-          <span className="text-sm text-primary">
-            {phase === 'teach' && `${teachIndex + 1}/${lessonVowels.length}`}
-            {phase === 'drill' && `Drill ${drillIndex + 1}/${drillsPerLesson}`}
-            {phase === 'complete' && 'Done!'}
-          </span>
+          <SpeedPill color="primary" />
         </div>
         <ProgressBar
           value={

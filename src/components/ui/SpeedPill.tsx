@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUserStore } from '@/stores/userStore';
 
-const SPEED_STEPS = [0.75, 1, 1.25, 1.5, 2];
+const SPEED_STEPS = [0.5, 0.75, 1, 1.25, 1.5, 2];
 
 export function SpeedPill({
   onSpeedChange,

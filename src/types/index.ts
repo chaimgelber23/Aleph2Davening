@@ -531,6 +531,7 @@ export interface Guide {
   beginnerSummary?: string; // Simple, encouraging explanation
   beginnerWhy?: string; // Why do we do this? (meaning)
   beginnerHow?: string; // How to do it - simplified to essentials only
+  beginnerMistakes?: string[]; // Beginner-appropriate common mistakes
 
   // Standard content
   quickAnswer: string;

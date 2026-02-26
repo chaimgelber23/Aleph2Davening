@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { ProgressBar } from '@/components/ui/ProgressBar';
+import { SpeedPill } from '@/components/ui/SpeedPill';
 
 interface BootcampProgressHeaderProps {
   dayNumber: number;
@@ -33,9 +34,7 @@ export function BootcampProgressHeader({
         <span className="text-sm font-semibold text-foreground">
           Day {dayNumber} of 5
         </span>
-        <span className="text-xs text-gray-500">
-          {phaseName} {phaseIndex + 1}/{phaseTotal}
-        </span>
+        <SpeedPill color="primary" />
       </div>
       <ProgressBar value={overallProgress} size="sm" color='var(--primary)' />
     </div>

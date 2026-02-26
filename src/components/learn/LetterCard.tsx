@@ -70,9 +70,15 @@ export function LetterCard({
           <button
             onClick={(e) => {
               e.stopPropagation();
+              const speed = useUserStore.getState().profile.audioSpeed;
               const audio = new Audio(audioUrl);
+              audio.playbackRate = speed;
               audio.onerror = () => {
-                if (gSuffix) new Audio(`/audio/letters/${letter.id}${suffix}.mp3`).play().catch(() => {});
+                if (gSuffix) {
+                  const fb = new Audio(`/audio/letters/${letter.id}${suffix}.mp3`);
+                  fb.playbackRate = speed;
+                  fb.play().catch(() => {});
+                }
               };
               audio.play().catch(() => {});
             }}

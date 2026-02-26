@@ -10,9 +10,10 @@ export type PreparationLevel = 'quick' | 'full' | 'rehearsal' | 'guide';
 
 interface AmudPreparationProps {
   defaultLevel?: PreparationLevel;
+  onBack?: () => void;
 }
 
-export default function AmudPreparation({ defaultLevel = 'quick' }: AmudPreparationProps) {
+export default function AmudPreparation({ defaultLevel = 'guide', onBack }: AmudPreparationProps) {
   const [level, setLevel] = useState<PreparationLevel>(defaultLevel);
 
   const levels: { id: PreparationLevel; title: string; description: string; time: string }[] = [
@@ -44,26 +45,34 @@ export default function AmudPreparation({ defaultLevel = 'quick' }: AmudPreparat
 
   return (
     <div className="min-h-screen bg-[#FEFDFB]">
-      {/* Level Selector */}
+      {/* Header + Level Selector */}
       <div className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
-        <div className="max-w-6xl mx-auto p-4">
-          <h1 className="text-2xl font-bold text-[#1A1A2E] mb-4">
+        <div className="max-w-md mx-auto p-4">
+          {onBack && (
+            <button
+              onClick={onBack}
+              className="text-gray-400 hover:text-gray-600 text-sm mb-2 transition-colors"
+            >
+              ← Back
+            </button>
+          )}
+          <h1 className="text-xl font-bold text-[#1A1A2E] mb-3">
             Prepare to Lead Davening
           </h1>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 gap-2">
             {levels.map((l) => (
               <button
                 key={l.id}
                 onClick={() => setLevel(l.id)}
-                className={`p-4 rounded-xl border-2 transition-all text-left ${
+                className={`p-3 rounded-xl border-2 transition-all text-left ${
                   level === l.id
                     ? 'border-[#1B4965] bg-[#E8F4F8] shadow-md'
                     : 'border-gray-200 bg-white hover:border-[#5FA8D3] hover:shadow-sm'
                 }`}
               >
-                <div className="font-bold text-[#1A1A2E] mb-1">{l.title}</div>
-                <div className="text-xs text-gray-600 mb-2">{l.description}</div>
-                <div className="text-xs text-[#1B4965] font-medium">{l.time}</div>
+                <div className="font-semibold text-sm text-[#1A1A2E] mb-0.5">{l.title}</div>
+                <div className="text-[11px] text-gray-500 leading-snug">{l.description}</div>
+                <div className="text-[11px] text-[#1B4965] font-medium mt-1">{l.time}</div>
               </button>
             ))}
           </div>
@@ -71,7 +80,7 @@ export default function AmudPreparation({ defaultLevel = 'quick' }: AmudPreparat
       </div>
 
       {/* Content */}
-      <div className="max-w-6xl mx-auto py-6">
+      <div className="max-w-md mx-auto py-6 px-4">
         {level === 'guide' && <AmudRolesGuide />}
         {level === 'quick' && <TodaysServicePath />}
         {level === 'full' && <ServiceScopeOverview />}
@@ -80,14 +89,14 @@ export default function AmudPreparation({ defaultLevel = 'quick' }: AmudPreparat
 
       {/* Progress Recommendation */}
       {level !== 'rehearsal' && (
-        <div className="max-w-6xl mx-auto px-6 pb-6">
-          <div className="bg-gradient-to-r from-[#5FA8D3] to-[#1B4965] rounded-2xl p-6 text-white">
-            <h3 className="text-xl font-bold mb-2">
+        <div className="max-w-md mx-auto px-4 pb-6">
+          <div className="bg-gradient-to-r from-[#5FA8D3] to-[#1B4965] rounded-2xl p-5 text-white">
+            <h3 className="text-lg font-bold mb-2">
               {level === 'guide' && 'Next Step: Review the Quick Path'}
               {level === 'quick' && 'Ready for More Detail?'}
               {level === 'full' && 'Ready to Practice?'}
             </h3>
-            <p className="mb-4">
+            <p className="text-sm mb-3 text-white/80">
               {level === 'guide' &&
                 'Now that you understand the roles, see how a complete service flows from start to finish.'}
               {level === 'quick' &&
@@ -101,7 +110,7 @@ export default function AmudPreparation({ defaultLevel = 'quick' }: AmudPreparat
                 else if (level === 'quick') setLevel('full');
                 else if (level === 'full') setLevel('rehearsal');
               }}
-              className="bg-white text-[#1B4965] px-6 py-3 rounded-xl font-bold hover:bg-gray-100 transition-colors"
+              className="bg-white text-[#1B4965] px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-gray-100 transition-colors"
             >
               {level === 'guide' && 'View Quick Path →'}
               {level === 'quick' && 'View Full Scope →'}
@@ -113,17 +122,17 @@ export default function AmudPreparation({ defaultLevel = 'quick' }: AmudPreparat
 
       {/* Encouragement at bottom of rehearsal */}
       {level === 'rehearsal' && (
-        <div className="max-w-6xl mx-auto px-6 pb-6">
-          <div className="bg-[#4A7C59] rounded-2xl p-6 text-white text-center">
-            <h3 className="text-2xl font-bold mb-3">
-              You Are Fully Prepared! 
+        <div className="max-w-md mx-auto px-4 pb-6">
+          <div className="bg-[#4A7C59] rounded-2xl p-5 text-white text-center">
+            <h3 className="text-xl font-bold mb-2">
+              You Are Fully Prepared!
             </h3>
-            <p className="text-lg mb-4">
+            <p className="text-sm mb-3">
               You&apos;ve reviewed the roles, the path, the scope, and the complete script.
               You know every word, every pause, every moment.
               The congregation is blessed to have you leading them.
             </p>
-            <p className="text-sm opacity-90">
+            <p className="text-xs opacity-90">
               Trust your preparation. Lead with confidence. You&apos;ve got this.
             </p>
           </div>

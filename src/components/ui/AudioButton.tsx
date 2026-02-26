@@ -43,6 +43,7 @@ export function AudioButton({
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const voiceGender = useUserStore((s) => s.profile.voiceGender) || 'male';
+  const audioSpeed = useUserStore((s) => s.profile.audioSpeed);
 
   const handlePlay = () => {
     if (!audioUrl) {
@@ -57,6 +58,7 @@ export function AudioButton({
 
     const genderedUrl = applyGenderSuffix(audioUrl, voiceGender);
     const audio = new Audio(genderedUrl);
+    audio.playbackRate = audioSpeed;
     audioRef.current = audio;
 
     audio.onplay = () => setIsPlaying(true);
@@ -65,6 +67,7 @@ export function AudioButton({
       // Fallback to original URL if gendered file doesn't exist
       if (genderedUrl !== audioUrl) {
         const fallback = new Audio(audioUrl);
+        fallback.playbackRate = audioSpeed;
         audioRef.current = fallback;
         fallback.onplay = () => setIsPlaying(true);
         fallback.onended = () => setIsPlaying(false);
