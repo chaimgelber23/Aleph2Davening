@@ -43,9 +43,15 @@ export default function DavenPage() {
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [sectionPositions, setSectionPositions] = useState<Record<string, number>>({});
 
-  // Audio source selection
-  const [selectedAudioSource, setSelectedAudioSource] = useState<AudioSourceId>('google-tts');
+  // Audio source selection — persisted in user store
+  const preferredSource = useUserStore((s) => s.profile.preferredAudioSource) as AudioSourceId | undefined;
+  const [selectedAudioSource, setSelectedAudioSource] = useState<AudioSourceId>(preferredSource || 'alex');
   const [selectedAudioEntry, setSelectedAudioEntry] = useState<PrayerAudioEntry | null>(null);
+
+  // Sync from store on mount (hydration)
+  useEffect(() => {
+    if (preferredSource) setSelectedAudioSource(preferredSource as AudioSourceId);
+  }, [preferredSource]);
 
   // Prayer view mode
   const [showProgressSidebar, setShowProgressSidebar] = useState(false);
@@ -56,6 +62,12 @@ export default function DavenPage() {
   const updateProfile = useUserStore((s) => s.updateProfile);
   const displaySettings = useUserStore((s) => s.displaySettings);
   const updateServicePosition = useUserStore((s) => s.updateServicePosition);
+
+  const handleSelectAudioSource = useCallback((sourceId: AudioSourceId, entry: PrayerAudioEntry | null) => {
+    setSelectedAudioSource(sourceId);
+    setSelectedAudioEntry(entry);
+    updateProfile({ preferredAudioSource: sourceId });
+  }, [updateProfile]);
 
   // Auto-advance state
   const [autoAdvanceEnabled, setAutoAdvanceEnabled] = useState(true);
@@ -382,7 +394,14 @@ export default function DavenPage() {
             </div>
           )}
 
-          {/* Controls row and display toggles have been unified into the View Modes & Settings modal */}
+          {/* Voice picker — directly on the playing screen for quick switching */}
+          <div className="flex items-center justify-center">
+            <AudioSourcePicker
+              prayerId={selectedPrayer.id}
+              selectedSource={selectedAudioSource}
+              onSelectSource={handleSelectAudioSource}
+            />
+          </div>
 
           {/* Compact Prayer Outline — collapsed by default */}
           <button
@@ -705,10 +724,7 @@ export default function DavenPage() {
           onClose={() => setShowSettingsModal(false)}
           prayerId={selectedPrayer.id}
           selectedAudioSource={selectedAudioSource}
-          onSelectAudioSource={(sourceId, entry) => {
-            setSelectedAudioSource(sourceId);
-            setSelectedAudioEntry(entry);
-          }}
+          onSelectAudioSource={handleSelectAudioSource}
           autoAdvanceEnabled={autoAdvanceEnabled}
           onToggleAutoAdvance={() => setAutoAdvanceEnabled(!autoAdvanceEnabled)}
           viewMode={viewMode}

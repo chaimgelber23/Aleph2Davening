@@ -1,17 +1,12 @@
 /**
  * Google Cloud Text-to-Speech client for Hebrew audio generation.
  *
- * Hebrew voices available (he-IL):
- *   WaveNet (highest quality):
- *     he-IL-Wavenet-A  (female)
- *     he-IL-Wavenet-B  (male)
- *     he-IL-Wavenet-C  (female)
- *     he-IL-Wavenet-D  (male)
- *   Standard:
- *     he-IL-Standard-A (female)
- *     he-IL-Standard-B (male)
- *     he-IL-Standard-C (female)
- *     he-IL-Standard-D (male)
+ * Voice tiers (best → good):
+ *   Neural2  — newest, most natural (he-IL-Neural2-A/B/C/D)
+ *   WaveNet  — high quality (he-IL-Wavenet-A/B/C/D)
+ *   Standard — basic (he-IL-Standard-A/B/C/D)
+ *
+ * A/C = female, B/D = male
  *
  * Setup:
  *   1. Create a Google Cloud project
@@ -34,10 +29,15 @@ export interface GoogleTTSOptions {
   gender?: GoogleVoiceGender;
 }
 
-// Voice selection — WaveNet voices sound most natural
-const HEBREW_VOICES = {
-  male: 'he-IL-Wavenet-B',
-  female: 'he-IL-Wavenet-A',
+// Primary: Neural2 (highest quality). Fallback: WaveNet.
+const HEBREW_VOICES_NEURAL2 = {
+  male: 'he-IL-Neural2-B',
+  female: 'he-IL-Neural2-A',
+} as const;
+
+const HEBREW_VOICES_WAVENET = {
+  male: 'he-IL-Wavenet-D',
+  female: 'he-IL-Wavenet-C',
 } as const;
 
 let _client: TextToSpeechClient | null = null;
@@ -63,7 +63,28 @@ export function fixHashemForTTS(text: string): string {
 }
 
 /**
+ * Build SSML from Hebrew prayer text for natural pacing.
+ * Adds pauses after Hebrew sentence-ending punctuation (׃ ׀ : . —)
+ * and shorter pauses after commas.
+ */
+function buildSSML(text: string): string {
+  let ssml = text
+    // Sof pasuk (׃) or pipe (׀) — liturgical pauses
+    .replace(/[׃׀]/g, '$&<break time="500ms"/>')
+    // Period or colon — sentence boundary
+    .replace(/([.:])(\s)/g, '$1<break time="400ms"/>$2')
+    // Em dash — dramatic pause
+    .replace(/—/g, '—<break time="350ms"/>')
+    // Comma — brief pause
+    .replace(/,/g, ',<break time="200ms"/>');
+
+  return `<speak><prosody rate="medium" pitch="0st">${ssml}</prosody></speak>`;
+}
+
+/**
  * Generate Hebrew speech audio using Google Cloud TTS.
+ * Tries Neural2 first (highest quality), falls back to WaveNet.
+ * Uses SSML for natural Hebrew pacing with liturgical pauses.
  * Returns MP3 audio as a Buffer.
  */
 export async function synthesizeHebrew(
@@ -72,31 +93,43 @@ export async function synthesizeHebrew(
 ): Promise<Buffer> {
   const client = getClient();
   const gender = opts.gender || 'male';
-  const voiceName = HEBREW_VOICES[gender];
-
-  // Fix Hashem references for proper pronunciation
   const processedText = fixHashemForTTS(text);
+  const ssml = buildSSML(processedText);
 
-  const [response] = await client.synthesizeSpeech({
-    input: { text: processedText },
-    voice: {
-      languageCode: 'he-IL',
-      name: voiceName,
-    },
-    audioConfig: {
-      audioEncoding: 'MP3',
-      speakingRate: opts.speed || 1.0,
-      pitch: opts.pitch || 0,
-      effectsProfileId: ['headphone-class-device'],
-    },
-  });
+  // Try Neural2 first, then WaveNet
+  const voicesToTry = [
+    HEBREW_VOICES_NEURAL2[gender],
+    HEBREW_VOICES_WAVENET[gender],
+  ];
 
-  if (!response.audioContent) {
-    throw new Error('Google Cloud TTS returned empty audio');
+  for (const voiceName of voicesToTry) {
+    try {
+      const [response] = await client.synthesizeSpeech({
+        input: { ssml },
+        voice: {
+          languageCode: 'he-IL',
+          name: voiceName,
+        },
+        audioConfig: {
+          audioEncoding: 'MP3',
+          speakingRate: opts.speed || 1.0,
+          pitch: opts.pitch || 0,
+          sampleRateHertz: 24000,
+          effectsProfileId: ['headphone-class-device'],
+        },
+      });
+
+      if (!response.audioContent) continue;
+
+      if (typeof response.audioContent === 'string') {
+        return Buffer.from(response.audioContent, 'base64');
+      }
+      return Buffer.from(response.audioContent);
+    } catch {
+      // Voice not available in this tier, try next
+      continue;
+    }
   }
 
-  if (typeof response.audioContent === 'string') {
-    return Buffer.from(response.audioContent, 'base64');
-  }
-  return Buffer.from(response.audioContent);
+  throw new Error('No Hebrew TTS voice available');
 }

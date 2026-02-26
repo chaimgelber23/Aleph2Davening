@@ -242,6 +242,8 @@ export interface UserProfile {
   onboardingComplete: boolean;
   voiceGender: VoiceGender;
   guideContentLevel: GuideLevel;
+  // Audio source preference (persists across sessions)
+  preferredAudioSource?: string;
   // Streak freeze
   streakFreezes: number; // available freezes (max 2)
   lastStreakFreezeWeek?: string; // ISO week string for weekly freeze grant

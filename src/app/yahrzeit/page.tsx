@@ -73,7 +73,7 @@ export default function YahrzeitPage() {
   const [showProgressSidebar, setShowProgressSidebar] = useState(false);
   const [autoAdvanceEnabled, setAutoAdvanceEnabled] = useState(false);
   const [autoPlayNext, setAutoPlayNext] = useState(false);
-  const [selectedAudioSource, setSelectedAudioSource] = useState<AudioSourceId>('siddur-audio');
+  const [selectedAudioSource, setSelectedAudioSource] = useState<AudioSourceId>('alex');
   const [selectedAudioEntry, setSelectedAudioEntry] = useState<PrayerAudioEntry | null>(null);
 
   const audioSpeed = useUserStore((s) => s.profile.audioSpeed);

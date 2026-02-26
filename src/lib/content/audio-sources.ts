@@ -1,72 +1,93 @@
 /**
  * Audio source registry for all prayer recordings.
  *
- * Each prayer can have multiple audio sources:
- * - Siddur Audio: Full text readings (split from compound recordings)
- * - Hadar (Weiss/Richman/Diamond): Nusach demonstrations by different artists
+ * Two primary voices:
+ *   1. Alex — human recordings (default, static files in /public/audio/)
+ *   2. AI Israeli — Google Cloud TTS Hebrew voice (always available fallback)
  *
- * Sources are listed per prayer so users can choose their preferred voice/style.
+ * Legacy sources (chabad, hadar, siddur-audio) still exist in the map
+ * but are not shown in the picker — they play if static files match.
  */
 
-export type AudioSourceId = 'siddur-audio' | 'chabad' | 'young-israel' | 'hadar-weiss' | 'hadar-richman' | 'hadar-diamond' | 'hadar-rosenbaum' | 'google-tts';
+export type AudioSourceId = 'alex' | 'google-tts' | 'siddur-audio' | 'chabad' | 'young-israel' | 'hadar-weiss' | 'hadar-richman' | 'hadar-diamond' | 'hadar-rosenbaum';
 
 export interface AudioSource {
   id: AudioSourceId;
   label: string;
   shortLabel: string;
   description: string;
+  /** Whether to show in the voice picker UI */
+  showInPicker: boolean;
 }
 
 export const AUDIO_SOURCES: Record<AudioSourceId, AudioSource> = {
+  'alex': {
+    id: 'alex',
+    label: 'Alex',
+    shortLabel: 'Alex',
+    description: 'Human voice — clear Hebrew reading',
+    showInPicker: true,
+  },
+  'google-tts': {
+    id: 'google-tts',
+    label: 'AI Israeli Voice',
+    shortLabel: 'AI Israeli',
+    description: 'Natural Israeli Hebrew voice — always available',
+    showInPicker: true,
+  },
   'siddur-audio': {
     id: 'siddur-audio',
     label: 'Siddur Audio',
     shortLabel: 'Siddur Audio',
     description: 'Full text reading — traditional pace',
+    showInPicker: false,
   },
   'chabad': {
     id: 'chabad',
     label: 'Chabad.org',
     shortLabel: 'Chabad',
     description: 'Full text reading — Chabad nusach',
+    showInPicker: false,
   },
   'young-israel': {
     id: 'young-israel',
     label: 'Young Israel',
     shortLabel: 'Young Israel',
     description: 'Full text reading — Young Israel nusach',
+    showInPicker: false,
   },
   'hadar-weiss': {
     id: 'hadar-weiss',
     label: 'Hadar - Rabbi Dena Weiss',
     shortLabel: 'R. Weiss',
     description: 'Nusach demonstration — Hadar Institute',
+    showInPicker: false,
   },
   'hadar-richman': {
     id: 'hadar-richman',
     label: 'Hadar - Rabbi Aviva Richman',
     shortLabel: 'R. Richman',
     description: 'Nusach demonstration — Hadar Institute',
+    showInPicker: false,
   },
   'hadar-diamond': {
     id: 'hadar-diamond',
     label: 'Hadar - Rabbi Eliezer Diamond',
     shortLabel: 'R. Diamond',
     description: 'Nusach demonstration — Hadar Institute',
+    showInPicker: false,
   },
   'hadar-rosenbaum': {
     id: 'hadar-rosenbaum',
     label: 'Hadar - Rosenbaum',
     shortLabel: 'Rosenbaum',
     description: 'Nusach demonstration — Hadar Institute',
-  },
-  'google-tts': {
-    id: 'google-tts',
-    label: 'AI Voice (Hebrew)',
-    shortLabel: 'AI Voice',
-    description: 'AI-generated Hebrew voice — high quality',
+    showInPicker: false,
   },
 };
+
+/** The two voices users can choose from */
+export const PICKER_SOURCES: AudioSourceId[] = ['alex', 'google-tts'];
 
 export interface PrayerAudioEntry {
   sourceId: AudioSourceId;
@@ -199,12 +220,9 @@ export function getAudioBySource(prayerId: string, sourceId: AudioSourceId): Pra
 }
 
 /**
- * Get the list of available source IDs for a prayer.
+ * Get the list of source IDs shown in the voice picker.
+ * Always returns Alex first (default), then AI Israeli.
  */
-export function getAvailableSources(prayerId: string): AudioSourceId[] {
-  const entries = PRAYER_AUDIO_MAP[prayerId] ?? [];
-  const sources = entries.map((e) => e.sourceId);
-  // Google TTS is always available as fallback
-  if (!sources.includes('google-tts')) sources.push('google-tts');
-  return sources;
+export function getAvailableSources(_prayerId: string): AudioSourceId[] {
+  return [...PICKER_SOURCES];
 }
