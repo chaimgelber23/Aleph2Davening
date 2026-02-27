@@ -16,6 +16,8 @@ const GENDER_SUFFIX: Record<VoiceGender, string> = {
   female: '-female',
 };
 
+const SPEED_OPTIONS = [0.5, 0.75, 1, 1.25];
+
 interface LetterCardProps {
   letter: Letter;
   showDetails?: boolean;
@@ -34,6 +36,8 @@ export function LetterCard({
   onTap,
 }: LetterCardProps) {
   const voiceGender = useUserStore((s) => s.profile.voiceGender) || 'male';
+  const audioSpeed = useUserStore((s) => s.profile.audioSpeed);
+  const updateProfile = useUserStore((s) => s.updateProfile);
   const suffix = PRONUNCIATION_SUFFIX[pronunciation] ?? '';
   const gSuffix = GENDER_SUFFIX[voiceGender] ?? '';
   const audioUrl = `/audio/letters/${letter.id}${suffix}${gSuffix}.mp3`;
@@ -89,6 +93,29 @@ export function LetterCard({
             </svg>
             Listen
           </button>
+
+          {/* Speed control bar */}
+          <div className="flex items-center gap-2 w-full justify-center" onClick={(e) => e.stopPropagation()}>
+            <span className="text-base" title="Slower">🐢</span>
+            <div className="flex gap-1.5">
+              {SPEED_OPTIONS.map((speed) => (
+                <button
+                  key={speed}
+                  onClick={() => updateProfile({ audioSpeed: speed })}
+                  className={`
+                    px-3.5 py-2 rounded-lg text-sm font-bold transition-all duration-150
+                    ${audioSpeed === speed
+                      ? 'bg-primary text-white shadow-sm scale-105'
+                      : 'bg-gray-100 text-gray-500 hover:bg-gray-200 active:scale-95'
+                    }
+                  `}
+                >
+                  {speed}x
+                </button>
+              ))}
+            </div>
+            <span className="text-base" title="Faster">🐇</span>
+          </div>
 
           {/* Mnemonic — only when actively teaching */}
           {showMnemonic && isActive && letter.mnemonic && (

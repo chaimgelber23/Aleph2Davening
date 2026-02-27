@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useUserStore } from '@/stores/userStore';
@@ -45,8 +45,10 @@ export default function LearnPage() {
   const [drillTotal, setDrillTotal] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showResult, setShowResult] = useState(false);
+  const [isRetry, setIsRetry] = useState(false);
   const [milestone, setMilestone] = useState<MilestoneType | null>(null);
   const [showResumePrompt, setShowResumePrompt] = useState(false);
+  const autoAdvanceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Check for saved session on mount
   useEffect(() => {
@@ -138,24 +140,20 @@ export default function LearnPage() {
     }
   };
 
-  // Handle drill answer — no auto-advance, user taps Continue
-  const handleDrillAnswer = (letterId: string) => {
-    if (showResult) return;
-    setSelectedAnswer(letterId);
-    setShowResult(true);
-
-    const isCorrect = letterId === drillCorrectLetter.id;
-    setDrillTotal(drillTotal + 1);
-    if (isCorrect) setDrillScore(drillScore + 1);
-
-    updateSkillProgress(drillCorrectLetter.id, isCorrect);
-    recordPractice(isCorrect, drillTotal === 0);
-  };
+  // Clear auto-advance timer
+  const clearAutoAdvance = useCallback(() => {
+    if (autoAdvanceRef.current) {
+      clearTimeout(autoAdvanceRef.current);
+      autoAdvanceRef.current = null;
+    }
+  }, []);
 
   // Continue to next question after seeing result
-  const handleDrillContinue = () => {
+  const handleDrillContinue = useCallback(() => {
+    clearAutoAdvance();
     setShowResult(false);
     setSelectedAnswer(null);
+    setIsRetry(false);
 
     if (drillIndex < 8) {
       setDrillIndex(drillIndex + 1);
@@ -178,7 +176,43 @@ export default function LearnPage() {
       clearLearnSession();
       setPhase('complete');
     }
+  }, [drillIndex, currentLesson, drillScore, drillTotal, checkAndUpdateStreak, hasMilestone, earnMilestone, clearLearnSession, clearAutoAdvance]);
+
+  // Handle drill answer — auto-advances after delay
+  const handleDrillAnswer = (letterId: string) => {
+    if (showResult) return;
+    setSelectedAnswer(letterId);
+    setShowResult(true);
+
+    const isCorrect = letterId === drillCorrectLetter.id;
+
+    // Only count score on first attempt (not retries)
+    if (!isRetry) {
+      setDrillTotal(drillTotal + 1);
+      if (isCorrect) setDrillScore(drillScore + 1);
+      updateSkillProgress(drillCorrectLetter.id, isCorrect);
+      recordPractice(isCorrect, drillTotal === 0);
+    }
+
+    // Auto-advance: 1.5s if correct, 2.5s if wrong
+    clearAutoAdvance();
+    autoAdvanceRef.current = setTimeout(() => {
+      handleDrillContinue();
+    }, isCorrect ? 1500 : 2500);
   };
+
+  // Retry: let user try the same question again (wrong answers only)
+  const handleRetry = () => {
+    clearAutoAdvance();
+    setShowResult(false);
+    setSelectedAnswer(null);
+    setIsRetry(true);
+  };
+
+  // Clean up timer on unmount
+  useEffect(() => {
+    return () => clearAutoAdvance();
+  }, [clearAutoAdvance]);
 
   // Handle lesson complete
   const handleNextLesson = () => {
@@ -299,7 +333,7 @@ export default function LearnPage() {
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -30 }}
-              className="space-y-8"
+              className="space-y-6 pb-28"
             >
               <div className="text-center">
                 <p className="text-sm text-primary font-medium uppercase tracking-wider">
@@ -345,7 +379,7 @@ export default function LearnPage() {
                   } else if (showResult && isSelected && !isCorrect) {
                     bgClass = 'bg-error/10 border-error';
                   } else if (showResult && isCorrect) {
-                    bgClass = 'bg-success/5 border-success/50'; // show correct when wrong picked
+                    bgClass = 'bg-success/5 border-success/50';
                   }
 
                   return (
@@ -370,38 +404,6 @@ export default function LearnPage() {
                   );
                 })}
               </div>
-
-              {/* Feedback + Continue */}
-              <AnimatePresence>
-                {showResult && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                    className="space-y-3"
-                  >
-                    <div className={`text-center py-3 rounded-xl text-sm font-medium ${
-                      selectedAnswer === drillCorrectLetter.id
-                        ? 'bg-success/10 text-success'
-                        : 'bg-error/10 text-error'
-                    }`}>
-                      {selectedAnswer === drillCorrectLetter.id
-                        ? '✓ Correct!'
-                        : `✗ That was ${drillCorrectLetter.name} (${drillCorrectLetter.sound})`}
-                    </div>
-                    <button
-                      onClick={handleDrillContinue}
-                      className={`w-full py-3.5 rounded-xl font-semibold text-white transition-colors ${
-                        selectedAnswer === drillCorrectLetter.id
-                          ? 'bg-success hover:bg-[#3d6a4a]'
-                          : 'bg-primary hover:bg-[#163d55]'
-                      }`}
-                    >
-                      {drillIndex < 8 ? 'Continue →' : 'Finish Lesson →'}
-                    </button>
-                  </motion.div>
-                )}
-              </AnimatePresence>
             </motion.div>
           )}
 
@@ -470,6 +472,52 @@ export default function LearnPage() {
           )}
         </AnimatePresence>
       </div>
+
+      {/* Fixed bottom result bar — drill feedback */}
+      <AnimatePresence>
+        {phase === 'drill' && showResult && (
+          <motion.div
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            className={`fixed bottom-0 left-0 right-0 z-30 safe-bottom ${
+              selectedAnswer === drillCorrectLetter.id
+                ? 'bg-[#4A7C59]'
+                : 'bg-[#C17767]'
+            }`}
+          >
+            <div className="max-w-md mx-auto px-6 py-4 flex items-center gap-3">
+              {/* Result text */}
+              <div className="flex-1 min-w-0">
+                <p className="text-white font-bold text-base">
+                  {selectedAnswer === drillCorrectLetter.id
+                    ? '✓ Correct!'
+                    : `✗ That was ${drillCorrectLetter.name} (${drillCorrectLetter.sound})`}
+                </p>
+              </div>
+
+              {/* Action buttons */}
+              <div className="flex gap-2 shrink-0">
+                {selectedAnswer !== drillCorrectLetter.id && (
+                  <button
+                    onClick={handleRetry}
+                    className="px-4 py-2.5 rounded-xl text-sm font-bold bg-white/20 text-white hover:bg-white/30 active:scale-95 transition-all"
+                  >
+                    Try Again
+                  </button>
+                )}
+                <button
+                  onClick={handleDrillContinue}
+                  className="px-4 py-2.5 rounded-xl text-sm font-bold bg-white text-gray-800 hover:bg-gray-100 active:scale-95 transition-all"
+                >
+                  {drillIndex < 8 ? 'Next' : 'Finish'}
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Milestone Toast */}
       <MilestoneToast milestone={milestone} onClose={() => setMilestone(null)} />
