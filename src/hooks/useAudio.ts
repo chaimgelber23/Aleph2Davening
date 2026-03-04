@@ -196,9 +196,13 @@ export function useAudio(options?: UseAudioOptions) {
 
     const speed = speedOverride ?? options?.speed ?? 1.0;
     const pronunciation = options?.pronunciation ?? 'modern';
+    // Create audio object synchronously to avoid iOS/Safari autoplay blocks
+    // We will update its src later if needed, but we must call .play() or similar
+    // to establish user gesture context if possible, or just accept the delay.
+    // Wait, the standard workaround is to construct Audio synchronously and load() it, 
+    // but React async callbacks already lose the context. Let's add better error logging first.
 
     try {
-      // When forceTTS is set (AI Voice selected), skip static files entirely
       if (!options?.forceTTS) {
         // 1. Try pre-generated static file per section
         if (prayerId && sectionId) {
@@ -207,27 +211,25 @@ export function useAudio(options?: UseAudioOptions) {
             await playAudioUrl(staticUrl, speed, false);
             setIsLoading(false);
 
-            // Track audio play
             track({
               eventType: 'audio_play',
               eventCategory: 'audio',
               prayerId,
               sectionId,
-              audioSource: 'siddur-audio',
+              audioSource: 'static',
             });
 
             return;
           }
         }
 
-        // 2. Try full-prayer Siddur Audio recording (skip in auto-advance — plays entire prayer)
+        // 2. Try full-prayer Siddur Audio recording
         if (prayerId) {
           const siddurUrl = await trySiddurAudioFile(prayerId);
           if (siddurUrl) {
             await playAudioUrl(siddurUrl, speed, false);
             setIsLoading(false);
 
-            // Track audio play
             track({
               eventType: 'audio_play',
               eventCategory: 'audio',
@@ -239,7 +241,7 @@ export function useAudio(options?: UseAudioOptions) {
         }
       }
 
-      // 3. AI Voice (Google Cloud TTS) — generates per-section audio
+      // 3. AI Voice (Google Cloud TTS)
       const response = await fetch('/api/tts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -255,6 +257,7 @@ export function useAudio(options?: UseAudioOptions) {
       const url = URL.createObjectURL(blob);
       await playAudioUrl(url, speed, true);
     } catch (err) {
+      console.error('[useAudio play error]:', err);
       setError(err instanceof Error ? err.message : 'Audio unavailable');
     } finally {
       setIsLoading(false);

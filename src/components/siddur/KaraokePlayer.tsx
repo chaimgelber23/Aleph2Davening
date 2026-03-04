@@ -98,11 +98,10 @@ export function KaraokePlayer({
                 return (
                   <span
                     key={i}
-                    className={`text-base transition-all duration-200 ${
-                      isCurrent
-                        ? 'text-primary font-semibold'
-                        : 'text-primary/50 italic'
-                    }`}
+                    className={`text-base transition-all duration-200 ${isCurrent
+                      ? 'text-primary font-semibold'
+                      : 'text-primary/50 italic'
+                      }`}
                   >
                     {word}
                   </span>
@@ -185,11 +184,10 @@ export function KaraokePlayer({
             <button
               onClick={onReplay}
               disabled={audioDisabled}
-              className={`w-10 h-10 rounded-full flex items-center justify-center transition-all shrink-0 ${
-                audioDisabled
-                  ? 'bg-gray-50 text-gray-300'
-                  : 'bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-600'
-              }`}
+              className={`w-10 h-10 rounded-full flex items-center justify-center transition-all shrink-0 ${audioDisabled
+                ? 'bg-gray-50 text-gray-300'
+                : 'bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-600'
+                }`}
               aria-label="Replay from beginning"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -201,24 +199,14 @@ export function KaraokePlayer({
 
           {/* Play/Pause — big, with first-time hint */}
           <div className="relative">
-            {showPlayHint && !isPlaying && !isLoading && (
-              <>
-                {/* Pulsing ring */}
-                <span className="absolute inset-0 rounded-full border-2 border-primary/40 animate-ping" />
-                {/* Label */}
-                <span className="absolute -bottom-7 left-1/2 -translate-x-1/2 whitespace-nowrap text-[11px] font-semibold text-primary bg-primary/10 px-2.5 py-0.5 rounded-full">
-                  Tap to play
-                </span>
-              </>
-            )}
+            {/* Pulsing ring removed per user request */}
             <button
               onClick={onTogglePlay}
               disabled={audioDisabled}
-              className={`w-16 h-16 rounded-full flex items-center justify-center transition-all shrink-0 shadow-lg active:scale-95 ${
-                audioDisabled
-                  ? 'bg-gray-200 text-gray-400'
-                  : 'bg-primary text-white hover:bg-[#163d55]'
-              }`}
+              className={`w-16 h-16 rounded-full flex items-center justify-center transition-all shrink-0 shadow-lg active:scale-95 ${audioDisabled
+                ? 'bg-gray-200 text-gray-400'
+                : 'bg-primary text-white hover:bg-[#163d55]'
+                }`}
             >
               {isLoading ? (
                 <LoadingSpinner />
@@ -239,8 +227,7 @@ export function KaraokePlayer({
           <SpeedPill onSpeedChange={onSpeedChange} color={speedColor} />
         </div>
 
-        {/* Extra spacing when play hint is showing */}
-        {showPlayHint && !isPlaying && <div className="h-4" />}
+        {/* Extra spacing removed */}
       </div>
     </div>
   );
