@@ -111,19 +111,6 @@ export const WEEKDAY_SHACHARIT: DaveningService = {
       color: 'var(--primary-light)',
       items: [
         {
-          id: 'pdzimra-hodu',
-          prayerId: 'hodu',
-          type: 'prayer',
-          label: 'Hodu',
-          labelHebrew: 'הוֹדוּ',
-          amud: {
-            role: 'both',
-            instruction: 'The Shaliach Tzibbur leads and the congregation joins in responsive verses.',
-            notes: 'A collection of verses giving thanks to Hashem. Sets the tone for the Pesukei D\'Zimra section.',
-          },
-          estimatedSeconds: 120,
-        },
-        {
           id: 'pdzimra-baruch-sheamar',
           prayerId: 'baruch-sheamar',
           type: 'prayer',
@@ -133,9 +120,23 @@ export const WEEKDAY_SHACHARIT: DaveningService = {
             role: 'both',
             instruction: 'Stand for this opening blessing of Pesukei D\'Zimra.',
             physicalActions: ['stand'],
-            notes: 'This blessing "opens" the Pesukei D\'Zimra section. Stand while reciting it. Hold the front two tzitzit during the blessing.',
+            notes: 'This blessing "opens" the Pesukei D\'Zimra section. Stand while reciting it. Hold the front two tzitzit during the blessing. (Ashkenaz: Baruch She\'amar comes first, before Hodu.)',
           },
           estimatedSeconds: 60,
+        },
+        {
+          id: 'pdzimra-hodu',
+          prayerId: 'hodu',
+          type: 'prayer',
+          label: 'Hodu',
+          labelHebrew: 'הוֹדוּ',
+          amud: {
+            role: 'both',
+            instruction: 'Sit for Hodu. The congregation joins in responsive verses.',
+            physicalActions: ['sit'],
+            notes: 'A collection of verses from Divrei HaYamim giving thanks to Hashem. In Ashkenaz this follows Baruch She\'amar.',
+          },
+          estimatedSeconds: 120,
         },
         {
           id: 'pdzimra-mizmor-ltodah',
