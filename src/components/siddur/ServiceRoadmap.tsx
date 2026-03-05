@@ -6,7 +6,7 @@ import { useUserStore } from '@/stores/userStore';
 import { AmudBadge } from './AmudBadge';
 import type { DaveningService, ServiceSegment, ServiceItem } from '@/types';
 
-type ViewMode = 'full' | 'minyan';
+type ViewMode = 'priority' | 'all';
 
 const TYPE_LABELS: Record<string, string> = {
   kaddish: 'Kaddish',
@@ -15,8 +15,8 @@ const TYPE_LABELS: Record<string, string> = {
   torah_reading: 'Torah Reading',
 };
 
-/** In Minyan Mode, only show items where the congregation actively participates */
-function filterItemsForMinyan(items: ServiceItem[]): ServiceItem[] {
+/** Priority mode: only show items where the congregation actively participates */
+function filterItemsForPriority(items: ServiceItem[]): ServiceItem[] {
   return items.filter((item) => item.amud.role === 'both' || item.amud.role === 'congregation');
 }
 
@@ -32,7 +32,7 @@ export function ServiceRoadmap({
   const [expandedSegment, setExpandedSegment] = useState<string | null>(
     service.segments[0]?.id || null
   );
-  const [viewMode, setViewMode] = useState<ViewMode>('full');
+  const [viewMode, setViewMode] = useState<ViewMode>('priority');
   const servicePosition = useUserStore((s) => s.servicePosition[service.id]);
   const displaySettings = useUserStore((s) => s.displaySettings);
 
@@ -47,9 +47,8 @@ export function ServiceRoadmap({
   }
   const progressPercent = totalItems > 0 ? (completedItems / totalItems) * 100 : 0;
 
-  // Minyan mode: count only congregation-participation items
-  const minyanItemCount = service.segments.reduce(
-    (sum, seg) => sum + filterItemsForMinyan(seg.items).length,
+  const priorityItemCount = service.segments.reduce(
+    (sum, seg) => sum + filterItemsForPriority(seg.items).length,
     0
   );
 
@@ -60,14 +59,40 @@ export function ServiceRoadmap({
 
   return (
     <div className="min-h-screen bg-[#FAFAF8]">
+      {/* Tab Bar — sticky at very top */}
+      <div className="sticky top-0 z-20 bg-[#FAFAF8] border-b border-gray-100">
+        <div className="max-w-md mx-auto flex">
+          <button
+            onClick={() => setViewMode('priority')}
+            className={`flex-1 py-3 text-sm font-bold transition-all border-b-2 ${
+              viewMode === 'priority'
+                ? 'text-[#1B4965] border-[#1B4965]'
+                : 'text-gray-400 border-transparent hover:text-gray-600'
+            }`}
+          >
+            Priority
+          </button>
+          <button
+            onClick={() => setViewMode('all')}
+            className={`flex-1 py-3 text-sm font-bold transition-all border-b-2 ${
+              viewMode === 'all'
+                ? 'text-[#1B4965] border-[#1B4965]'
+                : 'text-gray-400 border-transparent hover:text-gray-600'
+            }`}
+          >
+            All
+          </button>
+        </div>
+      </div>
+
       {/* Header */}
-      <div className="bg-gradient-to-b from-[#1B4965] to-[#163D55] text-white px-6 py-8 rounded-b-3xl">
+      <div className="bg-gradient-to-b from-[#1B4965] to-[#163D55] text-white px-6 py-6">
         <div className="max-w-md mx-auto">
           <button onClick={onBack} className="text-white/50 text-sm hover:text-white transition-colors">
             ← Back
           </button>
 
-          <div className="flex items-end justify-between mt-4">
+          <div className="flex items-end justify-between mt-3">
             <div>
               <h1 className="text-2xl font-bold tracking-tight">{service.name}</h1>
               <p dir="rtl" className="font-[var(--font-hebrew-serif)] text-white/50 text-sm mt-1">
@@ -76,36 +101,6 @@ export function ServiceRoadmap({
             </div>
             <span className="text-xs text-white/40 font-medium pb-1">~{service.estimatedMinutes} min</span>
           </div>
-
-          {/* Mode Toggle */}
-          <div className="mt-5 flex rounded-xl bg-white/10 p-1 gap-1">
-            <button
-              onClick={() => setViewMode('full')}
-              className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${
-                viewMode === 'full'
-                  ? 'bg-white text-[#1B4965]'
-                  : 'text-white/60 hover:text-white'
-              }`}
-            >
-              Full Service
-            </button>
-            <button
-              onClick={() => setViewMode('minyan')}
-              className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${
-                viewMode === 'minyan'
-                  ? 'bg-white text-[#1B4965]'
-                  : 'text-white/60 hover:text-white'
-              }`}
-            >
-              Minyan Guide
-            </button>
-          </div>
-
-          {viewMode === 'minyan' && (
-            <p className="text-[10px] text-white/40 mt-2 text-center">
-              Showing {minyanItemCount} congregation participation moments
-            </p>
-          )}
 
           {/* Progress */}
           <div className="mt-4">
@@ -140,17 +135,28 @@ export function ServiceRoadmap({
               })}
             </div>
           </div>
-
         </div>
       </div>
 
+      {/* Priority mode banner */}
+      {viewMode === 'priority' && (
+        <div className="max-w-md mx-auto px-6 pt-4">
+          <div className="bg-[#1B4965]/5 border border-[#1B4965]/10 rounded-xl px-4 py-3">
+            <p className="text-xs text-[#1B4965] font-semibold">Start here — {priorityItemCount} congregation moments</p>
+            <p className="text-[11px] text-gray-500 mt-0.5">
+              Learn these first. When you're ready, switch to All to see the full service.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Segment List */}
-      <div className="max-w-md mx-auto px-6 py-5 space-y-3 pb-28">
+      <div className="max-w-md mx-auto px-6 py-4 space-y-3 pb-28">
         {service.segments.map((segment, segIdx) => {
-          const visibleItems = viewMode === 'minyan'
-            ? filterItemsForMinyan(segment.items)
+          const visibleItems = viewMode === 'priority'
+            ? filterItemsForPriority(segment.items)
             : segment.items;
-          if (viewMode === 'minyan' && visibleItems.length === 0) return null;
+          if (viewMode === 'priority' && visibleItems.length === 0) return null;
           return (
             <SegmentCard
               key={segment.id}
@@ -164,18 +170,9 @@ export function ServiceRoadmap({
               isCurrentItem={isCurrentItem}
               showAmudCues={displaySettings.showAmudCues}
               visibleItems={visibleItems}
-              viewMode={viewMode}
             />
           );
         })}
-        {viewMode === 'minyan' && (
-          <div className="text-center py-4">
-            <p className="text-xs text-gray-400 italic leading-relaxed">
-              These are the moments the congregation participates together.<br />
-              As you get comfortable, switch to Full Service to see everything.
-            </p>
-          </div>
-        )}
       </div>
     </div>
   );
@@ -190,7 +187,6 @@ function SegmentCard({
   isCurrentItem,
   showAmudCues,
   visibleItems,
-  viewMode,
 }: {
   segment: ServiceSegment;
   segmentIndex: number;
@@ -200,7 +196,6 @@ function SegmentCard({
   isCurrentItem: (segIdx: number, itemIdx: number) => boolean;
   showAmudCues: boolean;
   visibleItems: ServiceItem[];
-  viewMode: ViewMode;
 }) {
   const totalSeconds = visibleItems.reduce((sum, item) => sum + (item.estimatedSeconds || 0), 0);
   const minutes = Math.ceil(totalSeconds / 60);
