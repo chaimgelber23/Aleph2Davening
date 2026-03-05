@@ -101,7 +101,101 @@ export const WEEKDAY_SHACHARIT: DaveningService = {
     },
 
     // =========================================================================
-    // SEGMENT 2: Pesukei D'Zimra (Verses of Praise)
+    // SEGMENT 2: Korbanot (Sacrificial Readings)
+    // =========================================================================
+    {
+      id: 'korbanot',
+      title: 'Korbanot',
+      titleHebrew: 'קָרְבָּנוֹת',
+      description: 'Readings about the Temple offerings — said in place of the sacrifices themselves',
+      color: '#92400E',
+      items: [
+        {
+          id: 'korbanot-akedah-item',
+          prayerId: 'korbanot-akedah',
+          type: 'prayer',
+          label: 'Akedah',
+          labelHebrew: 'עֲקֵדַת יִצְחָק',
+          amud: {
+            role: 'silent_individual',
+            instruction: 'Read quietly while seated.',
+            physicalActions: ['sit'],
+            notes: 'We recall the Binding of Isaac to invoke this eternal merit before Hashem each morning.',
+          },
+          estimatedSeconds: 120,
+        },
+        {
+          id: 'korbanot-hatamid-item',
+          prayerId: 'korbanot-hatamid',
+          type: 'prayer',
+          label: 'Parshat HaTamid',
+          labelHebrew: 'פָּרָשַׁת הַתָּמִיד',
+          amud: {
+            role: 'silent_individual',
+            instruction: 'Read the Torah passage about the daily Temple offering.',
+            notes: 'Numbers 28:1–8. The Talmud teaches that studying the laws of a sacrifice is as if you brought it.',
+          },
+          estimatedSeconds: 60,
+        },
+        {
+          id: 'korbanot-eizehu-item',
+          type: 'instruction',
+          label: 'Eizehu Mekoman',
+          labelHebrew: 'אֵיזֶהוּ מְקוֹמָן',
+          amud: {
+            role: 'silent_individual',
+            instruction: 'Read Mishna Zevachim ch. 5 — where different offerings were slaughtered in the Temple.',
+            notes: 'This Mishna is read daily because studying it fulfills our connection to the Temple service. Many learn it by heart.',
+          },
+          estimatedSeconds: 90,
+        },
+        {
+          id: 'korbanot-rabbi-yishmael-item',
+          type: 'instruction',
+          label: "Rabbi Yishmael's 13 Principles",
+          labelHebrew: 'י״ג מִדּוֹת',
+          amud: {
+            role: 'silent_individual',
+            instruction: 'Read the Baraita of Rabbi Yishmael — the 13 principles by which Torah is interpreted.',
+            notes: 'Said daily as Torah study — reading it maintains our connection to the oral tradition and rabbinic interpretation.',
+          },
+          estimatedSeconds: 60,
+        },
+        {
+          id: 'korbanot-ketores-item',
+          prayerId: 'korbanot-ketores',
+          type: 'prayer',
+          label: 'Pitum HaKetores',
+          labelHebrew: 'פִּטּוּם הַקְּטֹרֶת',
+          amud: {
+            role: 'silent_individual',
+            instruction: 'Read the incense formula slowly and with concentration.',
+            notes: 'The Zohar says reading this daily is a protection. The 11 spices include galbanum (which smells unpleasant alone) — teaching that all Jews, even those who have strayed, belong in communal prayer.',
+          },
+          estimatedSeconds: 90,
+        },
+        {
+          id: 'korbanot-kaddish-drabbanan',
+          prayerId: 'kaddish-drabbanan',
+          type: 'kaddish',
+          label: "Kaddish D'Rabbanan",
+          labelHebrew: 'קַדִּישׁ דְּרַבָּנָן',
+          amud: {
+            role: 'shaliach_tzibbur',
+            instruction: 'The Shaliach Tzibbur recites Kaddish D\'Rabbanan after the Torah learning of Korbanot.',
+            congregationResponse: 'אָמֵן. יְהֵא שְׁמֵהּ רַבָּא...',
+            congregationResponseTransliteration: 'Amen. Yehei shmei rabba...',
+            physicalActions: ['stand'],
+            waitForCongregation: true,
+            notes: 'Kaddish D\'Rabbanan is said after Torah study. It includes a special prayer for Torah scholars and their students — different from the Half Kaddish which marks service transitions.',
+          },
+          estimatedSeconds: 60,
+        },
+      ],
+    },
+
+    // =========================================================================
+    // SEGMENT 3: Pesukei D'Zimra (Verses of Praise)
     // =========================================================================
     {
       id: 'pesukei-dzimra',
@@ -110,6 +204,37 @@ export const WEEKDAY_SHACHARIT: DaveningService = {
       description: 'Psalms and praises to prepare your heart for the main prayer',
       color: 'var(--primary-light)',
       items: [
+        {
+          id: 'pdzimra-mizmor-shir',
+          prayerId: 'mizmor-shir',
+          type: 'prayer',
+          label: 'Mizmor Shir (Psalm 30)',
+          labelHebrew: 'מִזְמוֹר שִׁיר',
+          amud: {
+            role: 'both',
+            instruction: 'Psalm 30 opens Pesukei D\'Zimra, before Baruch She\'amar.',
+            physicalActions: ['sit'],
+            notes: '"Weeping may endure for a night, but joy comes in the morning" — the perfect theme for morning prayer. Young Israel says this psalm before Baruch She\'amar.',
+          },
+          estimatedSeconds: 90,
+        },
+        {
+          id: 'pdzimra-kaddish-yatom-1',
+          prayerId: 'kaddish-mourners',
+          type: 'kaddish',
+          label: "Mourner's Kaddish",
+          labelHebrew: 'קַדִּישׁ יָתוֹם',
+          amud: {
+            role: 'congregation',
+            instruction: 'Mourners recite Kaddish Yatom after Psalm 30.',
+            congregationResponse: 'אָמֵן. יְהֵא שְׁמֵהּ רַבָּא...',
+            congregationResponseTransliteration: 'Amen. Yehei shmei rabba...',
+            physicalActions: ['stand'],
+            waitForCongregation: true,
+            notes: 'Said by mourners within 11 months of a parent\'s passing, or on a yahrzeit. The congregation responds "Yehei shmei rabba" — one of the most important congregational responses in all of davening.',
+          },
+          estimatedSeconds: 60,
+        },
         {
           id: 'pdzimra-baruch-sheamar',
           prayerId: 'baruch-sheamar',
@@ -212,7 +337,7 @@ export const WEEKDAY_SHACHARIT: DaveningService = {
     },
 
     // =========================================================================
-    // SEGMENT 3: Shema & Brachot
+    // SEGMENT 4: Shema & Brachot
     // =========================================================================
     {
       id: 'shema-brachot',
@@ -295,7 +420,7 @@ export const WEEKDAY_SHACHARIT: DaveningService = {
     },
 
     // =========================================================================
-    // SEGMENT 4: Amidah (Standing Prayer)
+    // SEGMENT 5: Amidah (Standing Prayer)
     // =========================================================================
     {
       id: 'amidah',
@@ -378,7 +503,7 @@ export const WEEKDAY_SHACHARIT: DaveningService = {
     },
 
     // =========================================================================
-    // SEGMENT 5: Post-Amidah
+    // SEGMENT 6: Post-Amidah
     // =========================================================================
     {
       id: 'post-amidah',

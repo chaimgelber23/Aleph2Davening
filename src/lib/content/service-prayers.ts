@@ -1259,6 +1259,225 @@ const VAYECHULU: Prayer = {
 };
 
 // ==========================================
+// PSALM 30 — Mizmor Shir Chanukat HaBayit
+// ==========================================
+
+const MIZMOR_SHIR: Prayer = {
+  id: 'mizmor-shir',
+  slug: 'mizmor-shir',
+  nameHebrew: 'מִזְמוֹר שִׁיר חֲנֻכַּת הַבַּיִת לְדָוִד',
+  nameEnglish: 'Mizmor Shir (Psalm 30)',
+  category: 'tefillah',
+  sortOrder: 110,
+  whenSaid: 'At the beginning of Pesukei D\'Zimra in weekday Shacharit',
+  whySaid: 'Psalm 30 describes a journey from darkness to joy — from near-death to praise. Said each morning, it reminds us that each new day is itself a kind of resurrection: Hashem has returned our soul, and we respond with song.',
+  inspirationText: '"Weeping may endure for a night, but joy comes in the morning." This psalm is our daily declaration that no matter how hard yesterday was, today is a fresh start. Hashem has given us another morning — and that alone is worth singing about.',
+  requiredLevel: 1,
+  estimatedReadSeconds: 90,
+  sections: [
+    {
+      id: 'mizmor-shir-1',
+      sortOrder: 1,
+      hebrewText: 'מִזְמוֹר שִׁיר חֲנֻכַּת הַבַּיִת לְדָוִד',
+      transliteration: 'Mizmor shir chanukat habayit l\'David',
+      translation: 'A psalm, a song for the dedication of the House, by David',
+      notes: 'The opening verse — the psalm\'s title. "Chanukat HaBayit" refers to the dedication of the Temple.',
+      amud: {
+        role: 'both',
+        instruction: 'Recited while seated at the beginning of Pesukei D\'Zimra.',
+        physicalActions: ['sit'],
+      },
+    },
+    {
+      id: 'mizmor-shir-2',
+      sortOrder: 2,
+      hebrewText: 'אֲרוֹמִמְךָ יְהֹוָה כִּי דִלִּיתָנִי וְלֹא שִׂמַּחְתָּ אֹיְבַי לִי׃ יְהֹוָה אֱלֹהַי שִׁוַּעְתִּי אֵלֶיךָ וַתִּרְפָּאֵנִי׃ יְהֹוָה הֶעֱלִיתָ מִן שְׁאוֹל נַפְשִׁי חִיִּיתַנִי מִיָּרְדִי בוֹר׃',
+      transliteration: 'Aromimcha Hashem ki dilitani v\'lo simachta oyevai li. Hashem Elohai shiva\'ti eilecha vatirpa\'eni. Hashem he\'elita min she\'ol nafshi, chiyitani miyordei vor.',
+      translation: 'I exalt You, Hashem, for You have drawn me up and not let my enemies rejoice over me. Hashem my God, I cried out to You and You healed me. Hashem, You have raised my soul from the grave; You kept me alive from going down to the pit.',
+      notes: 'Verses 2–4: David gives personal praise for being saved from death.',
+      amud: { role: 'both', instruction: 'Continue reciting.' },
+    },
+    {
+      id: 'mizmor-shir-3',
+      sortOrder: 3,
+      hebrewText: 'זַמְּרוּ לַיהֹוָה חֲסִידָיו וְהוֹדוּ לְזֵכֶר קָדְשׁוֹ׃ כִּי רֶגַע בְּאַפּוֹ חַיִּים בִּרְצוֹנוֹ בָּעֶרֶב יָלִין בֶּכִי וְלַבֹּקֶר רִנָּה׃',
+      transliteration: 'Zamru la\'Hashem chasidav v\'hodu l\'zecher kodsho. Ki rega b\'apo chayim birtzono, ba\'erev yalin bechi v\'laboker rinah.',
+      translation: 'Sing praise to Hashem, His devoted ones, and give thanks at the mention of His holy name. For His anger is but for a moment; in His favor is life. Weeping may endure for a night, but joy comes in the morning.',
+      notes: 'Verses 5–6: The psalm\'s most famous line — said each morning, it affirms that every day brings renewal.',
+      amud: { role: 'both', instruction: 'Recite with feeling — this is the emotional heart of the psalm.' },
+    },
+    {
+      id: 'mizmor-shir-4',
+      sortOrder: 4,
+      hebrewText: 'וַאֲנִי אָמַרְתִּי בְשַׁלְוִי בַּל אֶמּוֹט לְעוֹלָם׃ יְהֹוָה בִּרְצוֹנְךָ הֶעֱמַדְתָּה לְהַרְרִי עֹז הִסְתַּרְתָּ פָנֶיךָ הָיִיתִי נִבְהָל׃ אֵלֶיךָ יְהֹוָה אֶקְרָא וְאֶל אֲדֹנָי אֶתְחַנָּן׃ מַה בֶּצַע בְּדָמִי בְּרִדְתִּי אֶל שָׁחַת הֲיוֹדְךָ עָפָר הֲיַגִּיד אֱמִתֶּךָ׃',
+      transliteration: 'Va\'ani amarti v\'shalvi bal emot l\'olam. Hashem birtzons\'cha he\'emad\'ta l\'harri oz, histarta fanecha hayiti nivhal. Eilecha Hashem ekra v\'el Adonai etchanan. Mah betza b\'dami b\'ridti el shachat, hayodecha afar hayagid emitech.',
+      translation: 'As for me, I said in my prosperity, "I shall never be moved." Hashem, by Your favor You made my mountain stand firm; when You hid Your face, I was dismayed. To You, Hashem, I call; to my Lord I make supplication: "What profit is in my blood, when I go down to the pit? Will the dust praise You? Will it tell of Your truth?"',
+      notes: 'Verses 7–10: David recalls his moment of false security, then his cry for help.',
+      amud: { role: 'both', instruction: 'Continue reciting.' },
+    },
+    {
+      id: 'mizmor-shir-5',
+      sortOrder: 5,
+      hebrewText: 'שְׁמַע יְהֹוָה וְחָנֵּנִי יְהֹוָה הֱיֵה עֹזֵר לִי׃ הָפַכְתָּ מִסְפְּדִי לְמָחוֹל לִי פִּתַּחְתָּ שַׂקִּי וַתְּאַזְּרֵנִי שִׂמְחָה׃ לְמַעַן יְזַמֶּרְךָ כָבוֹד וְלֹא יִדֹּם יְהֹוָה אֱלֹהַי לְעוֹלָם אוֹדֶךָּ׃',
+      transliteration: 'Sh\'ma Hashem v\'choneni, Hashem heyeh ozer li. Hafachta mispedi l\'machol li, pitachta saki vatazreni simcha. L\'maan y\'zanercha kavod v\'lo yidom, Hashem Elohai l\'olam odeka.',
+      translation: 'Hear, Hashem, and be gracious to me; Hashem, be my helper. You have turned my mourning into dancing; You have loosed my sackcloth and clothed me with gladness — so that my glory may sing Your praise and not be silent. Hashem my God, I will give thanks to You forever.',
+      notes: 'Verses 11–13: The triumphant conclusion. From mourning to dancing, from sackcloth to joy.',
+      amud: { role: 'both', instruction: 'Conclude the psalm.' },
+    },
+  ],
+};
+
+// ==========================================
+// KORBANOT — Akedah (Binding of Isaac)
+// ==========================================
+
+const KORBANOT_AKEDAH: Prayer = {
+  id: 'korbanot-akedah',
+  slug: 'korbanot-akedah',
+  nameHebrew: 'עֲקֵדַת יִצְחָק',
+  nameEnglish: 'Akedah (Binding of Isaac)',
+  category: 'tefillah',
+  sortOrder: 115,
+  whenSaid: 'In the Korbanot section, before Pesukei D\'Zimra',
+  whySaid: 'We recall the Akedah as a merit each morning. Just as Abraham passed the supreme test of faith, we ask that his descendants be remembered with that same devotion. Reading it daily invokes this eternal merit.',
+  inspirationText: 'Every morning we recall the most difficult moment in Abraham\'s life — and his perfect faith. The Akedah teaches that even when we don\'t understand, we can trust. By reading it daily, we invoke that merit and align ourselves with that faith.',
+  requiredLevel: 1,
+  estimatedReadSeconds: 120,
+  sections: [
+    {
+      id: 'korbanot-akedah-1',
+      sortOrder: 1,
+      hebrewText: 'וַיְהִי אַחַר הַדְּבָרִים הָאֵלֶּה וְהָאֱלֹהִים נִסָּה אֶת אַבְרָהָם וַיֹּאמֶר אֵלָיו אַבְרָהָם וַיֹּאמֶר הִנֵּנִי׃ וַיֹּאמֶר קַח נָא אֶת בִּנְךָ אֶת יְחִידְךָ אֲשֶׁר אָהַבְתָּ אֶת יִצְחָק וְלֶךְ לְךָ אֶל אֶרֶץ הַמֹּרִיָּה וְהַעֲלֵהוּ שָׁם לְעֹלָה עַל אַחַד הֶהָרִים אֲשֶׁר אֹמַר אֵלֶיךָ׃',
+      transliteration: 'Vay\'hi achar had\'varim ha\'eileh v\'ha\'Elohim nisa et Avraham vayomer eilav Avraham vayomer hineni. Vayomer kach na et bin\'cha et y\'chid\'cha asher ahavta et Yitzchak v\'lech l\'cha el eretz HaMoriah v\'ha\'aleihu sham l\'olah al achad heh\'harim asher omar eilecha.',
+      translation: 'And it came to pass after these things that God tested Abraham, and said to him, "Abraham," and he said, "Here I am." And He said, "Take now your son, your only son whom you love, Isaac, and go to the land of Moriah and offer him there as a burnt offering on one of the mountains which I will tell you."',
+      notes: 'Genesis 22:1–2. Hashem\'s command to Abraham.',
+      amud: { role: 'silent_individual', instruction: 'Read quietly while seated.', physicalActions: ['sit'] },
+    },
+    {
+      id: 'korbanot-akedah-2',
+      sortOrder: 2,
+      hebrewText: 'וַיַּשְׁכֵּם אַבְרָהָם בַּבֹּקֶר וַיַּחֲבֹשׁ אֶת חֲמֹרוֹ וַיִּקַּח אֶת שְׁנֵי נְעָרָיו אִתּוֹ וְאֵת יִצְחָק בְּנוֹ וַיְבַקַּע עֲצֵי עֹלָה וַיָּקָם וַיֵּלֶךְ אֶל הַמָּקוֹם אֲשֶׁר אָמַר לוֹ הָאֱלֹהִים׃',
+      transliteration: 'Vayashkem Avraham baboker vayachavosh et chamoro vayikach et sh\'nei n\'arav ito v\'et Yitzchak b\'no vay\'vakea atzei olah vayakam vayelech el hamakom asher amar lo ha\'Elohim.',
+      translation: 'And Abraham rose early in the morning and saddled his donkey, and took two of his young men with him, and Isaac his son; he split the wood for the burnt offering, and arose and went to the place of which God had told him.',
+      notes: 'Genesis 22:3. Abraham\'s immediate response — he rose early without hesitation.',
+      amud: { role: 'silent_individual', instruction: 'Continue reading quietly.' },
+    },
+    {
+      id: 'korbanot-akedah-3',
+      sortOrder: 3,
+      hebrewText: 'וַיִּשָּׂא אַבְרָהָם אֶת עֵינָיו וַיַּרְא אֶת הַמָּקוֹם מֵרָחֹק׃ וַיֹּאמֶר אַבְרָהָם אֶל נְעָרָיו שְׁבוּ לָכֶם פֹּה עִם הַחֲמוֹר וַאֲנִי וְהַנַּעַר נֵלְכָה עַד כֹּה וְנִשְׁתַּחֲוֶה וְנָשׁוּבָה אֲלֵיכֶם׃ וַיִּקַּח אַבְרָהָם אֶת עֲצֵי הָעֹלָה וַיָּשֶׂם עַל יִצְחָק בְּנוֹ וַיִּקַּח בְּיָדוֹ אֶת הָאֵשׁ וְאֶת הַמַּאֲכֶלֶת וַיֵּלְכוּ שְׁנֵיהֶם יַחְדָּו׃',
+      transliteration: 'Vayisa Avraham et einav vayar et hamakom meirachok. Vayomer Avraham el n\'arav sh\'vu lachem poh im hachamor va\'ani v\'hana\'ar neilcha ad koh v\'nishtachaveh v\'nashuvah aleichem. Vayikach Avraham et atzei ha\'olah vayasem al Yitzchak b\'no vayikach b\'yado et ha\'eish v\'et hama\'achelet vayelchu sh\'neihem yachdav.',
+      translation: 'Then Abraham lifted his eyes and saw the place from afar. Abraham said to his young men, "Stay here with the donkey; I and the lad will go over there and we will worship and return to you." Abraham took the wood of the burnt offering and placed it on Isaac his son; he took in his hand the fire and the knife, and the two of them went together.',
+      notes: 'Genesis 22:4–6. "We will worship and return" — Abraham\'s profound faith that both would return.',
+      amud: { role: 'silent_individual', instruction: 'Continue reading quietly.' },
+    },
+    {
+      id: 'korbanot-akedah-4',
+      sortOrder: 4,
+      hebrewText: 'וַיֹּאמֶר יִצְחָק אֶל אַבְרָהָם אָבִיו וַיֹּאמֶר אָבִי וַיֹּאמֶר הִנֶּנִּי בְנִי וַיֹּאמֶר הִנֵּה הָאֵשׁ וְהָעֵצִים וְאַיֵּה הַשֶּׂה לְעֹלָה׃ וַיֹּאמֶר אַבְרָהָם אֱלֹהִים יִרְאֶה לּוֹ הַשֶּׂה לְעֹלָה בְּנִי וַיֵּלְכוּ שְׁנֵיהֶם יַחְדָּו׃ וַיָּבֹאוּ אֶל הַמָּקוֹם אֲשֶׁר אָמַר לוֹ הָאֱלֹהִים וַיִּבֶן שָׁם אַבְרָהָם אֶת הַמִּזְבֵּחַ וַיַּעֲרֹךְ אֶת הָעֵצִים וַיַּעֲקֹד אֶת יִצְחָק בְּנוֹ וַיָּשֶׂם אֹתוֹ עַל הַמִּזְבֵּחַ מִמַּעַל לָעֵצִים׃',
+      transliteration: 'Vayomer Yitzchak el Avraham aviv vayomer avi vayomer hineni v\'ni vayomer hineh ha\'eish v\'ha\'etzim v\'ayeh haseh l\'olah. Vayomer Avraham Elohim yir\'eh lo haseh l\'olah b\'ni vayelchu sh\'neihem yachdav. Vayavo\'u el hamakom asher amar lo ha\'Elohim vayiven sham Avraham et hamizbe\'ach vaya\'aroch et ha\'etzim vaya\'akod et Yitzchak b\'no vayasem oto al hamizbe\'ach mima\'al la\'etzim.',
+      translation: 'And Isaac spoke to Abraham his father and said, "My father," and he said, "Here I am, my son." He said, "Behold, the fire and the wood, but where is the lamb for the burnt offering?" And Abraham said, "God will provide for Himself the lamb, my son." And the two of them went together. They came to the place; Abraham built the altar, arranged the wood, bound Isaac his son, and placed him on the altar, on top of the wood.',
+      notes: 'Genesis 22:7–9. Isaac\'s question and Abraham\'s prophetic answer. The climax of the test.',
+      amud: { role: 'silent_individual', instruction: 'Continue reading quietly.' },
+    },
+    {
+      id: 'korbanot-akedah-5',
+      sortOrder: 5,
+      hebrewText: 'וַיִּשְׁלַח אַבְרָהָם אֶת יָדוֹ וַיִּקַּח אֶת הַמַּאֲכֶלֶת לִשְׁחֹט אֶת בְּנוֹ׃ וַיִּקְרָא אֵלָיו מַלְאַךְ יְהֹוָה מִן הַשָּׁמַיִם וַיֹּאמֶר אַבְרָהָם אַבְרָהָם וַיֹּאמֶר הִנֵּנִי׃ וַיֹּאמֶר אַל תִּשְׁלַח יָדְךָ אֶל הַנַּעַר וְאַל תַּעַשׂ לוֹ מְאוּמָה כִּי עַתָּה יָדַעְתִּי כִּי יְרֵא אֱלֹהִים אַתָּה וְלֹא חָשַׂכְתָּ אֶת בִּנְךָ אֶת יְחִידְךָ מִמֶּנִּי׃',
+      transliteration: 'Vayishlach Avraham et yado vayikach et hama\'achelet lishchot et b\'no. Vayikra eilav malach Hashem min hashamayim vayomer Avraham Avraham vayomer hineni. Vayomer al tishlach yadcha el hana\'ar v\'al ta\'as lo m\'umah ki atah yadati ki y\'rei Elohim atah v\'lo chasachta et bin\'cha et y\'chid\'cha mimeni.',
+      translation: 'Abraham stretched out his hand and took the knife to slaughter his son. But the angel of Hashem called to him from heaven and said, "Abraham, Abraham!" And he said, "Here I am." He said, "Do not stretch out your hand against the lad, and do nothing to him; for now I know that you fear God, since you have not withheld your son, your only son, from Me."',
+      notes: 'Genesis 22:10–12. The divine intervention at the last moment. Hashem\'s recognition of Abraham\'s perfect faith.',
+      amud: { role: 'silent_individual', instruction: 'Continue reading quietly.' },
+    },
+    {
+      id: 'korbanot-akedah-6',
+      sortOrder: 6,
+      hebrewText: 'וַיִּשָּׂא אַבְרָהָם אֶת עֵינָיו וַיַּרְא וְהִנֵּה אַיִל אַחַר נֶאֱחַז בַּסְּבַךְ בְּקַרְנָיו וַיֵּלֶךְ אַבְרָהָם וַיִּקַּח אֶת הָאַיִל וַיַּעֲלֵהוּ לְעֹלָה תַּחַת בְּנוֹ׃ וַיִּקְרָא אַבְרָהָם שֵׁם הַמָּקוֹם הַהוּא יְהֹוָה יִרְאֶה׃ וַיִּקְרָא מַלְאַךְ יְהֹוָה אֶל אַבְרָהָם שֵׁנִית מִן הַשָּׁמָיִם׃ וַיֹּאמֶר בִּי נִשְׁבַּעְתִּי נְאֻם יְהֹוָה כִּי יַעַן אֲשֶׁר עָשִׂיתָ אֶת הַדָּבָר הַזֶּה וְלֹא חָשַׂכְתָּ אֶת בִּנְךָ אֶת יְחִידֶךָ׃ כִּי בָרֵךְ אֲבָרֶכְךָ וְהַרְבָּה אַרְבֶּה אֶת זַרְעֲךָ כְּכוֹכְבֵי הַשָּׁמַיִם וְכַחוֹל אֲשֶׁר עַל שְׂפַת הַיָּם וְיִרַשׁ זַרְעֲךָ אֵת שַׁעַר אֹיְבָיו׃ וְהִתְבָּרְכוּ בְזַרְעֲךָ כֹּל גּוֹיֵי הָאָרֶץ עֵקֶב אֲשֶׁר שָׁמַעְתָּ בְּקֹלִי׃',
+      transliteration: 'Vayisa Avraham et einav vayar v\'hineh ayil achar ne\'echaz basvach b\'karnav vayelech Avraham vayikach et ha\'ayil vaya\'aleihu l\'olah tachat b\'no. Vayikra Avraham shem hamakom hahu Hashem yir\'eh. Vayikra malach Hashem el Avraham sh\'nit min hashamayim. Vayomer bi nishbati n\'um Hashem ki ya\'an asher asita et hadavar hazeh v\'lo chasachta et bin\'cha et y\'chidecha. Ki varech avarechcha v\'harbeh arbeh et zar\'acha k\'chochvei hashamayim v\'cachol asher al s\'fat hayam v\'yirash zar\'acha et sha\'ar oyevav. V\'hitbarchu v\'zar\'acha kol goyei ha\'aretz eikev asher shamata b\'koli.',
+      translation: 'Then Abraham lifted his eyes and saw a ram caught in the thicket by its horns; Abraham went and took the ram and offered it up as a burnt offering instead of his son. Abraham called that place "Hashem will see." Then the angel of Hashem called to Abraham a second time from heaven, and said: "By Myself I have sworn, declares Hashem — because you have done this and have not withheld your son, your only son — I will greatly bless you, and greatly multiply your seed as the stars of the heavens and as the sand on the seashore; and your seed shall possess the gate of their enemies. In your seed all the nations of the earth shall be blessed, because you have obeyed My voice."',
+      notes: 'Genesis 22:13–18. The ram, the eternal promise. The merit of the Akedah endures for all of Abraham\'s descendants.',
+      amud: { role: 'silent_individual', instruction: 'Conclude the Akedah.' },
+    },
+  ],
+};
+
+// ==========================================
+// KORBANOT — Parshat HaTamid (Daily Offering)
+// ==========================================
+
+const KORBANOT_HATAMID: Prayer = {
+  id: 'korbanot-hatamid',
+  slug: 'korbanot-hatamid',
+  nameHebrew: 'פָּרָשַׁת הַתָּמִיד',
+  nameEnglish: 'Parshat HaTamid (Daily Offering)',
+  category: 'tefillah',
+  sortOrder: 116,
+  whenSaid: 'In the Korbanot section, after the Akedah',
+  whySaid: 'We read the Torah passage about the daily Temple offering each morning as a substitute for the offering itself. The Talmud teaches that studying the laws of a sacrifice is considered as if one actually brought it.',
+  inspirationText: 'The Beit HaMikdash no longer stands, but the offerings never stopped — they transformed into prayer. Each time we read these verses, we\'re participating in the service of Hashem in the way available to us today.',
+  requiredLevel: 1,
+  estimatedReadSeconds: 60,
+  sections: [
+    {
+      id: 'korbanot-hatamid-1',
+      sortOrder: 1,
+      hebrewText: 'וַיְדַבֵּר יְהֹוָה אֶל מֹשֶׁה לֵּאמֹר׃ צַו אֶת בְּנֵי יִשְׂרָאֵל וְאָמַרְתָּ אֲלֵהֶם אֶת קָרְבָּנִי לַחְמִי לְאִשַּׁי רֵיחַ נִיחֹחִי תִּשְׁמְרוּ לְהַקְרִיב לִי בְּמוֹעֲדוֹ׃ וְאָמַרְתָּ לָהֶם זֶה הָאִשֶּׁה אֲשֶׁר תַּקְרִיבוּ לַיהֹוָה כְּבָשִׂים בְּנֵי שָׁנָה תְמִימִם שְׁנַיִם לַיּוֹם עֹלָה תָמִיד׃',
+      transliteration: 'Vay\'daber Hashem el Moshe leimor. Tzav et b\'nei Yisrael v\'amarta aleihem et korbani lachmi l\'ishai rei\'ach nichochi tishm\'ru l\'hakriv li b\'moado. V\'amarta lahem zeh ha\'isheh asher takrivu l\'Hashem k\'vasim b\'nei shanah t\'mimim sh\'nayim layom olah tamid.',
+      translation: 'Hashem spoke to Moses, saying: Command the children of Israel and say to them: My offering, My food for My fire-offerings, a pleasing aroma to Me — you shall be careful to offer to Me at its appointed time. Say to them: This is the fire-offering that you shall bring to Hashem — two lambs in their first year, without blemish, as a daily burnt offering.',
+      notes: 'Numbers 28:1–3. The commandment of the Tamid — the daily offering brought each morning and afternoon.',
+      amud: { role: 'silent_individual', instruction: 'Read quietly while seated.', physicalActions: ['sit'] },
+    },
+    {
+      id: 'korbanot-hatamid-2',
+      sortOrder: 2,
+      hebrewText: 'אֶת הַכֶּבֶשׂ אֶחָד תַּעֲשֶׂה בַבֹּקֶר וְאֵת הַכֶּבֶשׂ הַשֵּׁנִי תַּעֲשֶׂה בֵּין הָעַרְבָּיִם׃ וַעֲשִׂירִית הָאֵיפָה סֹלֶת לְמִנְחָה בְּלוּלָה בְּשֶׁמֶן כָּתִית רְבִיעִת הַהִין׃ עֹלַת תָּמִיד הָעֲשֻׂיָה בְּהַר סִינַי לְרֵיחַ נִיחֹחַ אִשֶּׁה לַיהֹוָה׃ וְנִסְכּוֹ רְבִיעִת הַהִין לַכֶּבֶשׂ הָאֶחָד בַּקֹּדֶשׁ הַסֵּךְ נֶסֶךְ שֵׁכָר לַיהֹוָה׃ וְאֵת הַכֶּבֶשׂ הַשֵּׁנִי תַּעֲשֶׂה בֵּין הָעַרְבָּיִם כְּמִנְחַת הַבֹּקֶר וּכְנִסְכּוֹ תַּעֲשֶׂה אִשֵּׁה רֵיחַ נִיחֹחַ לַיהֹוָה׃',
+      transliteration: 'Et hakeves echad ta\'aseh vaboker v\'et hakeves hasheni ta\'aseh bein ha\'arbayim. Va\'asirit ha\'eifah solet l\'mincha b\'lulah b\'shemen katit r\'vi\'it hahin. Olat tamid ha\'asuyah b\'har Sinai l\'rei\'ach nicho\'ach isheh la\'Hashem. V\'nisko r\'vi\'it hahin lakeves ha\'echad bakodesh hasech nesech shechar la\'Hashem. V\'et hakeves hasheni ta\'aseh bein ha\'arbayim k\'minchat haboker uch\'nisko ta\'aseh isheh rei\'ach nicho\'ach la\'Hashem.',
+      translation: 'The one lamb you shall offer in the morning, and the second lamb in the afternoon — a tenth of an ephah of fine flour as a meal offering, mixed with a quarter of a hin of beaten oil. It is a continual burnt offering, as was made at Mount Sinai, a pleasing aroma, a fire-offering to Hashem. Its libation shall be a quarter hin for each lamb. The second lamb you shall offer in the afternoon; as the morning meal offering and as its libation — a fire-offering, a pleasing aroma to Hashem.',
+      notes: 'Numbers 28:4–8. The complete details of the Tamid — morning and afternoon.',
+      amud: { role: 'silent_individual', instruction: 'Conclude the Parshat HaTamid.' },
+    },
+  ],
+};
+
+// ==========================================
+// KORBANOT — Pitum HaKetores (Incense Formula)
+// ==========================================
+
+const KORBANOT_KETORES: Prayer = {
+  id: 'korbanot-ketores',
+  slug: 'korbanot-ketores',
+  nameHebrew: 'פִּטּוּם הַקְּטֹרֶת',
+  nameEnglish: 'Pitum HaKetores',
+  category: 'tefillah',
+  sortOrder: 117,
+  whenSaid: 'In the Korbanot section. Also repeated at Mincha (afternoon service).',
+  whySaid: 'The Ketores (incense) was the most spiritually intense part of the Temple service. The Zohar says that reading Pitum HaKetores protects from harm and brings blessing. The 11 spices represent different kinds of people — even the chilabenah, which smelled unpleasant alone, was included: to teach us that even those who have strayed belong in communal prayer.',
+  inspirationText: 'The incense of unity: 11 spices that only work together. A reminder that Jewish prayer is strongest when the whole community — including those who have drifted — stands together before Hashem.',
+  requiredLevel: 1,
+  estimatedReadSeconds: 90,
+  sections: [
+    {
+      id: 'korbanot-ketores-1',
+      sortOrder: 1,
+      hebrewText: 'פִּטּוּם הַקְּטֹרֶת: הַצֳּרִי, וְהַצִּפֹּרֶן, וְהַחֶלְבְּנָה, וְהַלְּבוֹנָה מִשְׁקַל שִׁבְעִים שִׁבְעִים מָנֶה. מוֹר, וּקְצִיעָה, שִׁבֹּלֶת נֵרְדְּ, וְכַרְכֹּם מִשְׁקַל שִׁשָּׁה עָשָׂר שִׁשָּׁה עָשָׂר מָנֶה. הַקֹּשְׁט שְׁנֵים עָשָׂר, קִלּוּפָה שְׁלֹשָׁה, וְקִנָּמוֹן תִּשְׁעָה.',
+      transliteration: 'Pitum hak\'tores: hatzori, v\'hatziporen, v\'hachelbenah, v\'hal\'vonah mishkal shiv\'im shiv\'im maneh. Mor, uktziah, shibolet nerd, v\'karkum mishkal shishah asar shishah asar maneh. Hakoshet sh\'neim asar, kilufah sh\'loshah, v\'kinamom tishah.',
+      translation: 'The formula of the incense: Balsam, onycha, galbanum, and frankincense — seventy maneh each. Myrrh, cassia, spikenard, and saffron — sixteen maneh each. Costus — twelve; aromatic bark — three; cinnamon — nine.',
+      notes: 'Keritut 6a. The eleven spices of the Ketores. The galbanum (chelbenah) smelled unpleasant — yet it was included. A lesson: communal prayer includes everyone.',
+      amud: { role: 'silent_individual', instruction: 'Read quietly while seated.', physicalActions: ['sit'] },
+    },
+    {
+      id: 'korbanot-ketores-2',
+      sortOrder: 2,
+      hebrewText: 'בֹּרִית כַּרְשִׁינָה תִּשְׁעָה קַבִּין, יֵין קַפְרִיסִין סְאִין תְּלָתָא וְקַבִּין תְּלָתָא. וְאִם אֵין לוֹ יֵין קַפְרִיסִין — מֵבִיא חֲמַר חִוַּרְיָן עַתִּיק. מֶלַח סְדוֹמִית רֹבַע הַקַּב, מַעֲלֶה עָשָׁן כָּל שֶׁהוּא. אִם נָתַן בָּהּ דְּבַשׁ — פְּסָלָהּ. וְאִם חִסֵּר אַחַת מִכָּל סַמָּמָנֶיהָ — חַיָּב מִיתָה׃',
+      transliteration: 'Borit karshina tish\'ah kabin, yein Kaprisi\'in s\'in t\'lata v\'kabin t\'lata. V\'im ein lo yein Kaprisi\'in — mevi chamar chivaryan atik. Melach s\'domit rova hakav, ma\'aleh ashan kol shehu. Im natan bah d\'vash — p\'salah. V\'im chiser achat mikol samamaneiha — chayav mitah.',
+      translation: 'Lye of Carshina — nine kav; Cyprus wine — three se\'ah and three kav. If Cyprus wine is unavailable, bring aged white wine. Sodomite salt — a quarter kav; a small amount of the smoke-raising herb. If one added honey — it became invalid. If one omitted any single ingredient — he was liable to death.',
+      notes: 'The strictness of the formula: each ingredient was essential. This teaches the precision required in our service to Hashem.',
+      amud: { role: 'silent_individual', instruction: 'Conclude the Pitum HaKetores.' },
+    },
+  ],
+};
+
+// ==========================================
 // COMBINED EXPORT
 // ==========================================
 
@@ -1270,6 +1489,10 @@ export const SERVICE_PRAYERS: Prayer[] = [
   BARCHU,
   KEDUSHA_SHACHARIT,
   MODIM_DERABANAN,
+  MIZMOR_SHIR,
+  KORBANOT_AKEDAH,
+  KORBANOT_HATAMID,
+  KORBANOT_KETORES,
   LECHA_DODI,
   KABBALAT_SHABBAT_PSALMS,
   VAYECHULU,

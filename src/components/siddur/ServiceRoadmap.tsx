@@ -6,12 +6,19 @@ import { useUserStore } from '@/stores/userStore';
 import { AmudBadge } from './AmudBadge';
 import type { DaveningService, ServiceSegment, ServiceItem } from '@/types';
 
+type ViewMode = 'full' | 'minyan';
+
 const TYPE_LABELS: Record<string, string> = {
   kaddish: 'Kaddish',
   instruction: 'Note',
   responsive: 'Call & Response',
   torah_reading: 'Torah Reading',
 };
+
+/** In Minyan Mode, only show items where the congregation actively participates */
+function filterItemsForMinyan(items: ServiceItem[]): ServiceItem[] {
+  return items.filter((item) => item.amud.role === 'both' || item.amud.role === 'congregation');
+}
 
 export function ServiceRoadmap({
   service,
@@ -25,6 +32,7 @@ export function ServiceRoadmap({
   const [expandedSegment, setExpandedSegment] = useState<string | null>(
     service.segments[0]?.id || null
   );
+  const [viewMode, setViewMode] = useState<ViewMode>('full');
   const servicePosition = useUserStore((s) => s.servicePosition[service.id]);
   const displaySettings = useUserStore((s) => s.displaySettings);
 
@@ -38,6 +46,12 @@ export function ServiceRoadmap({
     completedItems += servicePosition.itemIndex;
   }
   const progressPercent = totalItems > 0 ? (completedItems / totalItems) * 100 : 0;
+
+  // Minyan mode: count only congregation-participation items
+  const minyanItemCount = service.segments.reduce(
+    (sum, seg) => sum + filterItemsForMinyan(seg.items).length,
+    0
+  );
 
   const isCurrentItem = (segIdx: number, itemIdx: number) => {
     if (!servicePosition) return false;
@@ -63,8 +77,38 @@ export function ServiceRoadmap({
             <span className="text-xs text-white/40 font-medium pb-1">~{service.estimatedMinutes} min</span>
           </div>
 
+          {/* Mode Toggle */}
+          <div className="mt-5 flex rounded-xl bg-white/10 p-1 gap-1">
+            <button
+              onClick={() => setViewMode('full')}
+              className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${
+                viewMode === 'full'
+                  ? 'bg-white text-[#1B4965]'
+                  : 'text-white/60 hover:text-white'
+              }`}
+            >
+              Full Service
+            </button>
+            <button
+              onClick={() => setViewMode('minyan')}
+              className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${
+                viewMode === 'minyan'
+                  ? 'bg-white text-[#1B4965]'
+                  : 'text-white/60 hover:text-white'
+              }`}
+            >
+              Minyan Guide
+            </button>
+          </div>
+
+          {viewMode === 'minyan' && (
+            <p className="text-[10px] text-white/40 mt-2 text-center">
+              Showing {minyanItemCount} congregation participation moments
+            </p>
+          )}
+
           {/* Progress */}
-          <div className="mt-6">
+          <div className="mt-4">
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-[10px] text-white/40 uppercase tracking-widest font-semibold">Progress</span>
               <span className="text-[11px] text-white/60 font-medium">{Math.round(progressPercent)}%</span>
@@ -102,20 +146,36 @@ export function ServiceRoadmap({
 
       {/* Segment List */}
       <div className="max-w-md mx-auto px-6 py-5 space-y-3 pb-28">
-        {service.segments.map((segment, segIdx) => (
-          <SegmentCard
-            key={segment.id}
-            segment={segment}
-            segmentIndex={segIdx}
-            isExpanded={expandedSegment === segment.id}
-            onToggle={() =>
-              setExpandedSegment(expandedSegment === segment.id ? null : segment.id)
-            }
-            onSelectItem={onSelectItem}
-            isCurrentItem={isCurrentItem}
-            showAmudCues={displaySettings.showAmudCues}
-          />
-        ))}
+        {service.segments.map((segment, segIdx) => {
+          const visibleItems = viewMode === 'minyan'
+            ? filterItemsForMinyan(segment.items)
+            : segment.items;
+          if (viewMode === 'minyan' && visibleItems.length === 0) return null;
+          return (
+            <SegmentCard
+              key={segment.id}
+              segment={segment}
+              segmentIndex={segIdx}
+              isExpanded={expandedSegment === segment.id}
+              onToggle={() =>
+                setExpandedSegment(expandedSegment === segment.id ? null : segment.id)
+              }
+              onSelectItem={onSelectItem}
+              isCurrentItem={isCurrentItem}
+              showAmudCues={displaySettings.showAmudCues}
+              visibleItems={visibleItems}
+              viewMode={viewMode}
+            />
+          );
+        })}
+        {viewMode === 'minyan' && (
+          <div className="text-center py-4">
+            <p className="text-xs text-gray-400 italic leading-relaxed">
+              These are the moments the congregation participates together.<br />
+              As you get comfortable, switch to Full Service to see everything.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -129,6 +189,8 @@ function SegmentCard({
   onSelectItem,
   isCurrentItem,
   showAmudCues,
+  visibleItems,
+  viewMode,
 }: {
   segment: ServiceSegment;
   segmentIndex: number;
@@ -137,8 +199,10 @@ function SegmentCard({
   onSelectItem: (item: ServiceItem, segmentIndex: number, itemIndex: number) => void;
   isCurrentItem: (segIdx: number, itemIdx: number) => boolean;
   showAmudCues: boolean;
+  visibleItems: ServiceItem[];
+  viewMode: ViewMode;
 }) {
-  const totalSeconds = segment.items.reduce((sum, item) => sum + (item.estimatedSeconds || 0), 0);
+  const totalSeconds = visibleItems.reduce((sum, item) => sum + (item.estimatedSeconds || 0), 0);
   const minutes = Math.ceil(totalSeconds / 60);
 
   return (
@@ -173,7 +237,7 @@ function SegmentCard({
                   {minutes > 0 && (
                     <span className="text-[10px] font-medium">~{minutes} min</span>
                   )}
-                  <span className="text-[10px] font-medium">{segment.items.length}</span>
+                  <span className="text-[10px] font-medium">{visibleItems.length}</span>
                   <svg
                     className={`w-3.5 h-3.5 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
                     fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
@@ -212,7 +276,7 @@ function SegmentCard({
               className="mt-2 ml-3 border-l pl-4 space-y-0.5"
               style={{ borderColor: segment.color + '30' }}
             >
-              {segment.items.map((item, itemIdx) => {
+              {visibleItems.map((item, itemIdx) => {
                 const isCurrent = isCurrentItem(segmentIndex, itemIdx);
                 return (
                   <button
