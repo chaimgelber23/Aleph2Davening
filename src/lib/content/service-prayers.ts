@@ -1201,7 +1201,180 @@ const KABBALAT_SHABBAT_PSALMS: Prayer = {
 };
 
 // ==========================================
-// 9. VAYECHULU
+// 9. MIZMOR SHIR L'YOM HASHABBAT (Psalm 92)
+// ==========================================
+
+const MIZMOR_SHIR_SHABBAT: Prayer = {
+  id: 'mizmor-shir-shabbat',
+  slug: 'mizmor-shir-shabbat',
+  nameHebrew: 'מִזְמוֹר שִׁיר לְיוֹם הַשַּׁבָּת',
+  nameEnglish: "Mizmor Shir L'Yom HaShabbat (Psalm 92)",
+  category: 'tefillah',
+  sortOrder: 109,
+  whenSaid: 'At the end of Kabbalat Shabbat, after Lecha Dodi — the psalm designated for Shabbat in the Temple',
+  whySaid: "Psalm 92 was sung by the Levites in the Holy Temple every Shabbat. It celebrates Shabbat as the day that proclaims God's greatness. Reciting it on Friday night connects us to the Temple service.",
+  inspirationText: "This psalm was sung in the Temple every Shabbat. When we say it now, we connect across thousands of years to the Levites who stood in the Temple courts and sang these exact words. The Shabbat that was is the Shabbat that is.",
+  requiredLevel: 1,
+  estimatedReadSeconds: 90,
+  sections: [
+    {
+      id: 'mizmor-shir-shabbat-1',
+      sortOrder: 1,
+      hebrewText: 'מִזְמוֹר שִׁיר לְיוֹם הַשַּׁבָּת',
+      transliteration: "Mizmor shir l'yom haShabbat",
+      translation: 'A psalm, a song for the Shabbat day',
+      notes: "The heading of Psalm 92 — the Levites sang this psalm in the Temple every Shabbat.",
+      amud: {
+        role: 'both',
+        instruction: 'This psalm closes the Kabbalat Shabbat service, after Lecha Dodi.',
+      },
+    },
+    {
+      id: 'mizmor-shir-shabbat-2',
+      sortOrder: 2,
+      hebrewText: 'טוֹב לְהֹדוֹת לַיהוָה וּלְזַמֵּר לְשִׁמְךָ עֶלְיוֹן. לְהַגִּיד בַּבֹּקֶר חַסְדֶּךָ וֶאֱמוּנָתְךָ בַּלֵּילוֹת',
+      transliteration: "Tov l'hodot lAdonai, ul'zamer l'shimcha Elyon. L'hagid baboker chasdecha, ve'emunatcha baleilot",
+      translation: 'It is good to give thanks to the Lord, and to sing praises to Your name, O Most High. To proclaim Your kindness in the morning and Your faithfulness in the nights',
+      amud: { role: 'both' },
+    },
+    {
+      id: 'mizmor-shir-shabbat-3',
+      sortOrder: 3,
+      hebrewText: "עֲלֵי עָשׂוֹר וַעֲלֵי נָבֶל עֲלֵי הִגָּיוֹן בְּכִנּוֹר. כִּי שִׂמַּחְתַּנִי יְהוָה בְּפָעֳלֶךָ בְּמַעֲשֵׂי יָדֶיךָ אֲרַנֵּן",
+      transliteration: "Alei asor va'alei navel, alei higayon b'chinor. Ki simachtani Adonai b'fo'olecha, b'ma'asei yadecha arannen",
+      translation: 'Upon the ten-stringed instrument and upon the lute, with music upon the harp. For You have gladdened me, Lord, with Your works; at the works of Your hands I will sing for joy',
+      amud: { role: 'both' },
+    },
+    {
+      id: 'mizmor-shir-shabbat-4',
+      sortOrder: 4,
+      hebrewText: "מַה גָּדְלוּ מַעֲשֶׂיךָ יְהוָה מְאֹד עָמְקוּ מַחְשְׁבֹתֶיךָ. אִישׁ בַּעַר לֹא יֵדָע וּכְסִיל לֹא יָבִין אֶת זֹאת",
+      transliteration: "Ma gadlu ma'asecha Adonai, m'od amku machsh'votecha. Ish ba'ar lo yeda, uchsil lo yavin et zot",
+      translation: 'How great are Your works, Lord, how very deep are Your thoughts. A boor cannot know, and a fool cannot understand this',
+      amud: { role: 'both' },
+    },
+    {
+      id: 'mizmor-shir-shabbat-5',
+      sortOrder: 5,
+      hebrewText: "בִּפְרֹחַ רְשָׁעִים כְּמוֹ עֵשֶׂב וַיָּצִיצוּ כָּל פֹּעֲלֵי אָוֶן לְהִשָּׁמְדָם עֲדֵי עַד. וְאַתָּה מָרוֹם לְעֹלָם יְהוָה",
+      transliteration: "Bifro'ach resha'im k'mo esev, vayatzitzu kol po'alei aven, l'hisham'dam adei ad. V'ata marom l'olam Adonai",
+      translation: 'When the wicked bloom like grass and all evildoers blossom — it is to destroy them forever. But You are exalted forever, Lord',
+      amud: { role: 'both' },
+    },
+    {
+      id: 'mizmor-shir-shabbat-6',
+      sortOrder: 6,
+      hebrewText: "כִּי הִנֵּה אֹיְבֶיךָ יְהוָה כִּי הִנֵּה אֹיְבֶיךָ יֹאבֵדוּ יִתְפָּרְדוּ כָּל פֹּעֲלֵי אָוֶן. וַתָּרֶם כִּרְאֵים קַרְנִי בַּלֹּתִי בְּשֶׁמֶן רַעֲנָן",
+      transliteration: "Ki hine oy'vecha Adonai, ki hine oy'vecha yovedu, yitpar'du kol po'alei aven. Vatarem kir'eim karni, baloti b'shemen ra'anan",
+      translation: 'For behold, Your enemies, Lord — for behold, Your enemies shall perish; all evildoers shall be scattered. But You have raised my horn like that of a wild ox; I am anointed with fresh oil',
+      amud: { role: 'both' },
+    },
+    {
+      id: 'mizmor-shir-shabbat-7',
+      sortOrder: 7,
+      hebrewText: "וַתַּבֵּט עֵינִי בְּשׁוּרָי בַּקָּמִים עָלַי מְרֵעִים תִּשְׁמַעְנָה אָזְנָי",
+      transliteration: "Vatabet eini b'shurai, bakamim alai m're'im tishmena oznai",
+      translation: 'My eye has gazed upon my enemies; when the wicked rise up against me, my ears hear it',
+      amud: { role: 'both' },
+    },
+    {
+      id: 'mizmor-shir-shabbat-8',
+      sortOrder: 8,
+      hebrewText: "צַדִּיק כַּתָּמָר יִפְרָח כְּאֶרֶז בַּלְּבָנוֹן יִשְׂגֶּה. שְׁתוּלִים בְּבֵית יְהוָה בְּחַצְרוֹת אֱלֹהֵינוּ יַפְרִיחוּ",
+      transliteration: "Tzadik katamar yifrach, k'erez baL'vanon yisgeh. Sh'tulim b'veit Adonai, b'chatzrot Eloheinu yafrichu",
+      translation: 'The righteous will flourish like a date palm, grow tall like a cedar in Lebanon. Planted in the house of the Lord, they will flourish in the courts of our God',
+      amud: { role: 'both' },
+    },
+    {
+      id: 'mizmor-shir-shabbat-9',
+      sortOrder: 9,
+      hebrewText: "עוֹד יְנוּבוּן בְּשֵׂיבָה דְּשֵׁנִים וְרַעֲנַנִּים יִהְיוּ. לְהַגִּיד כִּי יָשָׁר יְהוָה צוּרִי וְלֹא עַוְלָתָה בּוֹ",
+      transliteration: "Od y'nuvun b'seiva, d'shenim v'ra'ananim yiheyu. L'hagid ki yashar Adonai, tzuri v'lo avlata bo",
+      translation: 'They will still bear fruit in old age; they will remain full of sap and freshness. To declare that the Lord is upright — He is my Rock, and there is no injustice in Him',
+      notes: 'End of Psalm 92. The righteous are like trees — they keep bearing fruit even in old age. This is the message of Shabbat itself.',
+      amud: { role: 'both' },
+    },
+  ],
+};
+
+// ==========================================
+// 10. BAMEH MADLIKIN (Mishnah Shabbat 2)
+// ==========================================
+
+const BAMEH_MADLIKIN: Prayer = {
+  id: 'bameh-madlikin',
+  slug: 'bameh-madlikin',
+  nameHebrew: 'בַּמֶּה מַדְלִיקִין',
+  nameEnglish: 'Bameh Madlikin (Mishnah Shabbat 2)',
+  category: 'tefillah',
+  sortOrder: 110,
+  whenSaid: 'Friday evening, between Kabbalat Shabbat and Maariv, in Ashkenaz congregations',
+  whySaid: "The Talmud (Shabbat 23b) says one who recites this Mishnah on Friday evening is protected. The Mishnah discusses Shabbat candle-lighting — the very mitzvah that just ushered in Shabbat — making it the perfect bridge between Kabbalat Shabbat and Maariv.",
+  inspirationText: "An ancient Mishnah about candle wicks and oils — sandwiched between welcoming Shabbat and praying Maariv. We recite it because on Shabbat we study Torah everywhere, even standing in shul. And because it connects the Shabbat candles that were just lit to the prayers we are about to say.",
+  requiredLevel: 2,
+  estimatedReadSeconds: 120,
+  sections: [
+    {
+      id: 'bameh-madlikin-1',
+      sortOrder: 1,
+      hebrewText: 'בַּמֶּה מַדְלִיקִין וּבַמֶּה אֵין מַדְלִיקִין אֵין מַדְלִיקִין לֹא בְלֶכֶשׁ וְלֹא בְחֹסֶן וְלֹא בְּכָלָךְ וְלֹא בִּפְתִילַת הָאִידָן וְלֹא בִּפְתִילַת הַמִּדְבָּר וְלֹא בִּירוֹקָה שֶׁעַל פְּנֵי הַמָּיִם',
+      transliteration: "Bameh madlikin uvameh ein madlikin? Ein madlikin lo v'lchesh v'lo v'chosen v'lo v'chalach v'lo biftilas ha'idan v'lo biftilas hamidbar v'lo b'yeroka sheal p'nei hamayim",
+      translation: 'With what may one light [the Shabbat lamp] and with what may one not light? One may not light with cedar bast, nor with uncombed flax, nor with raw silk, nor with a wick of rush, nor with desert herbs, nor with the green material on the surface of water',
+      notes: 'Mishnah Shabbat 2:1 — The opening question launches a discussion about valid wicks and oils for the Shabbat lamp.',
+      amud: {
+        role: 'both',
+        instruction: 'Recited publicly between Kabbalat Shabbat and Maariv in Ashkenaz congregations.',
+      },
+    },
+    {
+      id: 'bameh-madlikin-2',
+      sortOrder: 2,
+      hebrewText: 'וְלֹא בְּזֶפֶת וְלֹא בְּשַׁעֲוָה וְלֹא בְּשֶׁמֶן קִיק וְלֹא בְּשֶׁמֶן שְׂרֵפָה וְלֹא בְּאַלְיָה וְלֹא בְּחֵלֶב נַחוּם הַמָּדִי אוֹמֵר מַדְלִיקִין בְּחֵלֶב מְבֻשָּׁל וַחֲכָמִים אוֹמְרִים אֶחָד מְבֻשָּׁל וְאֶחָד שֶׁאֵינוֹ מְבֻשָּׁל אֵין מַדְלִיקִין בּוֹ',
+      transliteration: "V'lo b'zefet v'lo b'sha'ava v'lo b'shemen kik v'lo b'shemen s'reifa v'lo b'alya v'lo b'chelev. Nachum haMadi omer: madlikin b'chelev m'vushal. Vachachamim omrim: echad m'vushal v'echad she'eino m'vushal, ein madlikin bo",
+      translation: 'Nor with pitch, nor with wax, nor with castor oil, nor with singed oil, nor with a fat tail, nor with tallow. Nachum the Mede says: one may light with boiled tallow. But the Sages say: whether boiled or not boiled, one may not light with it',
+      amud: { role: 'both' },
+    },
+    {
+      id: 'bameh-madlikin-3',
+      sortOrder: 3,
+      hebrewText: 'מַדְלִיקִין בְּשֶׁמֶן שׂוּמְשְׁמִין וּבְשֶׁמֶן אֱגוֹזִין וּבְשֶׁמֶן צְנוֹנוֹת וּבְשֶׁמֶן דָּגִים וּבְשֶׁמֶן פַּקּוּעוֹת וּבְעִטְרָן וּבְנֵפְט רַבִּי טַרְפוֹן אוֹמֵר אֵין מַדְלִיקִין אֶלָּא בְּשֶׁמֶן זַיִת בִּלְבַד',
+      transliteration: "Madlikin b'shemen sumsumin uv'shemen egozim uv'shemen tzenonot uv'shemen dagim uv'shemen pakuot uv'itran uv'neft. Rabbi Tarfon omer: ein madlikin ela b'shemen zayit bilvad",
+      translation: 'One may light with sesame oil, nut oil, radish oil, fish oil, gourd oil, tar, and naphtha. Rabbi Tarfon says: one may only light with olive oil alone',
+      notes: 'Mishnah 2:2 — The permitted oils. Rabbi Tarfon insisted on olive oil only; the Sages were more lenient.',
+      amud: { role: 'both' },
+    },
+    {
+      id: 'bameh-madlikin-4',
+      sortOrder: 4,
+      hebrewText: "כָּל הַיּוֹצֵא מִן הָעֵץ אֵין מַדְלִיקִין בּוֹ אֶלָּא פִּשְׁתָּן וְכָל הַיּוֹצֵא מִן הָעֵץ אֵינוֹ מִטַּמֵּא טוּמְאַת אֹהָלִים אֶלָּא פִּשְׁתָּן",
+      transliteration: "Kol hayotze min ha'etz, ein madlikin bo ela pishtan. V'chol hayotze min ha'etz eino mitama tum'at ohalim ela pishtan",
+      translation: 'Of all that comes from a tree, one may only light with flax. And of all that comes from a tree, only flax becomes impure through tent impurity',
+      notes: 'Mishnah 2:3',
+      amud: { role: 'both' },
+    },
+    {
+      id: 'bameh-madlikin-5',
+      sortOrder: 5,
+      hebrewText: "עַל שָׁלֹשׁ עֲבֵרוֹת נָשִׁים מֵתוֹת בְּשָׁעַת לֵידָתָן עַל שֶׁאֵינָן זְהִירוֹת בַּנִּדָּה וּבַחַלָּה וּבְהַדְלָקַת הַנֵּר",
+      transliteration: "Al shalosh aveirot nashim metot b'sha'at leidatan: al she'einan z'hirot banida, uvachala, uv'hadlakat haner",
+      translation: 'For three transgressions women die in childbirth: for not being careful about niddah, about challah, and about lighting the Shabbat lamp',
+      notes: 'Mishnah 2:6 — A sobering reminder about the gravity of three mitzvot entrusted to women in the home.',
+      amud: { role: 'both' },
+    },
+    {
+      id: 'bameh-madlikin-6',
+      sortOrder: 6,
+      hebrewText: "שְׁלֹשָׁה דְּבָרִים צָרִיךְ אָדָם לוֹמַר בְּתוֹךְ בֵּיתוֹ עֶרֶב שַׁבָּת עִם חֲשֵׁכָה עִשַּׂרְתֶּם עֵרַבְתֶּם הַדְלִיקוּ אֶת הַנֵּר",
+      transliteration: "Shlosha d'varim tzarich adam lomar b'toch beito erev Shabbat im chasheicha: isartem? eiravtem? hadliku et haner!",
+      translation: 'Three things a man must say in his home on Erev Shabbat at nightfall: "Have you tithed? Have you made the eruv? Light the Shabbat lamp!"',
+      notes: 'Mishnah 2:7 — The final words of the chapter: a practical checklist for the head of the household as Shabbat descends.',
+      amud: { role: 'both' },
+    },
+  ],
+};
+
+// ==========================================
+// 11. VAYECHULU
 // ==========================================
 
 const VAYECHULU: Prayer = {
@@ -1478,6 +1651,220 @@ const KORBANOT_KETORES: Prayer = {
 };
 
 // ==========================================
+// 12. NISHMAT KOL CHAI
+// ==========================================
+
+const NISHMAT_KOL_CHAI: Prayer = {
+  id: 'nishmat-kol-chai',
+  slug: 'nishmat-kol-chai',
+  nameHebrew: 'נִשְׁמַת כָּל חַי',
+  nameEnglish: 'Nishmat Kol Chai',
+  category: 'tefillah',
+  sortOrder: 111,
+  whenSaid: 'On Shabbat and Yom Tov, at the end of Pesukei D\'Zimra before Yishtabach',
+  whySaid: 'Nishmat is one of the oldest prayers in the Jewish liturgy, possibly dating to the Second Temple era. On Shabbat and Yom Tov, when we have more time and elevated holiness, we add this great hymn of gratitude. The Talmud (Pesachim 118a) calls it "Birkat HaShir" — the Blessing of Song.',
+  inspirationText: 'The Talmud teaches that Nishmat was recited at the Seder. Imagine: after the Exodus, free at last, our ancestors sang these words. Every time we say Nishmat on Shabbat, we relive that liberation. "Even if our mouths were full of song as the sea..." — we could never thank You enough.',
+  requiredLevel: 1,
+  estimatedReadSeconds: 180,
+  sections: [
+    {
+      id: 'nishmat-1',
+      sortOrder: 1,
+      hebrewText: 'נִשְׁמַת כָּל חַי תְּבָרֵךְ אֶת שִׁמְךָ יְהוָה אֱלֹהֵינוּ וְרוּחַ כָּל בָּשָׂר תְּפָאֵר וּתְרוֹמֵם זִכְרְךָ מַלְכֵּנוּ תָּמִיד מִן הָעוֹלָם וְעַד הָעוֹלָם אַתָּה אֵל',
+      transliteration: "Nishmat kol chai t'varech et shimcha Adonai Eloheinu, v'ruach kol basar t'fa'er ut'romem zichr'cha Malkeinu tamid, min ha'olam v'ad ha'olam Ata El",
+      translation: 'The soul of every living being shall bless Your name, Lord our God; the spirit of all flesh shall forever glorify and exalt Your remembrance, our King. From eternity to eternity, You are God',
+      notes: 'The opening declaration — every soul, every breath of life, exists to praise You.',
+      amud: {
+        role: 'both',
+        instruction: 'Said on Shabbat and Yom Tov at the end of Pesukei D\'Zimra. The congregation recites together.',
+      },
+    },
+    {
+      id: 'nishmat-2',
+      sortOrder: 2,
+      hebrewText: 'וּמִבַּלְעָדֶיךָ אֵין לָנוּ מֶלֶךְ גּוֹאֵל וּמוֹשִׁיעַ פּוֹדֶה וּמַצִּיל וּמְפַרְנֵס וּמְרַחֵם בְּכָל עֵת צָרָה וְצוּקָה אֵין לָנוּ מֶלֶךְ אֶלָּא אַתָּה',
+      transliteration: "Umivaladecha ein lanu melech go'el umoshi'a, podeh umatzil ume'farneis umracheim b'chol et tzara v'tzuka, ein lanu melech ela Atah",
+      translation: 'Besides You we have no king, redeemer, or savior; no one who delivers, rescues, sustains, and shows mercy in every time of trouble and distress — we have no king but You',
+      amud: { role: 'both' },
+    },
+    {
+      id: 'nishmat-3',
+      sortOrder: 3,
+      hebrewText: 'אִלּוּ פִינוּ מָלֵא שִׁירָה כַּיָּם וּלְשׁוֹנֵנוּ רִנָּה כַּהֲמוֹן גַּלָּיו וְשִׂפְתוֹתֵינוּ שֶׁבַח כְּמֶרְחֲבֵי רָקִיעַ וְעֵינֵינוּ מְאִירוֹת כַּשֶּׁמֶשׁ וְכַיָּרֵחַ וְיָדֵינוּ פְרוּשׂוֹת כְּנִשְׁרֵי שָׁמַיִם וְרַגְלֵינוּ קַלּוֹת כָּאַיָּלוֹת אֵין אֲנַחְנוּ מַסְפִּיקִים לְהוֹדוֹת לְךָ יְהוָה אֱלֹהֵינוּ וֵאלֹהֵי אֲבוֹתֵינוּ וּלְבָרֵךְ אֶת שְׁמֶךָ עַל אַחַת מֵאֶלֶף אַלְפֵי אֲלָפִים וְרִבֵּי רְבָבוֹת פְּעָמִים הַטּוֹבוֹת שֶׁעָשִׂיתָ עִם אֲבוֹתֵינוּ וְעִמָּנוּ',
+      transliteration: "Ilu finu malei shira kayam, ul'shoneinu rina kahamonei galav, v'sifoteinu shevach k'merchavei rakia, v'eineinu me'irot kash'mesh v'chayarei'ach, v'yadeinu ferushiot k'nishrei shamayim, v'ragleinu kalot ka'ayalot — ein anachnu maspikim l'hodot l'cha Adonai Eloheinu vElohei avoteinu, ul'varech et sh'mecha al achat me'elef alfei alafim v'ribei revavot pe'amim hatovot she'asita im avoteinu v'imanu",
+      translation: 'Even if our mouths were filled with song as the sea, and our tongues with melody like its countless waves; if our lips were full of praise like the wide heavens, and our eyes shone like the sun and moon; if our arms were spread out like eagles\' wings, and our feet as swift as deer — we could not sufficiently thank You, Lord our God and God of our ancestors, or bless Your name for even one thousandth of the innumerable good things You have done for our ancestors and for us',
+      notes: 'The most beloved passage — a soaring declaration of inadequacy before divine goodness. No words are enough.',
+      amud: { role: 'both' },
+    },
+    {
+      id: 'nishmat-4',
+      sortOrder: 4,
+      hebrewText: 'לָכֵן אֵבָרִים שֶׁפִּלַּגְתָּ בָּנוּ וְרוּחַ וּנְשָׁמָה שֶׁנָּפַחְתָּ בְּאַפֵּינוּ וְלָשׁוֹן אֲשֶׁר שַׂמְתָּ בְּפִינוּ הֵן הֵם יוֹדוּ וִיבָרֲכוּ וִישַׁבְּחוּ וִיפָאֲרוּ וִירוֹמְמוּ וְיַעֲרִיצוּ וְיַקְדִּישׁוּ וְיַמְלִיכוּ אֶת שִׁמְךָ מַלְכֵּנוּ',
+      transliteration: "Lachen evarim she'pilagta banu, v'ru'ach un'shama she'nafachta b'apeinu, v'lashon asher samta b'finu — hen heim yodu vivar'chu vish'ab'chu vifo'aru virom'mu v'ya'aritzu v'yakdishu v'yamlichu et shimcha Malkeinu",
+      translation: 'Therefore — the limbs You formed within us, and the spirit and soul You breathed into our nostrils, and the tongue You placed in our mouth — they all shall thank, bless, praise, glorify, exalt, revere, sanctify, and crown Your name, our King',
+      amud: { role: 'both' },
+    },
+    {
+      id: 'nishmat-5',
+      sortOrder: 5,
+      hebrewText: 'שׁוֹכֵן עַד מָרוֹם וְקָדוֹשׁ שְׁמוֹ וְכָתוּב רַנְּנוּ צַדִּיקִים בַּיהוָה לַיְשָׁרִים נָאוָה תְהִלָּה בְּפִי יְשָׁרִים תִּתְהַלָּל וּבְדִבְרֵי צַדִּיקִים תִּתְבָּרַךְ וּבִלְשׁוֹן חֲסִידִים תִּתְרוֹמַם וּבְקֶרֶב קְדוֹשִׁים תִּתְקַדָּשׁ',
+      transliteration: "Shochen ad marom v'kadosh sh'mo. V'chatuv: ran'nu tzadikim bAdonai, layesharim nava t'hila. B'fi yesharim tit'halal, uvdivrei tzadikim titbarach, uvleshon chasidim titromam, uvkerev kedoshim titkadash",
+      translation: 'You dwell forever, exalted and holy is Your name. And it is written: "Rejoice, O righteous, in the Lord — praise befits the upright." In the mouth of the upright You are praised; in the words of the righteous You are blessed; in the tongue of the pious You are exalted; in the midst of the holy You are sanctified',
+      notes: 'The climax of Nishmat — connecting our prayer to all the righteous throughout history.',
+      amud: { role: 'both' },
+    },
+  ],
+};
+
+// ==========================================
+// 13. EL ADON (Shabbat Piyyut in Yotzer Or)
+// ==========================================
+
+const EL_ADON: Prayer = {
+  id: 'el-adon',
+  slug: 'el-adon',
+  nameHebrew: 'אֵל אָדוֹן',
+  nameEnglish: 'El Adon',
+  category: 'tefillah',
+  sortOrder: 112,
+  whenSaid: 'On Shabbat morning, within the Yotzer Or blessing before the Shema',
+  whySaid: 'El Adon is a beautiful alphabetical acrostic poem praising Hashem for creating the luminaries — the sun, moon, and stars. On Shabbat, when we have more time, this piyyut is added to the Yotzer Or blessing to deepen our appreciation of creation.',
+  inspirationText: 'An alphabetical poem from aleph to tav — every letter of the Hebrew alphabet praises God for the light He created. On Shabbat, the day when creation is honored, we take extra time to praise the Creator of all light.',
+  requiredLevel: 1,
+  estimatedReadSeconds: 90,
+  sections: [
+    {
+      id: 'el-adon-1',
+      sortOrder: 1,
+      hebrewText: 'אֵל אָדוֹן עַל כָּל הַמַּעֲשִׂים בָּרוּךְ וּמְבֹרָךְ בְּפִי כָּל הַנְּשָׁמוֹת גָּדְלוֹ וְטוּבוֹ מָלֵא עוֹלָם דַּעַת וּתְבוּנָה סוֹבְבִים אֹתוֹ',
+      transliteration: "El Adon al kol hama'asim, baruch umvorach b'fi kol haneshamot. Godlo v'tuvo malei olam, da'at ut'vuna sovevim oto",
+      translation: 'God, Master over all created works, blessed and praised by the mouth of all souls. His greatness and goodness fill the world; knowledge and understanding surround Him',
+      notes: 'An alphabetical acrostic poem (aleph through tav) — each phrase begins with the next Hebrew letter.',
+      amud: {
+        role: 'both',
+        instruction: 'Said within the Yotzer Or blessing on Shabbat morning.',
+      },
+    },
+    {
+      id: 'el-adon-2',
+      sortOrder: 2,
+      hebrewText: 'הַמִּתְגָּאֶה עַל חַיּוֹת הַקֹּדֶשׁ וְנֶהְדָּר בְּכָבוֹד עַל הַמֶּרְכָּבָה זְכוּת וּמֵישָׁר לִפְנֵי כִסְאוֹ חֶסֶד וְרַחֲמִים לִפְנֵי כְבוֹדוֹ',
+      transliteration: "Hamitga'eh al chayot hakodesh, v'nehedar b'chavod al hamerkava. Z'chut umeishar lifnei chis'o, chesed v'rachamim lifnei ch'vodo",
+      translation: 'He is exalted above the holy celestial beings and adorned in glory upon the Divine Chariot. Merit and uprightness are before His throne; kindness and mercy are before His glory',
+      amud: { role: 'both' },
+    },
+    {
+      id: 'el-adon-3',
+      sortOrder: 3,
+      hebrewText: 'טוֹבִים מְאוֹרוֹת שֶׁבָּרָא אֱלֹהֵינוּ יְצָרָם בְּדַעַת בְּבִינָה וּבְהַשְׂכֵּל כֹּחַ וּגְבוּרָה נָתַן בָּהֶם לִהְיוֹת מוֹשְׁלִים בְּקֶרֶב תֵּבֵל',
+      transliteration: "Tovim me'orot she'bara Eloheinu, y'tzaram b'da'at b'vina uv'haskeil. Ko'ach ug'vura natan bahem, lihyot moshlim b'kerev teivel",
+      translation: 'Good are the luminaries that our God created; He formed them with knowledge, understanding, and discernment. He gave them strength and power to rule in the midst of the world',
+      amud: { role: 'both' },
+    },
+    {
+      id: 'el-adon-4',
+      sortOrder: 4,
+      hebrewText: 'מְלֵאִים זִיו וּמְפִיקִים נֹגַהּ נָאֶה זִיוָם בְּכָל הָעוֹלָם שְׂמֵחִים בְּצֵאתָם וְשָׂשִׂים בְּבוֹאָם עוֹשִׂים בְּאֵימָה רְצוֹן קוֹנָם',
+      transliteration: "M'lei'im ziv umfi'kim no'gah, na'eh zivam b'chol ha'olam. S'meichim b'tzeitam v'sasim b'vo'am, osim b'eima r'tzon konam",
+      translation: 'Full of radiance and shining brightness, beautiful is their glow throughout the world. Joyful in their going forth and glad in their return, they perform with awe the will of their Maker',
+      amud: { role: 'both' },
+    },
+    {
+      id: 'el-adon-5',
+      sortOrder: 5,
+      hebrewText: 'פְּאֵר וְכָבוֹד נוֹתְנִים לִשְׁמוֹ צָהֳלָה וְרִנָּה לְזֵכֶר מַלְכוּתוֹ קָרָא לַשֶּׁמֶשׁ וַיִּזְרַח אוֹר רָאָה וְהִתְקִין צוּרַת הַלְּבָנָה',
+      transliteration: "P'er v'chavod notnim lishmo, tzahala v'rina l'zecher malchuto. Kara lashemesh vayizrach or, ra'a v'hitkin tzurat hal'vana",
+      translation: 'They give glory and honor to His name, joyous song at the remembrance of His kingship. He called to the sun and it shone with light; He looked and shaped the image of the moon',
+      amud: { role: 'both' },
+    },
+    {
+      id: 'el-adon-6',
+      sortOrder: 6,
+      hebrewText: 'שֶׁבַח נוֹתְנִים לוֹ כָּל צְבָא מָרוֹם תִּפְאֶרֶת וּגְדֻלָּה שְׂרָפִים וְאוֹפַנִּים וְחַיּוֹת הַקֹּדֶשׁ',
+      transliteration: "Shevach notnim lo kol tzva marom, tiferet ug'dula, serafim v'ofanim v'chayot hakodesh",
+      translation: 'All the host of heaven gives praise to Him — splendor and greatness, the seraphim and the ofanim and the holy chayot',
+      notes: 'The poem concludes with all the celestial beings joining in praise — seraphim, ofanim, and the Holy Chayot of Ezekiel\'s vision.',
+      amud: { role: 'both' },
+    },
+  ],
+};
+
+// ==========================================
+// 14. AV HARACHAMIM
+// ==========================================
+
+const AV_HARACHAMIM: Prayer = {
+  id: 'av-harachamim',
+  slug: 'av-harachamim',
+  nameHebrew: 'אָב הָרַחֲמִים',
+  nameEnglish: 'Av HaRachamim',
+  category: 'tefillah',
+  sortOrder: 113,
+  whenSaid: 'On most Shabbat mornings in Ashkenaz congregations, before the Torah is returned to the Aron. Omitted on Shabbat Mevarchim, Rosh Chodesh, and certain joyful Shabbatot.',
+  whySaid: 'Composed after the Crusades massacres of 1096, this prayer memorializes the Jewish communities of the Rhineland who were murdered al kiddush Hashem. On Shabbat we pause to remember our martyrs before returning the Torah to the Aron.',
+  inspirationText: 'This prayer was written in the shadow of the Crusades, when entire Jewish communities chose death over conversion. Every Shabbat, before we return the Torah that these communities died to protect, we say their names — not the individual names, but the prayer that contains them all. They died so we could stand here, reading this.',
+  requiredLevel: 1,
+  estimatedReadSeconds: 45,
+  sections: [
+    {
+      id: 'av-harachamim-1',
+      sortOrder: 1,
+      hebrewText: 'אָב הָרַחֲמִים שׁוֹכֵן מְרוֹמִים בְּרַחֲמָיו הָעֲצוּמִים הוּא יִפְקֹד בְּרַחֲמִים הַחֲסִידִים וְהַיְּשָׁרִים וְהַתְּמִימִים קְהִלּוֹת הַקֹּדֶשׁ שֶׁמָּסְרוּ נַפְשָׁם עַל קְדֻשַּׁת הַשֵּׁם הַנֶּאֱהָבִים וְהַנְּעִימִים בְּחַיֵּיהֶם וּבְמוֹתָם לֹא נִפְרָדוּ מִנְּשָׁרִים קַלּוּ וּמֵאֲרָיוֹת גָּבֵרוּ לַעֲשׂוֹת רְצוֹן קוֹנָם וְזִכְרוֹן קְדוֹשֵׁינוּ יִנָּקֵם בְּחַיֵּינוּ',
+      transliteration: "Av harachamim shochen m'romim, b'rachamav ha'atzumim hu yifkod b'rachamim hachasidim v'hayesharim v'hat'mimim, kehilot hakodesh she'masru nafshtam al k'dushat hashem. Hane'ehavim v'hane'imim b'chayeihem uv'motam lo nifr'du, minsh'rim kalu ume'arayot gavru la'asot r'tzon konam. V'zichronam yinakeim b'chayeinu",
+      translation: 'Father of mercy who dwells on high — in His mighty mercy He shall remember with compassion the devout, the upright, and the blameless — the holy communities who gave their lives for the sanctification of His name. They were beloved and pleasant in their lives and in their death they were not parted; swifter than eagles, stronger than lions to do the will of their Creator. May our holy ones be remembered as an act of justice in our lifetimes',
+      notes: 'Composed after the Rhineland massacres of 1096 (Crusades). Recited on most Shabbatot before returning the Torah. Omitted on joyful Shabbatot such as before Rosh Chodesh.',
+      amud: {
+        role: 'both',
+        instruction: 'Said quietly. On Shabbat Mevarchim, Rosh Chodesh, or other joyful Shabbatot, this is omitted.',
+        notes: 'A memorial prayer for Jewish martyrs throughout history. Stand.',
+        physicalActions: ['stand'],
+      },
+    },
+  ],
+};
+
+// ==========================================
+// 15. YEKUM PURKAN
+// ==========================================
+
+const YEKUM_PURKAN: Prayer = {
+  id: 'yekum-purkan',
+  slug: 'yekum-purkan',
+  nameHebrew: 'יְקוּם פֻּרְקָן',
+  nameEnglish: 'Yekum Purkan',
+  category: 'tefillah',
+  sortOrder: 114,
+  whenSaid: 'On Shabbat morning, after the Torah reading, before the Torah is returned',
+  whySaid: 'These two Aramaic prayers were composed in Babylonia and ask for blessing for Torah scholars and the entire congregation. The first blesses the leaders and scholars; the second blesses the entire community. They were originally said before the sermon, which was given in Aramaic in Babylon.',
+  inspirationText: 'Written in Aramaic — the language of the Jewish people in Babylon — these prayers bridge the ancient diaspora to our present Shabbat morning. We pray for our teachers and leaders, then for the whole community, acknowledging that without Torah scholars there is no community, and without community the scholars have no one to serve.',
+  requiredLevel: 1,
+  estimatedReadSeconds: 90,
+  sections: [
+    {
+      id: 'yekum-purkan-1',
+      sortOrder: 1,
+      hebrewText: 'יְקוּם פֻּרְקָן מִן שְׁמַיָּא חִנָּא וְחִסְדָּא וְרַחֲמֵי וְחַיֵּי אֲרִיכֵי וּמְזוֹנֵי רְוִיחֵי וְסִיַּעְתָּא דִּשְׁמַיָּא וּבְרִיאוּת גּוּפָא וּנְהוֹרָא מַעַלְיָא זַרְעָא חַיָּא וְקַיָּמָא זַרְעָא דִּי לָא יִפְסוּק וְדִי לָא יִבְטוּל מִן פִּתְגָּמֵי אוֹרַיְתָא לְרֵישֵׁי כַלָּה וּלְרֵישֵׁי גָּלוּתָא וּלְרֵישֵׁי מְתִיבָתָא וּלְדַיָּנֵי דִּבְהוֹן כָּל יִשְׂרָאֵל',
+      transliteration: "Y'kum purkan min sh'maya, china v'chisda v'rachamei v'chayei arichei umzonei r'vichei v'siy'ata dish'maya uvri'ut gufa unehora ma'alya, zar'a chaya v'kayama, zar'a di lo yifsuk v'di lo yivtul min pit'gamei orayta, l'reishei chala ul'reishei galuta ul'reishei m'tiv'ata ul'dayanei div'hon kol Yisrael",
+      translation: 'May salvation arise from Heaven — grace, kindness, mercy, long life, ample sustenance, heavenly assistance, bodily health, enlightened vision, living and enduring offspring who will not cease or depart from the words of the Torah — upon the heads of the academies and the heads of the Diaspora and the heads of the yeshivot and the judges of Israel',
+      notes: 'First Yekum Purkan — for Torah leaders and scholars. Written in Aramaic, the language of Babylonian Jewry.',
+      amud: {
+        role: 'both',
+        instruction: 'Said on Shabbat after the Torah reading. Two paragraphs — first for Torah leaders, second for the community.',
+      },
+    },
+    {
+      id: 'yekum-purkan-2',
+      sortOrder: 2,
+      hebrewText: 'יְקוּם פֻּרְקָן מִן שְׁמַיָּא חִנָּא וְחִסְדָּא וְרַחֲמֵי וְחַיֵּי אֲרִיכֵי וּמְזוֹנֵי רְוִיחֵי וְסִיַּעְתָּא דִּשְׁמַיָּא וּבְרִיאוּת גּוּפָא וּנְהוֹרָא מַעַלְיָא זַרְעָא חַיָּא וְקַיָּמָא לְכָל קְהָלָא קַדִּישָׁא הָדֵין רַבְרְבַיָּא עִם זְעֵירַיָּא טַפְלָא וּנְשַׁיָּא מַן דְּמַפַּק וּמַן דְּעָיֵּיל אַנְתּוּן וּבְנֵיכוֹן וְכָל דִּי לְכוֹן יְהֵא לֵהּ פֻּרְקָן מִן שְׁמַיָּא',
+      transliteration: "Y'kum purkan min sh'maya, china v'chisda v'rachamei v'chayei arichei umzonei r'vichei v'siy'ata dish'maya uvri'ut gufa unehora ma'alya, zar'a chaya v'kayama, l'chol k'hala kadisha hadein ravr'vaya im z'eiray'ya, tapla unsh'ya, man d'mapak uman d'ayeil, antun uv'neichon v'chol di l'chon, y'hei lei purkan min sh'maya",
+      translation: 'May salvation arise from Heaven — grace, kindness, mercy, long life, ample sustenance, and heavenly assistance, bodily health, enlightened vision, living and enduring offspring — upon this entire holy congregation, great and small, children and women, all who enter and all who leave. May there be salvation from Heaven for you, your children, and all that is yours',
+      notes: 'Second Yekum Purkan — for the entire congregation. After this, Mi Shebeirach is often said for the sick.',
+      amud: { role: 'both' },
+    },
+  ],
+};
+
+// ==========================================
 // COMBINED EXPORT
 // ==========================================
 
@@ -1495,7 +1882,13 @@ export const SERVICE_PRAYERS: Prayer[] = [
   KORBANOT_KETORES,
   LECHA_DODI,
   KABBALAT_SHABBAT_PSALMS,
+  MIZMOR_SHIR_SHABBAT,
+  BAMEH_MADLIKIN,
   VAYECHULU,
+  NISHMAT_KOL_CHAI,
+  EL_ADON,
+  AV_HARACHAMIM,
+  YEKUM_PURKAN,
 ];
 
 // ==========================================

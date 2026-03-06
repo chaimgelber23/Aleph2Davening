@@ -8,6 +8,7 @@ import type { BootcampPracticeWord } from '@/types';
 interface WordDrillProps {
   words: BootcampPracticeWord[];
   onComplete: (score: number, total: number) => void;
+  onProgress?: (index: number) => void;
 }
 
 function shuffleArray<T>(arr: T[]): T[] {
@@ -19,7 +20,7 @@ function shuffleArray<T>(arr: T[]): T[] {
   return shuffled;
 }
 
-export function WordDrill({ words, onComplete }: WordDrillProps) {
+export function WordDrill({ words, onComplete, onProgress }: WordDrillProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
@@ -48,15 +49,18 @@ export function WordDrill({ words, onComplete }: WordDrillProps) {
     setSelectedAnswer(transliteration);
 
     const correct = transliteration === currentWord.transliteration;
-    if (correct) setScore((s) => s + 1);
+    const newScore = score + (correct ? 1 : 0); // compute before async, avoids stale closure
+    if (correct) setScore(newScore);
 
     // Auto-advance after delay
     setTimeout(() => {
-      if (currentIndex + 1 >= total) {
-        onComplete(score + (correct ? 1 : 0), total);
+      const nextIndex = currentIndex + 1;
+      if (nextIndex >= total) {
+        onComplete(newScore, total);
       } else {
-        setCurrentIndex((i) => i + 1);
+        setCurrentIndex(nextIndex);
         setSelectedAnswer(null);
+        onProgress?.(nextIndex);
       }
     }, 1200);
   };

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { BottomNav } from '@/components/ui/BottomNav';
 import { getTefillahPrayers, getAllPrayers } from '@/lib/content/prayers';
+import { getAllServicePrayers } from '@/lib/content/service-prayers';
 import { getAllServices } from '@/lib/content/services';
 import { useAudio } from '@/hooks/useAudio';
 import { useKaraokeSync } from '@/hooks/useKaraokeSync';
@@ -30,7 +31,7 @@ import type { TourStep } from '@/components/ui/SpotlightTour';
 import type { Prayer, DaveningService, ServiceItem } from '@/types';
 import type { AudioSourceId, PrayerAudioEntry } from '@/lib/content/audio-sources';
 
-type Tab = 'services' | 'prayers' | 'lead';
+type Tab = 'services' | 'prayers' | 'lead' | 'favorites';
 type View = 'list' | 'prayer_reader' | 'service_roadmap' | 'chazan_guide' | 'chazan_prep_hub' | 'amud_preparation' | 'amud_mode';
 
 export default function DavenPage() {
@@ -62,6 +63,8 @@ export default function DavenPage() {
   const updateProfile = useUserStore((s) => s.updateProfile);
   const displaySettings = useUserStore((s) => s.displaySettings);
   const updateServicePosition = useUserStore((s) => s.updateServicePosition);
+  const favoritePrayers = useUserStore((s) => s.favoritePrayers);
+  const toggleFavoritePrayer = useUserStore((s) => s.toggleFavoritePrayer);
 
   const handleSelectAudioSource = useCallback((sourceId: AudioSourceId, entry: PrayerAudioEntry | null) => {
     setSelectedAudioSource(sourceId);
@@ -127,7 +130,7 @@ export default function DavenPage() {
 
   // Prayer map for AmudMode
   const prayerMap = useMemo(() => {
-    const all = getAllPrayers();
+    const all = [...getAllPrayers(), ...getAllServicePrayers()];
     return new Map(all.map((p) => [p.id, p]));
   }, []);
 
@@ -334,16 +337,35 @@ export default function DavenPage() {
                 {currentSectionIndex + 1} OF {totalSections}
               </span>
             </div>
-            <button
-              onClick={() => setShowSettingsModal(true)}
-              className="flex items-center justify-center w-10 h-10 -mr-2 text-gray-400 hover:text-primary transition-colors"
-              title="View Modes & Settings"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="3" />
-                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
-              </svg>
-            </button>
+            <div className="flex items-center gap-0.5 -mr-2">
+              {/* Favorite button */}
+              <button
+                onClick={() => toggleFavoritePrayer(selectedPrayer.id)}
+                className="flex items-center justify-center w-10 h-10 text-gray-400 hover:text-[#C17767] transition-colors"
+                aria-label={favoritePrayers.includes(selectedPrayer.id) ? 'Remove from favorites' : 'Add to favorites'}
+              >
+                {favoritePrayers.includes(selectedPrayer.id) ? (
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="#C17767">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                  </svg>
+                ) : (
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                  </svg>
+                )}
+              </button>
+              {/* Settings button */}
+              <button
+                onClick={() => setShowSettingsModal(true)}
+                className="flex items-center justify-center w-10 h-10 text-gray-400 hover:text-primary transition-colors"
+                title="View Modes & Settings"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="3" />
+                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                </svg>
+              </button>
+            </div>
           </div>
           {/* Service progress track — only when opened from a service */}
           {selectedService && currentServiceItemIndex >= 0 && totalServiceItems > 1 && (
@@ -845,6 +867,19 @@ function DavenList({
   const completeTour = useUserStore((s) => s.completeTour);
   const resetTour = useUserStore((s) => s.resetTour);
   const davenTourDone = completedTours.daven === true;
+  const favoritePrayers = useUserStore((s) => s.favoritePrayers);
+  const toggleFavoritePrayer = useUserStore((s) => s.toggleFavoritePrayer);
+
+  // Build full prayer map for favorites lookup (includes service-only prayers)
+  const allPrayersMap = useMemo(() => {
+    const all = [...getAllPrayers(), ...getAllServicePrayers()];
+    return new Map(all.map((p) => [p.id, p]));
+  }, []);
+
+  const favoritePrayerObjects = useMemo(
+    () => favoritePrayers.map((id) => allPrayersMap.get(id)).filter(Boolean) as Prayer[],
+    [favoritePrayers, allPrayersMap]
+  );
 
   const services = getAllServices();
   const tefillahPrayers = getTefillahPrayers();
@@ -889,18 +924,21 @@ function DavenList({
       </div>
 
       <div className="max-w-md mx-auto px-6 py-4 pb-28">
-        {/* 3-Tab Bar */}
+        {/* 4-Tab Bar */}
         <div className="flex gap-1 bg-gray-100 rounded-xl p-1 mb-6" data-tour="daven-tour-tabs">
           {[
             { id: 'services' as Tab, label: 'Services' },
-            { id: 'lead' as Tab, label: 'Lead Davening' },
+            { id: 'lead' as Tab, label: 'Lead' },
             { id: 'prayers' as Tab, label: 'All Prayers' },
+            { id: 'favorites' as Tab, label: '♡' },
           ].map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`flex-1 py-2.5 rounded-lg text-[13px] font-semibold transition-colors ${activeTab === tab.id
-                ? 'bg-white text-primary shadow-sm'
+                ? tab.id === 'favorites'
+                  ? 'bg-white text-[#C17767] shadow-sm'
+                  : 'bg-white text-primary shadow-sm'
                 : 'text-gray-500 hover:text-gray-700'
                 }`}
               data-tour={tab.id === 'lead' ? 'daven-tour-lead' : undefined}
@@ -1026,6 +1064,50 @@ function DavenList({
                 </p>
               )}
             </div>
+          </div>
+        )}
+
+        {/* === FAVORITES TAB === */}
+        {activeTab === 'favorites' && (
+          <div className="space-y-4">
+            {favoritePrayerObjects.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-20 gap-4 text-center">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" strokeWidth="1.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+                <div>
+                  <p className="text-gray-500 font-medium">No favorites yet</p>
+                  <p className="text-sm text-gray-400 mt-1">
+                    Tap ♡ on any prayer to save it here
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {favoritePrayerObjects.map((prayer, i) => (
+                  <motion.div
+                    key={prayer.id}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.03 }}
+                    className="flex items-center gap-2"
+                  >
+                    <div className="flex-1">
+                      <PrayerCard prayer={prayer} onSelect={onSelectPrayer} />
+                    </div>
+                    <button
+                      onClick={() => toggleFavoritePrayer(prayer.id)}
+                      className="flex items-center justify-center w-10 h-10 shrink-0 text-[#C17767]"
+                      aria-label="Remove from favorites"
+                    >
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="#C17767">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                      </svg>
+                    </button>
+                  </motion.div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 

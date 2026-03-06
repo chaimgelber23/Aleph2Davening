@@ -31,6 +31,7 @@ export default function BootcampDayPage() {
     completeTeachPhase,
     completeSyllablePhase,
     completeWordPhase,
+    completeDrillPhase,
     completeReadingPhase,
     isDayAvailable,
   } = useBootcampStore();
@@ -52,15 +53,15 @@ export default function BootcampDayPage() {
   const [teachVowelIdx, setTeachVowelIdx] = useState(0);
   const [reviewIdx, setReviewIdx] = useState(0);
   const [reviewAnswer, setReviewAnswer] = useState<string | null>(null);
-  const [reviewOptions, setReviewOptions] = useState<Letter[]>([]);
+  const [drillIndex, setDrillIndex] = useState(0);
   const [milestone, setMilestone] = useState<MilestoneType | null>(null);
 
   // Start day on mount
-  useState(() => {
+  useEffect(() => {
     if (dayData && isDayAvailable(dayNumber)) {
       startDay(dayNumber);
     }
-  });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!dayData) {
     return (
@@ -81,16 +82,15 @@ export default function BootcampDayPage() {
   const reviewLetters = reviewLetterIds.map(getLetterById).filter(Boolean) as Letter[];
   const reviewQuestions = reviewLetters.slice(0, 6); // Max 6 review questions
 
-  // Generate stable review options (don't reshuffle on re-render)
-  useEffect(() => {
-    if (reviewQuestions.length === 0) return;
+  // Generate stable review options — useMemo so options exist on first render (no flash)
+  const reviewOptions = useMemo(() => {
     const correct = reviewQuestions[reviewIdx];
-    if (!correct) return;
+    if (!correct) return [];
     const others = reviewLetters
       .filter((l) => l.id !== correct.id)
       .sort(() => Math.random() - 0.5)
       .slice(0, 3);
-    setReviewOptions([...others, correct].sort(() => Math.random() - 0.5));
+    return [...others, correct].sort(() => Math.random() - 0.5);
   }, [reviewIdx]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Current teach state
@@ -138,7 +138,7 @@ export default function BootcampDayPage() {
       case 'review': return [reviewIdx, reviewQuestions.length];
       case 'teach_letters': return [letterStepsSoFar, totalLetterSteps];
       case 'teach_vowels': return [teachVowelIdx, totalVowelSteps];
-      case 'drill': return [0, dayData.practiceWords.length];
+      case 'drill': return [drillIndex, dayData.practiceWords.length];
       case 'reading': return [0, dayData.culminatingReading.lines.length];
     }
   };
@@ -223,6 +223,7 @@ export default function BootcampDayPage() {
 
   // Word drill complete
   const handleDrillComplete = (score: number, total: number) => {
+    completeDrillPhase(dayNumber, score, total);
     completeWordPhase(dayNumber);
     checkAndUpdateStreak();
 
@@ -505,7 +506,7 @@ export default function BootcampDayPage() {
                 </h2>
               </div>
 
-              <WordDrill words={dayData.practiceWords} onComplete={handleDrillComplete} />
+              <WordDrill words={dayData.practiceWords} onComplete={handleDrillComplete} onProgress={setDrillIndex} />
             </motion.div>
           )}
 

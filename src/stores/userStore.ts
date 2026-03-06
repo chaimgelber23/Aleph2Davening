@@ -92,6 +92,10 @@ interface UserState {
   toggleGuideBookmark: (guideId: string) => void;
   completeGuideQuiz: (guideId: string, score: number, total: number) => void;
 
+  // Favorite prayers
+  favoritePrayers: string[];
+  toggleFavoritePrayer: (prayerId: string) => void;
+
   // App tour (per-page)
   completedTours: Record<string, boolean>;
   completeTour: (tourId: string) => void;
@@ -552,6 +556,15 @@ export const useUserStore = create<UserState>()(
           },
         })),
 
+      // Favorite prayers
+      favoritePrayers: [],
+      toggleFavoritePrayer: (prayerId) =>
+        set((state) => ({
+          favoritePrayers: state.favoritePrayers.includes(prayerId)
+            ? state.favoritePrayers.filter((id) => id !== prayerId)
+            : [...state.favoritePrayers, prayerId],
+        })),
+
       // App tour (per-page)
       completedTours: {},
       completeTour: (tourId) =>
@@ -586,7 +599,7 @@ export const useUserStore = create<UserState>()(
     }),
     {
       name: 'aleph2davening-user',
-      version: 5,
+      version: 6,
       migrate: (persistedState: unknown, version: number) => {
         const state = persistedState as Record<string, unknown>;
         if (version < 2) {
@@ -604,6 +617,9 @@ export const useUserStore = create<UserState>()(
             completed.home = true;
           }
           state.completedTours = completed;
+        }
+        if (version < 6) {
+          state.favoritePrayers = [];
         }
         return state;
       },

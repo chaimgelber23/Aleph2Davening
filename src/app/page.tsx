@@ -13,6 +13,7 @@ import { BottomNav } from '@/components/ui/BottomNav';
 import { ContinueHero } from '@/components/home/ContinueHero';
 import { DailyWisdom } from '@/components/home/DailyWisdom';
 import { QuickActionPills } from '@/components/home/QuickActionPills';
+import { AppSearch } from '@/components/home/AppSearch';
 import { TodaysGoals } from '@/components/home/TodaysGoals';
 import { AppTour } from '@/components/home/AppTour';
 import { TourReplayButton } from '@/components/ui/TourReplayButton';
@@ -309,6 +310,15 @@ function HomeOverview() {
         {/* Continue Hero */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.02 }}
+        >
+          <AppSearch />
+        </motion.div>
+
+        {/* Continue Hero */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.05 }}
         >
