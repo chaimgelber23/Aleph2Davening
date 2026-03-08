@@ -66,12 +66,18 @@ export function AppSearch() {
   return (
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 space-y-3">
       {/* Label */}
-      <div className="flex items-center gap-2">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="text-primary-light shrink-0">
-          <path d="M12 2L9.09 8.26L2 9.27L7 14.14L5.82 21.02L12 17.77L18.18 21.02L17 14.14L22 9.27L14.91 8.26L12 2Z"
-            fill="currentColor" />
-        </svg>
-        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Find Anything</span>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          {/* Sparkle / AI icon */}
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" className="text-[#5FA8D3] shrink-0">
+            <path d="M12 2L9.09 8.26L2 9.27L7 14.14L5.82 21.02L12 17.77L18.18 21.02L17 14.14L22 9.27L14.91 8.26L12 2Z"
+              fill="currentColor" />
+          </svg>
+          <span className="text-xs font-bold text-[#1B4965] uppercase tracking-wider">AI Search</span>
+        </div>
+        <span className="text-[10px] text-gray-400 font-medium bg-gray-50 px-2 py-0.5 rounded-full">
+          Powered by AI
+        </span>
       </div>
 
       {/* Input row */}
@@ -82,7 +88,7 @@ export function AppSearch() {
           value={query}
           onChange={handleQueryChange}
           onKeyDown={handleKeyDown}
-          placeholder="Shema, Hamotzi, learn letters…"
+          placeholder="Ask: Shema, Hamotzi, learn letters…"
           className="flex-1 px-4 py-3 rounded-xl border border-gray-200 text-sm focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none bg-[#FEFDFB] placeholder-gray-400"
           disabled={loading}
         />

@@ -62,6 +62,19 @@ export const SHABBAT_KABBALAT_SHABBAT: DaveningService = {
           estimatedSeconds: 90,
         },
         {
+          id: 'kshabbat-psalm-93',
+          type: 'prayer',
+          label: 'Psalm 93 (Hashem Malach)',
+          labelHebrew: 'ה׳ מָלָךְ גֵּאוּת לָבֵשׁ',
+          amud: {
+            role: 'both',
+            instruction: 'Psalm 93 — sung immediately after Psalm 92, still standing. Declares Hashem\'s eternal kingship.',
+            physicalActions: ['stand'],
+            notes: '"Hashem reigns, He is clothed in grandeur..." This short psalm proclaims Hashem\'s sovereignty over all creation and the permanence of His throne. In the Temple it was sung on Friday (Erev Shabbat).',
+          },
+          estimatedSeconds: 45,
+        },
+        {
           id: 'kshabbat-bameh-madlikin',
           prayerId: 'bameh-madlikin',
           type: 'prayer',

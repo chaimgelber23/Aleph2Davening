@@ -18,7 +18,7 @@ import { BootcampProgressHeader } from '@/components/bootcamp/BootcampProgressHe
 import { MilestoneToast } from '@/components/ui/MilestoneToast';
 import type { BootcampDayNumber, MilestoneType, Letter, Vowel } from '@/types';
 
-type Phase = 'review' | 'teach_letters' | 'teach_vowels' | 'drill' | 'reading';
+type Phase = 'review' | 'teach_letters' | 'letter_quiz' | 'teach_vowels' | 'drill' | 'reading';
 
 export default function BootcampDayPage() {
   const params = useParams();
@@ -53,6 +53,8 @@ export default function BootcampDayPage() {
   const [teachVowelIdx, setTeachVowelIdx] = useState(0);
   const [reviewIdx, setReviewIdx] = useState(0);
   const [reviewAnswer, setReviewAnswer] = useState<string | null>(null);
+  const [letterQuizIdx, setLetterQuizIdx] = useState(0);
+  const [letterQuizAnswer, setLetterQuizAnswer] = useState<string | null>(null);
   const [drillIndex, setDrillIndex] = useState(0);
   const [milestone, setMilestone] = useState<MilestoneType | null>(null);
 
@@ -93,6 +95,21 @@ export default function BootcampDayPage() {
     return [...others, correct].sort(() => Math.random() - 0.5);
   }, [reviewIdx]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Letter quiz — tests today's NEW letters right after teaching
+  const letterQuizQuestions = useMemo(() => {
+    return [...allLetters].sort(() => Math.random() - 0.5).slice(0, Math.min(allLetters.length, 6));
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const letterQuizOptions = useMemo(() => {
+    const correct = letterQuizQuestions[letterQuizIdx];
+    if (!correct || allLetters.length < 2) return [];
+    const others = allLetters
+      .filter((l) => l.id !== correct.id)
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 3);
+    return [...others, correct].sort(() => Math.random() - 0.5);
+  }, [letterQuizIdx]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Current teach state
   const currentLetterGroup = dayData.letterGroups[teachLetterGroupIdx];
   const currentVowelGroup = dayData.vowelGroups[teachVowelGroupIdx];
@@ -115,6 +132,7 @@ export default function BootcampDayPage() {
     const phases = [
       hasReview ? 'review' : null,
       hasLetters ? 'teach_letters' : null,
+      hasLetters ? 'letter_quiz' : null,
       'teach_vowels',
       'drill',
       'reading',
@@ -127,6 +145,7 @@ export default function BootcampDayPage() {
     switch (phase) {
       case 'review': return 'Review';
       case 'teach_letters': return 'Letters';
+      case 'letter_quiz': return 'Letter Quiz';
       case 'teach_vowels': return 'Vowels';
       case 'drill': return 'Practice';
       case 'reading': return 'Reading';
@@ -137,6 +156,7 @@ export default function BootcampDayPage() {
     switch (phase) {
       case 'review': return [reviewIdx, reviewQuestions.length];
       case 'teach_letters': return [letterStepsSoFar, totalLetterSteps];
+      case 'letter_quiz': return [letterQuizIdx, letterQuizQuestions.length];
       case 'teach_vowels': return [teachVowelIdx, totalVowelSteps];
       case 'drill': return [drillIndex, dayData.practiceWords.length];
       case 'reading': return [0, dayData.culminatingReading.lines.length];
@@ -154,7 +174,10 @@ export default function BootcampDayPage() {
 
   const goToNextPhaseAfterLetters = () => {
     completeTeachPhase(dayNumber);
-    if (dayData.vowelGroups.length > 0) {
+    // Always quiz on today's new letters before moving to vowels
+    if (allLetters.length >= 2) {
+      setPhase('letter_quiz');
+    } else if (dayData.vowelGroups.length > 0) {
       setPhase('teach_vowels');
     } else {
       setPhase('drill');
@@ -181,6 +204,29 @@ export default function BootcampDayPage() {
         goToNextPhaseAfterReview();
       } else {
         setReviewIdx(reviewIdx + 1);
+      }
+    }, 1000);
+  };
+
+  // Handle letter quiz (today's new letters)
+  const handleLetterQuizAnswer = (letterId: string) => {
+    if (letterQuizAnswer) return;
+    setLetterQuizAnswer(letterId);
+    const correct = letterQuizQuestions[letterQuizIdx];
+    const isCorrect = letterId === correct.id;
+    updateSkillProgress(correct.id, isCorrect);
+    recordPractice(isCorrect);
+
+    setTimeout(() => {
+      setLetterQuizAnswer(null);
+      if (letterQuizIdx + 1 >= letterQuizQuestions.length) {
+        if (dayData.vowelGroups.length > 0) {
+          setPhase('teach_vowels');
+        } else {
+          setPhase('drill');
+        }
+      } else {
+        setLetterQuizIdx(letterQuizIdx + 1);
       }
     }, 1000);
   };
@@ -417,11 +463,63 @@ export default function BootcampDayPage() {
                   {(teachLetterIdx + 1 < currentLetterGroup.letterIds.length) ||
                    (teachLetterGroupIdx + 1 < dayData.letterGroups.length)
                     ? 'Next Letter'
-                    : 'On to Vowels'}
+                    : 'Test Yourself'}
                 </button>
               </motion.div>
             );
           })()}
+
+          {/* ====== LETTER QUIZ PHASE ====== */}
+          {phase === 'letter_quiz' && letterQuizQuestions.length > 0 && (
+            <motion.div
+              key={`letter-quiz-${letterQuizIdx}`}
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -30 }}
+              className="space-y-6"
+            >
+              <div className="text-center">
+                <p className="text-xs text-gold font-semibold uppercase tracking-wider">
+                  Quick Check — {letterQuizIdx + 1} of {letterQuizQuestions.length}
+                </p>
+                <h2 className="text-lg font-bold text-foreground mt-1">
+                  Which letter is this?
+                </h2>
+              </div>
+
+              <div className="flex justify-center">
+                <div className="bg-white rounded-2xl border-2 border-gray-100 w-36 h-36 flex items-center justify-center">
+                  <span dir="rtl" className="font-['Noto_Serif_Hebrew',serif] text-6xl text-[#1A1A2E]">
+                    {letterQuizQuestions[letterQuizIdx].hebrew}
+                  </span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                {letterQuizOptions.map((letter) => {
+                  const isSelected = letterQuizAnswer === letter.id;
+                  const isCorrect = letter.id === letterQuizQuestions[letterQuizIdx]?.id;
+                  let bgClass = 'bg-white border-gray-200';
+                  if (letterQuizAnswer) {
+                    if (isCorrect) bgClass = 'bg-success/10 border-success';
+                    else if (isSelected) bgClass = 'bg-error/10 border-error';
+                    else bgClass = 'bg-white border-gray-100 opacity-50';
+                  }
+                  return (
+                    <button
+                      key={letter.id}
+                      onClick={() => handleLetterQuizAnswer(letter.id)}
+                      disabled={!!letterQuizAnswer}
+                      className={`${bgClass} border-2 rounded-xl p-3 text-center transition-all`}
+                    >
+                      <p className="font-medium text-foreground">{letter.name}</p>
+                      <p className="text-xs text-gray-500">{letter.sound}</p>
+                    </button>
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
 
           {/* ====== TEACH VOWELS PHASE ====== */}
           {phase === 'teach_vowels' && (() => {

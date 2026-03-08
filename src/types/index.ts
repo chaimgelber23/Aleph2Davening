@@ -506,6 +506,7 @@ export interface GuideStep {
   audioUrl?: string;
   tip?: string;
   level?: GuideLevel; // Which experience level this step is for
+  handWashingSteps?: Array<'right' | 'left'>; // Visual R/L sequence for hand-washing steps
 }
 
 export interface GuideQuizQuestion {

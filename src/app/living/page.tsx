@@ -55,8 +55,8 @@ export default function LivingPage() {
   const displayedBrachot = brachaView === 'before' ? brachotPrayers : brachotAchronot;
   // Filter guides by category
   const filteredGuides = useMemo(() => {
-    if (guideCategory === 'all') return GUIDES;
-    return GUIDES.filter((g) => g.category === guideCategory);
+    const guides = guideCategory === 'all' ? GUIDES : GUIDES.filter((g) => g.category === guideCategory);
+    return [...guides].sort((a, b) => a.sortOrder - b.sortOrder);
   }, [guideCategory]);
 
   const handleSelectGuide = useCallback((guide: Guide) => {

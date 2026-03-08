@@ -168,6 +168,19 @@ export const SHABBAT_SHACHARIT: DaveningService = {
           estimatedSeconds: 90,
         },
         {
+          id: 'shabbat-pdzimra-halleluyah-psalms',
+          type: 'prayer',
+          label: 'Halleluyah Psalms (146–150)',
+          labelHebrew: 'הַלְלוּיָהּ',
+          amud: {
+            role: 'both',
+            instruction: 'Five psalms of pure praise — each begins and ends with "Halleluyah." Said while seated.',
+            physicalActions: ['sit'],
+            notes: 'Psalms 146–150 form the grand crescendo of Pesukei D\'Zimra. On Shabbat they follow the expanded psalm selections. Psalm 150, the final psalm, calls all of creation to praise Hashem with every instrument.',
+          },
+          estimatedSeconds: 120,
+        },
+        {
           id: 'shabbat-pdzimra-az-yashir',
           prayerId: 'az-yashir',
           type: 'prayer',

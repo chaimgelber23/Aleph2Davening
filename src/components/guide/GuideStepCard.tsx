@@ -47,6 +47,33 @@ export function GuideStepCard({ step, stepNumber }: GuideStepCardProps) {
           </div>
         )}
 
+        {/* Hand-washing sequence visualization */}
+        {step.handWashingSteps && step.handWashingSteps.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-2 items-center">
+            {step.handWashingSteps.map((hand, i) => (
+              <div key={i} className="flex items-center gap-1.5">
+                {i > 0 && (
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" strokeWidth="2.5" className="shrink-0">
+                    <path d="M9 18l6-6-6-6" />
+                  </svg>
+                )}
+                <span
+                  className={`inline-flex items-center justify-center px-3 py-1.5 rounded-lg text-xs font-bold tracking-wide shadow-sm ${
+                    hand === 'right'
+                      ? 'bg-[#1B4965] text-white'
+                      : 'bg-[#D4A373]/25 text-[#8B5E2A] border border-[#D4A373]/40'
+                  }`}
+                >
+                  {hand === 'right' ? 'R' : 'L'}
+                </span>
+              </div>
+            ))}
+            <span className="text-[11px] text-gray-400 ml-1">
+              {step.handWashingSteps.filter(h => h === 'right').length}× each hand
+            </span>
+          </div>
+        )}
+
         {/* Tip callout */}
         {step.tip && (
           <div className="bg-[#5FA8D3]/8 border border-[#5FA8D3]/15 rounded-xl p-3 mt-2.5 flex items-start gap-2">

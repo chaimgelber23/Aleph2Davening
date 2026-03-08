@@ -88,7 +88,8 @@ const MORNING_GUIDES: Guide[] = [
         id: 'nv-beginner-1',
         sortOrder: 1,
         level: 'beginner',
-        instruction: 'Fill a cup with water. Pour it over your right hand, then your left hand. Do this twice total (right, left, right, left).',
+        instruction: 'Fill a cup with water. Pour it over your right hand, then your left — twice:',
+        handWashingSteps: ['right', 'left', 'right', 'left'],
         tip: 'Any cup works - a plastic cup, a mug, whatever you have. You don\'t need any special setup.',
       },
       {
@@ -124,9 +125,8 @@ const MORNING_GUIDES: Guide[] = [
         id: 'nv-4',
         sortOrder: 7,
         level: 'intermediate',
-        instruction:
-          'Repeat two more times, alternating: right, left, right, left — for a total of three pours on each hand.',
-        tip: 'The traditional order is: R-L-R-L-R-L (right first each round).',
+        instruction: 'Continue alternating — full sequence is three pours on each hand:',
+        handWashingSteps: ['right', 'left', 'right', 'left', 'right', 'left'],
       },
       {
         id: 'nv-5',
@@ -612,13 +612,9 @@ const BRACHOT_FOOD_GUIDES: Guide[] = [
       {
         id: 'wb-2',
         sortOrder: 2,
-        instruction: 'Pour water over your entire right hand, up to the wrist. Pour a second time over the right hand.',
+        instruction: 'Pour water twice over your right hand, then twice over your left:',
+        handWashingSteps: ['right', 'right', 'left', 'left'],
         tip: 'Make sure the water covers the whole hand including between the fingers.',
-      },
-      {
-        id: 'wb-3',
-        sortOrder: 3,
-        instruction: 'Transfer the cup to your right hand. Pour water twice over your entire left hand.',
       },
       {
         id: 'wb-4',
@@ -957,6 +953,116 @@ const PERSONAL_CARE_GUIDES: Guide[] = [
 
 const SHABBAT_GUIDES: Guide[] = [
   {
+    id: 'shabbat-overview',
+    slug: 'shabbat-overview',
+    title: 'How to Do Shabbat',
+    titleHebrew: 'כֵּיצַד לְקַיֵּם שַׁבָּת',
+    category: 'shabbat',
+    sortOrder: 0,
+    icon: '',
+    summary: 'A complete walkthrough of Shabbat from start to finish',
+    beginnerSummary:
+      'Shabbat is the Jewish day of rest — from Friday sunset to Saturday night. It has a beautiful rhythm: candles, wine, challah, synagogue, family time, and a gentle farewell ceremony.',
+    beginnerWhy:
+      'God rested on the seventh day after creation, and He commanded us to do the same. Shabbat is not just "no work" — it\'s a gift of sacred time. A weekly island of peace in a busy world.',
+    beginnerHow:
+      'On Friday afternoon, prepare food and get ready. Light candles before sunset. Make Kiddush over wine. Eat a special dinner with challah. On Saturday morning, go to synagogue. Have lunch. Rest. When 3 stars appear Saturday night, do Havdalah to say goodbye.',
+    whenRelevant: 'Every Friday evening through Saturday night',
+    whyItMatters:
+      'Shabbat is the cornerstone of Jewish life — called "a foretaste of the World to Come." It is the one mitzvah mentioned in the Ten Commandments. Every week, for 25 hours, Jews step out of the rush of daily life and into sacred time.',
+    quickAnswer:
+      'Shabbat starts Friday at sunset and ends Saturday night when 3 stars appear. The highlights: candle lighting, Kiddush, challah, synagogue, Shabbat meals, and Havdalah at the end.',
+    steps: [
+      {
+        id: 'so-1',
+        sortOrder: 1,
+        instruction: 'Friday afternoon: Prepare food, get cleaned up, and set the Shabbat table with a white tablecloth, two challot (covered), and the Kiddush cup.',
+        tip: 'Shabbat cooking must be done before Shabbat. Many people cook on Thursday night or Friday morning.',
+      },
+      {
+        id: 'so-2',
+        sortOrder: 2,
+        instruction: 'About 18 minutes before sunset on Friday: A woman (or anyone in the household) lights at least 2 Shabbat candles and says the bracha. Once candles are lit, Shabbat has begun.',
+        tip: 'Check your local candle lighting time — it changes weekly. Apps like MyZmanim or Chabad.org have lookup tools.',
+      },
+      {
+        id: 'so-3',
+        sortOrder: 3,
+        instruction: 'Friday night: Attend Kabbalat Shabbat and Maariv services at synagogue, welcoming Shabbat with song.',
+        tip: 'Don\'t know the prayers yet? Just being present and absorbing the atmosphere is a beautiful start.',
+      },
+      {
+        id: 'so-4',
+        sortOrder: 4,
+        instruction: 'Before the Friday night meal: Bless your children (Birkat Banim) by placing your hands on their head and saying the blessing.',
+        tip: 'This is one of the most emotionally powerful moments of the week — don\'t skip it.',
+      },
+      {
+        id: 'so-5',
+        sortOrder: 5,
+        instruction: 'Make Kiddush: fill a cup with wine or grape juice, say the Friday night Kiddush (Vayechulu + brachot), and drink.',
+      },
+      {
+        id: 'so-6',
+        sortOrder: 6,
+        instruction: 'Wash your hands (Netilat Yadayim), say Hamotzi over two challot, and enjoy your Shabbat dinner.',
+        tip: 'We use two challot ("lechem mishneh") to commemorate the double portion of manna in the desert.',
+      },
+      {
+        id: 'so-7',
+        sortOrder: 7,
+        instruction: 'Saturday morning: Attend Shacharit and Torah reading services. The Shemoneh Esrei has a special Shabbat version.',
+      },
+      {
+        id: 'so-8',
+        sortOrder: 8,
+        instruction: 'After morning services: Make the shorter Shabbat day Kiddush (just a verse + wine bracha) before Shabbat lunch.',
+        tip: 'Shabbat day Kiddush is much shorter than Friday night — the whole thing takes 30 seconds.',
+      },
+      {
+        id: 'so-9',
+        sortOrder: 9,
+        instruction: 'Saturday afternoon: Rest, study Torah, spend time with family. Attend Mincha. Many eat "Seudah Shlishit" (the third Shabbat meal) in the late afternoon.',
+      },
+      {
+        id: 'so-10',
+        sortOrder: 10,
+        instruction: 'Saturday night after 3 stars appear: Attend Maariv, then do Havdalah — a beautiful multi-sensory ceremony with wine, spices, and a special candle to end Shabbat.',
+      },
+    ],
+    practicalTips: [
+      'The most important thing is to start — even one Shabbat element (candles, or Kiddush) is meaningful',
+      'Phones and screens off really transforms the experience — try it at least once',
+      'Prepare your Shabbat outfit and anything you\'ll need on Friday afternoon',
+      'Shabbat is a positive celebration — it\'s about joy, not just restrictions',
+      'There are 3 Shabbat meals: Friday night dinner, Shabbat lunch, and Seudah Shlishit',
+    ],
+    sources: [
+      'Exodus 20:8-11 — "Remember the Sabbath day to sanctify it"',
+      'Exodus 31:16-17 — "The children of Israel shall keep the Shabbat"',
+      'Shulchan Aruch, Orach Chaim 242-299',
+    ],
+    quiz: [
+      {
+        id: 'so-q1',
+        question: 'When does Shabbat begin?',
+        options: ['Saturday at midnight', 'Friday at sunset', 'Saturday morning', 'Friday at noon'],
+        correctIndex: 1,
+        explanation: 'Shabbat begins at sunset on Friday evening. We light candles 18 minutes before sunset to ensure we accept Shabbat on time.',
+        source: 'Genesis 1 — "And it was evening, and it was morning..."',
+      },
+      {
+        id: 'so-q2',
+        question: 'How many Shabbat meals are there?',
+        options: ['1', '2', '3', '4'],
+        correctIndex: 2,
+        explanation: 'There are 3 Shabbat meals (Seudot Shabbat): Friday night dinner, Shabbat day lunch, and Seudah Shlishit (third meal) on Saturday afternoon.',
+        source: 'Talmud Shabbat 117b',
+      },
+    ],
+    relatedGuideIds: ['shabbat-candles', 'kiddush-guide', 'birkat-banim', 'shabbat-day-kiddush', 'havdalah-guide'],
+  },
+  {
     id: 'shabbat-candles',
     slug: 'shabbat-candles',
     title: 'Candle Lighting',
@@ -1039,24 +1145,24 @@ const SHABBAT_GUIDES: Guide[] = [
         source: 'Mishnah Berurah 263:27',
       },
     ],
-    relatedGuideIds: ['kiddush-guide', 'havdalah-guide'],
+    relatedGuideIds: ['shabbat-overview', 'kiddush-guide', 'birkat-banim', 'havdalah-guide'],
   },
   {
     id: 'kiddush-guide',
     slug: 'kiddush-guide',
-    title: 'Kiddush',
-    titleHebrew: 'קִדּוּשׁ',
+    title: 'Friday Night Kiddush',
+    titleHebrew: 'קִדּוּשׁ לֵיל שַׁבָּת',
     category: 'shabbat',
-    sortOrder: 2,
+    sortOrder: 3,
     icon: '', // Removed emoji
-    summary: 'Sanctifying Shabbat over wine',
+    summary: 'Sanctifying Shabbat over wine on Friday night',
     beginnerSummary:
-      'Kiddush is a blessing said over wine or grape juice on Friday night and Shabbat day. It sanctifies Shabbat - declares it holy and special.',
+      'Friday night Kiddush is a blessing over wine or grape juice that opens the Shabbat meal. It declares Shabbat holy and different from the rest of the week.',
     beginnerWhy:
-      'The Torah says to "remember the Sabbath day to keep it holy." Kiddush is how we do that - we literally say out loud that Shabbat is different, sacred, set apart from the regular week.',
+      'The Torah says to "remember the Sabbath day to keep it holy." Kiddush is how we do that — we literally say out loud that Shabbat is different, sacred, set apart from the regular week.',
     beginnerHow:
-      'Fill a cup with wine or grape juice. Say the blessing (Kiddush text is in any siddur). You can read it in English at first. Drink some, share with family. That\'s it! The blessing transforms regular time into holy time.',
-    whenRelevant: 'Friday night and Shabbat day, before the meal',
+      'Fill a cup with wine or grape juice. Say the Kiddush (Vayechulu + brachot — found in any siddur or on the Daven page). Drink some, share with family. That\'s it! The blessing transforms regular Friday night into holy Shabbat time.',
+    whenRelevant: 'Friday night before the Shabbat dinner',
     whyItMatters:
       'Kiddush ("sanctification") fulfills the Torah commandment to "remember the Sabbath day to keep it holy" (Exodus 20:8). By reciting Kiddush over wine, we verbally declare that Shabbat is set apart — holy and different from the rest of the week.',
     quickAnswer:
@@ -1076,11 +1182,11 @@ const SHABBAT_GUIDES: Guide[] = [
       {
         id: 'ki-3',
         sortOrder: 3,
-        instruction: 'Recite the Friday night Kiddush. It begins with "Vayechulu" (the Torah\'s account of God resting on the seventh day) followed by the bracha over wine and the bracha of Kiddush.',
+        instruction: 'Recite the Friday night Kiddush. It begins with "Vayechulu" (the Torah\'s account of God resting on the seventh day), then the bracha over wine, then the bracha of Kiddush itself.',
         hebrewText: 'בָּרוּךְ אַתָּה ה\' אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם בּוֹרֵא פְּרִי הַגָּפֶן',
         transliteration: "Baruch Atah Adonai Eloheinu Melech ha'olam borei p'ri hagafen",
         translation: 'Blessed are You... who creates the fruit of the vine.',
-        tip: 'The full Kiddush text is in the siddur and available in Aleph2Daven\'s Siddur section.',
+        tip: 'The full Kiddush text is available in the Daven section of this app. The Shabbat day Kiddush is separate and much shorter — see the Shabbat Day Kiddush guide.',
       },
       {
         id: 'ki-4',
@@ -1097,7 +1203,7 @@ const SHABBAT_GUIDES: Guide[] = [
     practicalTips: [
       'Grape juice works just as well as wine for Kiddush',
       'Everyone at the table fulfills their obligation by listening — they just need to answer "Amen"',
-      'Shabbat day Kiddush is shorter — just the bracha over wine plus a short paragraph',
+      'Shabbat day Kiddush is much shorter — see the Shabbat Day Kiddush guide for full details',
       'Practice the Kiddush text in Aleph2Daven\'s Siddur section',
     ],
     sources: [
@@ -1123,7 +1229,7 @@ const SHABBAT_GUIDES: Guide[] = [
         source: 'Talmud Pesachim 106a',
       },
     ],
-    relatedGuideIds: ['shabbat-candles', 'havdalah-guide'],
+    relatedGuideIds: ['shabbat-overview', 'shabbat-candles', 'birkat-banim', 'shabbat-day-kiddush', 'havdalah-guide'],
   },
   {
     id: 'havdalah-guide',
@@ -1131,7 +1237,7 @@ const SHABBAT_GUIDES: Guide[] = [
     title: 'Havdalah',
     titleHebrew: 'הַבְדָּלָה',
     category: 'shabbat',
-    sortOrder: 3,
+    sortOrder: 5,
     icon: '', // Removed emoji
     summary: 'Saying goodbye to Shabbat',
     beginnerSummary:
@@ -1223,7 +1329,196 @@ const SHABBAT_GUIDES: Guide[] = [
         source: 'Shulchan Aruch, Orach Chaim 298:2',
       },
     ],
-    relatedGuideIds: ['shabbat-candles', 'kiddush-guide'],
+    relatedGuideIds: ['shabbat-overview', 'shabbat-candles', 'kiddush-guide'],
+  },
+  {
+    id: 'birkat-banim',
+    slug: 'birkat-banim',
+    title: 'Blessing Your Children',
+    titleHebrew: 'בִּרְכַּת בָּנִים',
+    category: 'shabbat',
+    sortOrder: 2,
+    icon: '',
+    summary: 'The Friday night blessing for sons and daughters',
+    beginnerSummary:
+      'On Friday night before Kiddush, parents place their hands on each child\'s head and bless them. It\'s one of the most tender moments of the week.',
+    beginnerWhy:
+      'A parent\'s blessing carries spiritual power. By blessing our children every Shabbat, we pass on love, Torah values, and a connection to the Jewish people going back thousands of years.',
+    beginnerHow:
+      'Place both hands gently on your child\'s head. Say the blessing for boys (wishing they be like Efraim and Menashe) or girls (like Sarah, Rivka, Rachel, and Leah). Then say the Priestly Blessing for all children. It takes under a minute.',
+    whenRelevant: 'Friday night before Kiddush',
+    whyItMatters:
+      'Birkat Banim is one of the most emotionally powerful Shabbat customs. The blessings draw on the Torah\'s model of righteous men and women. The Priestly Blessing (Birkat Kohanim) carries the direct words of blessing God gave Moses to bless the people.',
+    quickAnswer:
+      'Place hands on child\'s head. Say the gender-specific blessing, then the Priestly Blessing. It takes less than a minute and means everything.',
+    steps: [
+      {
+        id: 'bb-1',
+        sortOrder: 1,
+        instruction: 'On Friday night, before Kiddush, gather your children around you.',
+      },
+      {
+        id: 'bb-2',
+        sortOrder: 2,
+        instruction: 'Place both hands gently on your son\'s head and say:',
+        hebrewText: 'יְשִׂימְךָ אֱלֹהִים כְּאֶפְרַיִם וְכִמְנַשֶּׁה',
+        transliteration: "Y'simcha Elohim k'Efraim v'chiMenasheh",
+        translation: 'May God make you like Efraim and Menashe.',
+        tip: 'Efraim and Menashe were Jacob\'s grandchildren who grew up surrounded by Egyptian culture yet remained fully connected to their Jewish identity — a blessing for every generation.',
+      },
+      {
+        id: 'bb-3',
+        sortOrder: 3,
+        instruction: 'For a daughter, place both hands on her head and say:',
+        hebrewText: 'יְשִׂימֵךְ אֱלֹהִים כְּשָׂרָה רִבְקָה רָחֵל וְלֵאָה',
+        transliteration: "Y'simeich Elohim k'Sarah Rivkah Rachel v'Leah",
+        translation: 'May God make you like Sarah, Rivkah, Rachel, and Leah.',
+        tip: 'These are the four Matriarchs — the founding mothers of the Jewish people.',
+      },
+      {
+        id: 'bb-4',
+        sortOrder: 4,
+        instruction: 'For all children (boys and girls), continue with the Priestly Blessing:',
+        hebrewText: 'יְבָרֶכְךָ ה\' וְיִשְׁמְרֶךָ\nיָאֵר ה\' פָּנָיו אֵלֶיךָ וִיחֻנֶּךָּ\nיִשָּׂא ה\' פָּנָיו אֵלֶיךָ וְיָשֵׂם לְךָ שָׁלוֹם',
+        transliteration: "Y'varechecha Adonai v'yishmerecha\nYa'er Adonai panav eilecha vichuneka\nYisa Adonai panav eilecha v'yasem lecha shalom",
+        translation: 'May God bless you and protect you.\nMay God shine His face toward you and be gracious to you.\nMay God turn His face toward you and grant you peace.',
+        tip: 'These are God\'s own words given to Moses to bless the people (Numbers 6:24-26). The same words Kohanim use when blessing the congregation.',
+      },
+      {
+        id: 'bb-5',
+        sortOrder: 5,
+        instruction: 'Many parents then add a personal prayer or a kiss. This is a precious, intimate moment — use your own words.',
+        tip: 'Children who receive this blessing regularly grow up with a deep sense of being loved and spiritually held.',
+      },
+    ],
+    practicalTips: [
+      'Even adult children can receive this blessing from their parents',
+      'If your children are not present, you can bless them over the phone or in your heart',
+      'Some parents add their own personal wishes after the formal blessing',
+      'This custom creates a weekly moment of intentional love and connection',
+      'Men and women can both give this blessing to their children',
+    ],
+    sources: [
+      'Genesis 48:20 — Jacob blesses Efraim and Menashe',
+      'Numbers 6:24-26 — The Priestly Blessing',
+      'Shulchan Aruch, Orach Chaim 261 (Shabbat eve customs)',
+    ],
+    quiz: [
+      {
+        id: 'bb-q1',
+        question: 'Why do we bless sons to be "like Efraim and Menashe"?',
+        options: [
+          'They were the strongest warriors',
+          'They maintained Jewish identity in Egypt',
+          'They were the first-born sons',
+          'They were kohanim',
+        ],
+        correctIndex: 1,
+        explanation: 'Efraim and Menashe grew up in Egypt surrounded by foreign culture yet stayed fully Jewish and connected to their heritage. That\'s the blessing we give every son.',
+        source: 'Genesis 48:20',
+      },
+      {
+        id: 'bb-q2',
+        question: 'When is Birkat Banim traditionally given?',
+        options: ['Shabbat morning after services', 'Before bedtime on weekdays', 'Friday night before Kiddush', 'During Havdalah'],
+        correctIndex: 2,
+        explanation: 'The traditional time is Friday night before Kiddush — at the very start of Shabbat, setting a tone of blessing and love for the whole day.',
+        source: 'Shulchan Aruch, Orach Chaim 261',
+      },
+    ],
+    relatedGuideIds: ['shabbat-overview', 'shabbat-candles', 'kiddush-guide'],
+  },
+  {
+    id: 'shabbat-day-kiddush',
+    slug: 'shabbat-day-kiddush',
+    title: 'Shabbat Day Kiddush',
+    titleHebrew: 'קִדּוּשׁ שַׁחֲרִית',
+    category: 'shabbat',
+    sortOrder: 4,
+    icon: '',
+    summary: 'The shorter Kiddush said before Shabbat lunch',
+    beginnerSummary:
+      'On Shabbat morning after synagogue, we make a quick Kiddush over wine before lunch. It\'s much shorter than Friday night — just a verse and the wine blessing.',
+    beginnerWhy:
+      'The Sages decreed that Kiddush be recited before every Shabbat meal. But since we already sanctified Shabbat fully on Friday night, the day Kiddush is intentionally brief.',
+    beginnerHow:
+      'Fill a cup with wine or grape juice. Some say a verse from the Torah first. Then just say the bracha over wine (borei p\'ri hagafen). Drink. That\'s it — the whole thing takes about 30 seconds.',
+    whenRelevant: 'Shabbat morning after synagogue, before lunch',
+    whyItMatters:
+      'While Friday night Kiddush is the main sanctification, the Shabbat day Kiddush is also obligatory. It is playfully called "Kiddush Rabbah" (the Great Kiddush) — a humorous name since it\'s actually very short! It reminds us that the holiness of Shabbat continues through the day.',
+    quickAnswer:
+      'After morning services: fill a cup, optionally say a Torah verse (V\'shamru or Al kein beirach), then just the wine bracha (borei p\'ri hagafen). Drink. Done!',
+    steps: [
+      {
+        id: 'sdk-1',
+        sortOrder: 1,
+        instruction: 'After returning from Shacharit, before sitting down to lunch, fill a kiddush cup with wine or grape juice.',
+        tip: 'This Kiddush must be said in the place where you will eat the meal.',
+      },
+      {
+        id: 'sdk-2',
+        sortOrder: 2,
+        instruction: 'Many begin with this passage from the Torah (optional but traditional):',
+        hebrewText: 'וְשָׁמְרוּ בְנֵי יִשְׂרָאֵל אֶת הַשַּׁבָּת לַעֲשׂוֹת אֶת הַשַּׁבָּת לְדֹרֹתָם בְּרִית עוֹלָם. בֵּינִי וּבֵין בְּנֵי יִשְׂרָאֵל אוֹת הִוא לְעֹלָם כִּי שֵׁשֶׁת יָמִים עָשָׂה ה\' אֶת הַשָּׁמַיִם וְאֶת הָאָרֶץ וּבַיּוֹם הַשְּׁבִיעִי שָׁבַת וַיִּנָּפַשׁ',
+        transliteration: "V'sham'ru v'nei Yisrael et haShabbat la'asot et haShabbat l'dorotam b'rit olam. Beini uvein b'nei Yisrael ot hi l'olam, ki sheishet yamim asah Adonai et hashamayim v'et ha'aretz, uvayom hash'vi'i shavat vayinafash.",
+        translation: 'The children of Israel shall observe the Shabbat, to make the Shabbat an eternal covenant for all generations. Between Me and the children of Israel it is an eternal sign, for in six days God made the heavens and the earth, and on the seventh day He rested.',
+        tip: 'This passage (Exodus 31:16-17) is a beautiful framing. If you\'re short on time, you can skip straight to the wine bracha.',
+      },
+      {
+        id: 'sdk-3',
+        sortOrder: 3,
+        instruction: 'Say the bracha over wine:',
+        hebrewText: 'בָּרוּךְ אַתָּה ה\' אֱלֹהֵינוּ מֶלֶךְ הָעוֹלָם בּוֹרֵא פְּרִי הַגָּפֶן',
+        transliteration: "Baruch Atah Adonai Eloheinu Melech ha'olam borei p'ri hagafen",
+        translation: 'Blessed are You, Lord our God, King of the universe, who creates the fruit of the vine.',
+        tip: 'That\'s it! That\'s the entire Shabbat day Kiddush. Compare this to Friday night — Vayechulu, two full brachot, and a longer passage. The day Kiddush is beautifully brief.',
+      },
+      {
+        id: 'sdk-4',
+        sortOrder: 4,
+        instruction: 'Drink at least a cheek-full of wine (ideally most of the cup). Share with everyone at the table.',
+      },
+      {
+        id: 'sdk-5',
+        sortOrder: 5,
+        instruction: 'Wash your hands (Netilat Yadayim), say Hamotzi over two challot, and enjoy your Shabbat lunch!',
+      },
+    ],
+    practicalTips: [
+      'Kiddush must be recited in the place where you\'ll eat — don\'t make Kiddush in one room and eat in another',
+      'You must say the day Kiddush before eating any food on Shabbat morning',
+      'Grape juice is perfectly acceptable if you don\'t drink wine',
+      '"Kiddush Rabbah" literally means "the Great Kiddush" — the funny irony is that it\'s actually the shorter one',
+    ],
+    sources: [
+      'Exodus 31:16-17',
+      'Shulchan Aruch, Orach Chaim 289:1',
+      'Talmud Pesachim 106a',
+    ],
+    quiz: [
+      {
+        id: 'sdk-q1',
+        question: 'How does Shabbat day Kiddush differ from Friday night Kiddush?',
+        options: [
+          'It uses a different cup',
+          'It\'s much shorter — essentially just the wine bracha',
+          'It\'s only said by men',
+          'It uses beer instead of wine',
+        ],
+        correctIndex: 1,
+        explanation: 'Friday night Kiddush includes Vayechulu and multiple paragraphs. The Shabbat day Kiddush is just a verse (optional) and the wine bracha — much shorter.',
+        source: 'Shulchan Aruch, Orach Chaim 289:1',
+      },
+      {
+        id: 'sdk-q2',
+        question: 'What is the playful nickname for Shabbat day Kiddush?',
+        options: ['Kiddush Gadol', 'Kiddush HaYom', 'Kiddush Rabbah', 'Kiddush Sheni'],
+        correctIndex: 2,
+        explanation: '"Kiddush Rabbah" means "the Great Kiddush" — a humorous name since this Kiddush is actually very short compared to Friday night!',
+        source: 'Shulchan Aruch, Orach Chaim 289:1',
+      },
+    ],
+    relatedGuideIds: ['shabbat-overview', 'kiddush-guide', 'shabbat-candles'],
   },
 ];
 

@@ -65,13 +65,37 @@ export const BOOTCAMP_DAYS: BootcampDay[] = [
       { hebrew: 'אַתָּה', transliteration: 'atah', translation: 'You', audioUrl: '/audio/bootcamp/words/atah.mp3', source: 'Bracha formula' },
     ],
     culminatingReading: {
-      title: 'Your First Bracha Words',
-      description: 'You can already read words from the bracha formula — words Jews have been saying for thousands of years.',
+      title: 'Your First Hebrew Words',
+      description: 'You can already read real Hebrew! These are all words from Jewish life and prayer — try each one.',
       lines: [
+        {
+          hebrew: 'שָׁם',
+          transliteration: 'sham',
+          translation: 'there',
+          audioUrl: '/audio/bootcamp/words/sham.mp3',
+        },
+        {
+          hebrew: 'מָה',
+          transliteration: 'mah',
+          translation: 'what',
+          audioUrl: '/audio/bootcamp/words/mah.mp3',
+        },
+        {
+          hebrew: 'אָם',
+          transliteration: 'am',
+          translation: 'mother',
+          audioUrl: '/audio/bootcamp/words/am.mp3',
+        },
+        {
+          hebrew: 'שָׁלַם',
+          transliteration: 'shalam',
+          translation: 'complete / whole',
+          audioUrl: '/audio/bootcamp/words/shalam.mp3',
+        },
         {
           hebrew: 'אַתָּה',
           transliteration: 'atah',
-          translation: 'You (addressing G-d)',
+          translation: 'You — the word that begins every blessing to G-d',
           audioUrl: '/audio/bootcamp/readings/day1_atah.mp3',
         },
       ],

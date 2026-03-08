@@ -32,7 +32,7 @@ export function ServiceRoadmap({
   const [expandedSegment, setExpandedSegment] = useState<string | null>(
     service.segments[0]?.id || null
   );
-  const [viewMode, setViewMode] = useState<ViewMode>('priority');
+  const [viewMode, setViewMode] = useState<ViewMode>('all');
   const servicePosition = useUserStore((s) => s.servicePosition[service.id]);
   const displaySettings = useUserStore((s) => s.displaySettings);
 
